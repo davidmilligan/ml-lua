@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><strong>lens</strong></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>lens</code></h1>
+<p>Lens functions</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2014</li>
+        <li><strong>License</strong>: GPL</li>
+        <li><strong>Author</strong>: Magic Lantern Team</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#focus">focus (num_steps[, step_size=1[, wait=1[, extra_delay=0]]])</a></td>
+	<td class="summary">Moves the focus motor a specified number of steps.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#name">name</a></td>
+	<td class="summary">The name of the lens (reported by the lens)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#focal_length">focal_length</a></td>
+	<td class="summary">The focal length of the lens (in mm)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#focal_distance">focal_distance</a></td>
+	<td class="summary">The current focal distance (in cm)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#hyperfocal">hyperfocal</a></td>
+	<td class="summary">The hyperfocal distance of the lens (in mm)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dof_near">dof_near</a></td>
+	<td class="summary">The distance to the DOF near (in mm)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dof_far">dof_far</a></td>
+	<td class="summary">The distance to the DOF far (in mm)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#af">af</a></td>
+	<td class="summary">Whether or not auto focus is enabled</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "focus"></a>
+    <strong>focus (num_steps[, step_size=1[, wait=1[, extra_delay=0]]])</strong>
+    </dt>
+    <dd>
+    Moves the focus motor a specified number of steps.  Only works in LV.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">num_steps</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">step_size</span>
+            <span class="types"><span class="type">integer</span></span>
+
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">wait</span>
+            <span class="types"><span class="type">integer</span></span>
+
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">extra_delay</span>
+            <span class="types"><span class="type">integer</span></span>
+
+         (<em>default</em> 0)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "name"></a>
+    <strong>name</strong>
+    </dt>
+    <dd>
+    The name of the lens (reported by the lens)
+
+
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "focal_length"></a>
+    <strong>focal_length</strong>
+    </dt>
+    <dd>
+    The focal length of the lens (in mm)
+
+
+    <ul>
+        <li><span class="parameter">focal_length</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "focal_distance"></a>
+    <strong>focal_distance</strong>
+    </dt>
+    <dd>
+    The current focal distance (in cm)
+
+
+    <ul>
+        <li><span class="parameter">focal_distance</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hyperfocal"></a>
+    <strong>hyperfocal</strong>
+    </dt>
+    <dd>
+    The hyperfocal distance of the lens (in mm)
+
+
+    <ul>
+        <li><span class="parameter">hyperfocal</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dof_near"></a>
+    <strong>dof_near</strong>
+    </dt>
+    <dd>
+    The distance to the DOF near (in mm)
+
+
+    <ul>
+        <li><span class="parameter">dof_near</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dof_far"></a>
+    <strong>dof_far</strong>
+    </dt>
+    <dd>
+    The distance to the DOF far (in mm)
+
+
+    <ul>
+        <li><span class="parameter">dof_far</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "af"></a>
+    <strong>af</strong>
+    </dt>
+    <dd>
+    Whether or not auto focus is enabled
+
+
+    <ul>
+        <li><span class="parameter">af</span>
+            <span class="types"><span class="type">boolean</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-10 23:19:57 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

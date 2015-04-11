@@ -1,0 +1,377 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><strong>display</strong></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>display</code></h1>
+<p>Display and bmp drawing functions functions</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2014</li>
+        <li><strong>License</strong>: GPL</li>
+        <li><strong>Author</strong>: Magic Lantern Team</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#on">on ()</a></td>
+	<td class="summary">Turn the display on</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#off">off ()</a></td>
+	<td class="summary">Turn the display off</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#screenshot">screenshot ([filename[, mode]])</a></td>
+	<td class="summary">Take a screenshot</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#clear">clear ()</a></td>
+	<td class="summary">Clear the screen</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#print">print (text, x, y[, font[, fg[, bg]]])</a></td>
+	<td class="summary">Print text to the screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pixel">pixel (x, y)</a></td>
+	<td class="summary">Set a pixel to a color</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pixel">pixel (x1, y1, x2, y2)</a></td>
+	<td class="summary">Set a pixel to a color</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pixel">pixel (x, y, w, h, stroke[, fill])</a></td>
+	<td class="summary">Set a pixel to a color</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pixel">pixel (x, y, r, stroke[, fill])</a></td>
+	<td class="summary">Draw a circle</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "on"></a>
+    <strong>on ()</strong>
+    </dt>
+    <dd>
+    Turn the display on
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "off"></a>
+    <strong>off ()</strong>
+    </dt>
+    <dd>
+    Turn the display off
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "screenshot"></a>
+    <strong>screenshot ([filename[, mode]])</strong>
+    </dt>
+    <dd>
+    Take a screenshot
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">filename</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">mode</span>
+            <span class="types"><span class="type">integer</span></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "clear"></a>
+    <strong>clear ()</strong>
+    </dt>
+    <dd>
+    Clear the screen
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "print"></a>
+    <strong>print (text, x, y[, font[, fg[, bg]]])</strong>
+    </dt>
+    <dd>
+    Print text to the screen.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">integer</span></span>
+         <a href="../modules/constants.html#FONT">constants.FONT</a>
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">fg</span>
+            <span class="types"><span class="type">integer</span></span>
+         foreground <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">bg</span>
+            <span class="types"><span class="type">integer</span></span>
+         background <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pixel"></a>
+    <strong>pixel (x, y)</strong>
+    </dt>
+    <dd>
+    Set a pixel to a color
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pixel"></a>
+    <strong>pixel (x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    Set a pixel to a color
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">y1</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">x2</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">y2</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pixel"></a>
+    <strong>pixel (x, y, w, h, stroke[, fill])</strong>
+    </dt>
+    <dd>
+    Set a pixel to a color
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">w</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">h</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+        <li><span class="parameter">stroke</span>
+            <span class="types"><span class="type">integer</span></span>
+         outline <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+        </li>
+        <li><span class="parameter">fill</span>
+            <span class="types"><span class="type">integer</span></span>
+         fill <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pixel"></a>
+    <strong>pixel (x, y, r, stroke[, fill])</strong>
+    </dt>
+    <dd>
+    Draw a circle
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">integer</span></span>
+         center x
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">integer</span></span>
+         center y
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">integer</span></span>
+         radius
+        </li>
+        <li><span class="parameter">stroke</span>
+            <span class="types"><span class="type">integer</span></span>
+         outline <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+        </li>
+        <li><span class="parameter">fill</span>
+            <span class="types"><span class="type">integer</span></span>
+         fill <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-10 23:19:57 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

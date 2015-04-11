@@ -1,0 +1,746 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Class_menu">Class menu </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><strong>menu</strong></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>menu</code></h1>
+<p>Functions for interacting with the ML menu</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2014</li>
+        <li><strong>License</strong>: GPL</li>
+        <li><strong>Author</strong>: Magic Lantern Team</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#new">new (definition)</a></td>
+	<td class="summary">Creates a new menu item</td>
+	</tr>
+</table>
+<h2><a href="#Class_menu">Class menu </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#menu.value">menu.value</a></td>
+	<td class="summary">current value of the menu item</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.name">menu.name</a></td>
+	<td class="summary">Name for the menu item</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.help">menu.help</a></td>
+	<td class="summary">Help text for the menu item (line 1)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.help2">menu.help2</a></td>
+	<td class="summary">Help text for the menu item (line 2)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.advanced">menu.advanced</a></td>
+	<td class="summary">Advanced setting in submenus; add a MENU_ADVANCED_TOGGLE if you use it</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.depends_on">menu.depends_on</a></td>
+	<td class="summary">Dependencies for this menu item.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.edit_mode">menu.edit_mode</a></td>
+	<td class="summary">Editing mode for the menu item</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.hidden">menu.hidden</a></td>
+	<td class="summary">Hidden from main menu</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.icon_type">menu.icon_type</a></td>
+	<td class="summary">The type of icon to use for this menu item</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.jhidden">menu.jhidden</a></td>
+	<td class="summary">Hidden from junkie menu</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.max">menu.max</a></td>
+	<td class="summary">The maximum value the menu item can have</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.min">menu.min</a></td>
+	<td class="summary">The minimum value the menu item can have</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.selected">menu.selected</a></td>
+	<td class="summary">Whether or not the menu is selected</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.shidden">menu.shidden</a></td>
+	<td class="summary">Special hide, not toggleable by user</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.starred">menu.starred</a></td>
+	<td class="summary">Present in "my menu"</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.submenu_height">menu.submenu_height</a></td>
+	<td class="summary">Submenu Height</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.submenu_width">menu.submenu_width</a></td>
+	<td class="summary">Submenu Width</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.unit">menu.unit</a></td>
+	<td class="summary">The unit for the menu item's value</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.works_best_in">menu.works_best_in</a></td>
+	<td class="summary">Suggested operating mode for this menu item</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu:select">menu:select (delta)</a></td>
+	<td class="summary">Function called when menu is toggled</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu:update">menu:update ()</a></td>
+	<td class="summary">Function called when menu is displayed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu:info">menu:info ()</a></td>
+	<td class="summary">Function called when menu is displayed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu:select">menu:select ()</a></td>
+	<td class="summary">Function called when menu is displayed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.choices">menu.choices</a></td>
+	<td class="summary">List of strings to display as choices in the menu item</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu.submenu">menu.submenu</a></td>
+	<td class="summary">Table of more menu tables that define a submenu</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu:remove">menu:remove ()</a></td>
+	<td class="summary">Removes this menu entry</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "new"></a>
+    <strong>new (definition)</strong>
+    </dt>
+    <dd>
+    Creates a new menu item
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">definition</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        a menu object
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_menu"></a>Class menu </h2>
+
+        Represents a menu item
+    <dl class="function">
+    <dt>
+    <a name = "menu.value"></a>
+    <strong>menu.value</strong>
+    </dt>
+    <dd>
+    current value of the menu item
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.name"></a>
+    <strong>menu.name</strong>
+    </dt>
+    <dd>
+    Name for the menu item
+
+
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.help"></a>
+    <strong>menu.help</strong>
+    </dt>
+    <dd>
+    Help text for the menu item (line 1)
+
+
+    <ul>
+        <li><span class="parameter">help</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.help2"></a>
+    <strong>menu.help2</strong>
+    </dt>
+    <dd>
+    Help text for the menu item (line 2)
+
+
+    <ul>
+        <li><span class="parameter">help2</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.advanced"></a>
+    <strong>menu.advanced</strong>
+    </dt>
+    <dd>
+    Advanced setting in submenus; add a MENU_ADVANCED_TOGGLE if you use it
+
+
+    <ul>
+        <li><span class="parameter">advanced</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.depends_on"></a>
+    <strong>menu.depends_on</strong>
+    </dt>
+    <dd>
+    Dependencies for this menu item.
+ If the dependecies are not met, the item will be greyed out and a warning will appear at the bottom of the screen.
+
+
+    <ul>
+        <li><span class="parameter">depends_on</span>
+            <span class="types"><span class="type">integer</span></span>
+         <a href="../modules/constants.html#DEPENDS_ON">constants.DEPENDS_ON</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.edit_mode"></a>
+    <strong>menu.edit_mode</strong>
+    </dt>
+    <dd>
+    Editing mode for the menu item
+
+
+    <ul>
+        <li><span class="parameter">edit_mode</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.hidden"></a>
+    <strong>menu.hidden</strong>
+    </dt>
+    <dd>
+    Hidden from main menu
+
+
+    <ul>
+        <li><span class="parameter">hidden</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.icon_type"></a>
+    <strong>menu.icon_type</strong>
+    </dt>
+    <dd>
+    The type of icon to use for this menu item
+
+
+    <ul>
+        <li><span class="parameter">icon_type</span>
+            <span class="types"><span class="type">integer</span></span>
+         <a href="../modules/constants.html#ICON_TYPE">constants.ICON_TYPE</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.jhidden"></a>
+    <strong>menu.jhidden</strong>
+    </dt>
+    <dd>
+    Hidden from junkie menu
+
+
+    <ul>
+        <li><span class="parameter">jhidden</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.max"></a>
+    <strong>menu.max</strong>
+    </dt>
+    <dd>
+    The maximum value the menu item can have
+
+
+    <ul>
+        <li><span class="parameter">max</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.min"></a>
+    <strong>menu.min</strong>
+    </dt>
+    <dd>
+    The minimum value the menu item can have
+
+
+    <ul>
+        <li><span class="parameter">min</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.selected"></a>
+    <strong>menu.selected</strong>
+    </dt>
+    <dd>
+    Whether or not the menu is selected
+
+
+    <ul>
+        <li><span class="parameter">selected</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.shidden"></a>
+    <strong>menu.shidden</strong>
+    </dt>
+    <dd>
+    Special hide, not toggleable by user
+
+
+    <ul>
+        <li><span class="parameter">shidden</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.starred"></a>
+    <strong>menu.starred</strong>
+    </dt>
+    <dd>
+    Present in "my menu"
+
+
+    <ul>
+        <li><span class="parameter">starred</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.submenu_height"></a>
+    <strong>menu.submenu_height</strong>
+    </dt>
+    <dd>
+    Submenu Height
+
+
+    <ul>
+        <li><span class="parameter">submenu_height</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.submenu_width"></a>
+    <strong>menu.submenu_width</strong>
+    </dt>
+    <dd>
+    Submenu Width
+
+
+    <ul>
+        <li><span class="parameter">submenu_width</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.unit"></a>
+    <strong>menu.unit</strong>
+    </dt>
+    <dd>
+    The unit for the menu item's value
+
+
+    <ul>
+        <li><span class="parameter">unit</span>
+            <span class="types"><span class="type">integer</span></span>
+         <a href="../modules/constants.html#UNIT">constants.UNIT</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.works_best_in"></a>
+    <strong>menu.works_best_in</strong>
+    </dt>
+    <dd>
+    Suggested operating mode for this menu item
+
+
+    <ul>
+        <li><span class="parameter">works_best_in</span>
+            <span class="types"><span class="type">integer</span></span>
+         <a href="../modules/constants.html#DEPENDS_ON">constants.DEPENDS_ON</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu:select"></a>
+    <strong>menu:select (delta)</strong>
+    </dt>
+    <dd>
+    Function called when menu is toggled
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">delta</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu:update"></a>
+    <strong>menu:update ()</strong>
+    </dt>
+    <dd>
+    Function called when menu is displayed.  Return a string to be displayed.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu:info"></a>
+    <strong>menu:info ()</strong>
+    </dt>
+    <dd>
+    Function called when menu is displayed.  Return a string to be displayed in the info area (in green).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu:select"></a>
+    <strong>menu:select ()</strong>
+    </dt>
+    <dd>
+    Function called when menu is displayed.  Return a string when there is a warning (menu will be greyed out).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.choices"></a>
+    <strong>menu.choices</strong>
+    </dt>
+    <dd>
+    List of strings to display as choices in the menu item
+
+
+    <ul>
+        <li><span class="parameter">choices</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu.submenu"></a>
+    <strong>menu.submenu</strong>
+    </dt>
+    <dd>
+    Table of more menu tables that define a submenu
+
+
+    <ul>
+        <li><span class="parameter">submenu</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu:remove"></a>
+    <strong>menu:remove ()</strong>
+    </dt>
+    <dd>
+    Removes this menu entry
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-10 23:19:57 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

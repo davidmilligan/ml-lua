@@ -1,0 +1,490 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/global.html">global</a></li>
+  <li><strong>camera</strong></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>camera</code></h1>
+<p>Basic camera operations and properties</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2014</li>
+        <li><strong>License</strong>: GPL</li>
+        <li><strong>Author</strong>: Magic Lantern Team</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#shoot">shoot ([wait=64[, should_af=true]])</a></td>
+	<td class="summary">Take a picture</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bulb">bulb (duration)</a></td>
+	<td class="summary">Take a picture in bulb mode</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#shutter">shutter</a></td>
+	<td class="summary">Shutter shutter speed in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture">aperture</a></td>
+	<td class="summary">Lens aperture in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iso">iso</a></td>
+	<td class="summary">ISO in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ec">ec</a></td>
+	<td class="summary">Exposure compensation in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#flash_ec">flash_ec</a></td>
+	<td class="summary">Flash exposure compensation in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mode">mode</a></td>
+	<td class="summary">The current camera mode, possible values defined in <a href="../modules/constants.html#MODE">constants.MODE</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#af_mode">af_mode</a></td>
+	<td class="summary">The current auto focus mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#metering_mode">metering_mode</a></td>
+	<td class="summary">The current metering mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#drive_mode">drive_mode</a></td>
+	<td class="summary">The current drive mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#model">model</a></td>
+	<td class="summary">The model name of the camera</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#model_short">model_short</a></td>
+	<td class="summary">The shortened model name of the camera (e.g.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#firmware">firmware</a></td>
+	<td class="summary">The Canon firmware version string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#temperature">temperature</a></td>
+	<td class="summary">The temperature from the efic chip in raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#state">state</a></td>
+	<td class="summary">The current Canon GUI state of the camera (PLAY, QR, LV, etc)</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "shoot"></a>
+    <strong>shoot ([wait=64[, should_af=true]])</strong>
+    </dt>
+    <dd>
+    Take a picture
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">wait</span>
+            <span class="types"><span class="type">integer</span></span>
+         how long to wait for camera to be ready to take a picture
+         (<em>default</em> 64)
+        </li>
+        <li><span class="parameter">should_af</span>
+            <span class="types"><span class="type">boolean</span></span>
+         whether ot not to us auto focus
+         (<em>default</em> true)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bulb"></a>
+    <strong>bulb (duration)</strong>
+    </dt>
+    <dd>
+    Take a picture in bulb mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">duration</span>
+            <span class="types"><span class="type">integer</span></span>
+         bulb duration in seconds
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "shutter"></a>
+    <strong>shutter</strong>
+    </dt>
+    <dd>
+    Shutter shutter speed in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">shutter</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture"></a>
+    <strong>aperture</strong>
+    </dt>
+    <dd>
+    Lens aperture in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">aperture</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "iso"></a>
+    <strong>iso</strong>
+    </dt>
+    <dd>
+    ISO in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">iso</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ec"></a>
+    <strong>ec</strong>
+    </dt>
+    <dd>
+    Exposure compensation in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">ec</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "flash_ec"></a>
+    <strong>flash_ec</strong>
+    </dt>
+    <dd>
+    Flash exposure compensation in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">flash_ec</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mode"></a>
+    <strong>mode</strong>
+    </dt>
+    <dd>
+    The current camera mode, possible values defined in <a href="../modules/constants.html#MODE">constants.MODE</a>
+
+
+    <ul>
+        <li><span class="parameter">mode</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "af_mode"></a>
+    <strong>af_mode</strong>
+    </dt>
+    <dd>
+    The current auto focus mode
+
+
+    <ul>
+        <li><span class="parameter">af_mode</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "metering_mode"></a>
+    <strong>metering_mode</strong>
+    </dt>
+    <dd>
+    The current metering mode
+
+
+    <ul>
+        <li><span class="parameter">metering_mode</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "drive_mode"></a>
+    <strong>drive_mode</strong>
+    </dt>
+    <dd>
+    The current drive mode
+
+
+    <ul>
+        <li><span class="parameter">drive_mode</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "model"></a>
+    <strong>model</strong>
+    </dt>
+    <dd>
+    The model name of the camera
+
+
+    <ul>
+        <li><span class="parameter">model</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "model_short"></a>
+    <strong>model_short</strong>
+    </dt>
+    <dd>
+    The shortened model name of the camera (e.g.  5D3)
+
+
+    <ul>
+        <li><span class="parameter">model_short</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "firmware"></a>
+    <strong>firmware</strong>
+    </dt>
+    <dd>
+    The Canon firmware version string
+
+
+    <ul>
+        <li><span class="parameter">firmware</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "temperature"></a>
+    <strong>temperature</strong>
+    </dt>
+    <dd>
+    The temperature from the efic chip in raw units
+
+
+    <ul>
+        <li><span class="parameter">temperature</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "state"></a>
+    <strong>state</strong>
+    </dt>
+    <dd>
+    The current Canon GUI state of the camera (PLAY, QR, LV, etc)
+
+
+    <ul>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">integer</span></span>
+         readonly
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-10 23:19:57 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
