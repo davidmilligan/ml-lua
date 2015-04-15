@@ -73,6 +73,14 @@
 	<td class="name" nowrap><a href="#new">new (definition)</a></td>
 	<td class="summary">Creates a new menu item</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set">set (menu, entry, value)</a></td>
+	<td class="summary">Set the value of some existing ML menu entry</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get">get (menu, entry)</a></td>
+	<td class="summary">Get the value of some existing ML menu entry</td>
+	</tr>
 </table>
 <h2><a href="#Class_menu">Class menu </a></h2>
 <table class="function_list">
@@ -153,6 +161,10 @@
 	<td class="summary">Suggested operating mode for this menu item</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#menu.run_in_separate_task">menu.run_in_separate_task</a></td>
+	<td class="summary">Whether or not the backend should run 'select' in it's own task</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#menu:select">menu:select (delta)</a></td>
 	<td class="summary">Function called when menu is toggled</td>
 	</tr>
@@ -162,6 +174,10 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#menu:info">menu:info ()</a></td>
+	<td class="summary">Function called when menu is displayed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#menu:rinfo">menu:rinfo ()</a></td>
 	<td class="summary">Function called when menu is displayed.</td>
 	</tr>
 	<tr>
@@ -219,54 +235,97 @@
 mymenu = menu.new
 {
     parent = <span class="string">"LUA"</span>,
-    name = <span class="string">"Run Test Script"</span>,
-    help = <span class="string">"Run the test script."</span>,
+    name = <span class="string">"Lua Test Script"</span>,
+    help = <span class="string">"Some help for this script"</span>,
+    value = <span class="number">1</span>,
     submenu =
     {
         {
             name = <span class="string">"Run"</span>,
             help = <span class="string">"Run this script."</span>,
-            icon_type = <span class="number">5</span>,
+            icon_type = ICON_TYPE.ACTION,
             update = <span class="string">""</span>,
         },
         {
-            name = <span class="string">"param1"</span>,
-            help = <span class="string">"help for param1"</span>,
+            name = <span class="string">"Parameter Example"</span>,
+            help = <span class="string">"Help for Parameter Example"</span>,
             min = <span class="number">0</span>,
             max = <span class="number">100</span>,
-            warning = <span class="keyword">function</span>() <span class="keyword">return</span> <span class="string">"this param doesn't work right :P"</span> <span class="keyword">end</span>,
+            unit = UNIT.DEC,
+            warning = <span class="keyword">function</span>(this) <span class="keyword">if</span> this.value == <span class="number">5</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"this value is not supported"</span> <span class="keyword">end</span> <span class="keyword">end</span>,
         },
         {
-            name = <span class="string">"param2"</span>,
-            help = <span class="string">"help for param2"</span>,
-            min = <span class="number">0</span>,
-            max = <span class="number">10</span>,
-            value = <span class="number">5</span>,
-            info = <span class="keyword">function</span>() <span class="keyword">return</span> <span class="string">"click it baby!"</span> <span class="keyword">end</span>,
-        },
-        {
-            name = <span class="string">"dec test"</span>,
-            min = <span class="number">0</span>,
-            max = <span class="number">10000</span>,
-            unit = <span class="number">7</span>,
-        },
-        {
-            name = <span class="string">"choices test"</span>,
+            name = <span class="string">"Choices Example"</span>,
             choices = { <span class="string">"choice1"</span>, <span class="string">"choice2"</span>, <span class="string">"choice3"</span> },
         }
     },
-    update = <span class="keyword">function</span>() <span class="keyword">return</span> mymenu.submenu[<span class="string">"choices test"</span>].value <span class="keyword">end</span>,
+    update = <span class="keyword">function</span>(this) <span class="keyword">return</span> this.submenu[<span class="string">"Choices Example"</span>].value <span class="keyword">end</span>,
 }
 
 mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</span> = <span class="keyword">function</span>()
-    console.show()
-    <span class="global">print</span>(<span class="string">"param1= "</span>..mymenu.submenu[<span class="string">"param1"</span>].value)
-    <span class="global">print</span>(<span class="string">"param2= "</span>..mymenu.submenu[<span class="string">"param2"</span>].value)
-    <span class="global">print</span>(<span class="string">"dec test= "</span>..mymenu.submenu[<span class="string">"dec test"</span>].value)
-    <span class="global">print</span>(<span class="string">"choices test= "</span>..mymenu.submenu[<span class="string">"choices test"</span>].value)
-    <span class="global">print</span>(<span class="string">"script run finished!"</span>)
+    <span class="global">print</span>(<span class="string">"Parameter Example= "</span>..mymenu.submenu[<span class="string">"Parameter Example"</span>].value)
+    <span class="global">print</span>(<span class="string">"Choices Example= "</span>..mymenu.submenu[<span class="string">"Choices Example"</span>].value)
 <span class="keyword">end</span></pre>
     </ul>
+
+</dd>
+    <dt>
+    <a name = "set"></a>
+    <strong>set (menu, entry, value)</strong>
+    </dt>
+    <dd>
+    Set the value of some existing ML menu entry
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">menu</span>
+         name of the parent menu ('Audio', 'Expo', 'Overlay', 'Shoot', 'Movie', etc)
+        </li>
+        <li><span class="parameter">entry</span>
+         name of the menu entry
+        </li>
+        <li><span class="parameter">value</span>
+         the value to set
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        whether or not the call was sucessful
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get"></a>
+    <strong>get (menu, entry)</strong>
+    </dt>
+    <dd>
+    Get the value of some existing ML menu entry
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">menu</span>
+         name of the parent menu ('Audio', 'Expo', 'Overlay', 'Shoot', 'Movie', etc)
+        </li>
+        <li><span class="parameter">entry</span>
+         name of the menu entry
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        the value of the menu entry
+    </ol>
+
+
+
 
 </dd>
 </dl>
@@ -425,7 +484,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">hidden</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">boolean</span></span>
 
         </li>
     </ul>
@@ -656,6 +715,26 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
 </dd>
     <dt>
+    <a name = "menu.run_in_separate_task"></a>
+    <strong>menu.run_in_separate_task</strong>
+    </dt>
+    <dd>
+    Whether or not the backend should run 'select' in it's own task
+
+
+    <ul>
+        <li><span class="parameter">run_in_separate_task</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "menu:select"></a>
     <strong>menu:select (delta)</strong>
     </dt>
@@ -701,6 +780,25 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
     </dt>
     <dd>
     Function called when menu is displayed.  Return a string to be displayed in the info area (in green).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "menu:rinfo"></a>
+    <strong>menu:rinfo ()</strong>
+    </dt>
+    <dd>
+    Function called when menu is displayed.  Return a string to be displayed on the right side of the menu item
 
 
 
@@ -794,7 +892,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-12 21:46:07 </i>
+<i style="float:right;">Last updated 2015-04-15 17:25:26 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
