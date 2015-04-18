@@ -47,8 +47,8 @@
   <li><a href="../modules/display.html">display</a></li>
   <li><a href="../modules/dryos.html">dryos</a></li>
   <li><a href="../modules/global.html">global</a></li>
-  <li><a href="../modules/interval.html">interval</a></li>
-  <li><strong>key</strong></li>
+  <li><strong>interval</strong></li>
+  <li><a href="../modules/key.html">key</a></li>
   <li><a href="../modules/lens.html">lens</a></li>
   <li><a href="../modules/lv.html">lv</a></li>
   <li><a href="../modules/menu.html">menu</a></li>
@@ -59,8 +59,8 @@
 
 <div id="content">
 
-<h1>Module <code>key</code></h1>
-<p>Key functions</p>
+<h1>Module <code>interval</code></h1>
+<p>Intervalometer operations and properties</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -73,19 +73,23 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#press">press (key)</a></td>
-	<td class="summary">Send a keypress.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#wait">wait ([key[, timeout]])</a></td>
-	<td class="summary">Wait for a key to be pressed.</td>
+	<td class="name" nowrap><a href="#stop">stop ()</a></td>
+	<td class="summary">Stop the intervalometer</td>
 	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#last">last</a></td>
-	<td class="summary">The last key that was pressed.</td>
+	<td class="name" nowrap><a href="#time">time</a></td>
+	<td class="summary">Get/Set the interval time (in seconds)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#count">count</a></td>
+	<td class="summary">Get the current number of pictures that have been taken</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#running">running</a></td>
+	<td class="summary">Get whether or not the intervalometer is currently running</td>
 	</tr>
 </table>
 
@@ -97,53 +101,14 @@
 
     <dl class="function">
     <dt>
-    <a name = "press"></a>
-    <strong>press (key)</strong>
+    <a name = "stop"></a>
+    <strong>stop ()</strong>
     </dt>
     <dd>
-    Send a keypress.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">key</span>
-            <span class="types"><span class="type">integer</span></span>
-         the key to press
-        </li>
-    </ul>
+    Stop the intervalometer
 
 
 
-
-
-</dd>
-    <dt>
-    <a name = "wait"></a>
-    <strong>wait ([key[, timeout]])</strong>
-    </dt>
-    <dd>
-    Wait for a key to be pressed.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">key</span>
-            <span class="types"><span class="type">integer</span></span>
-
-         (<em>optional</em>)
-        </li>
-        <li><span class="parameter">timeout</span>
-            <span class="types"><span class="type">integer</span></span>
-
-         (<em>optional</em>)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        the key that was pressed
-    </ol>
 
 
 
@@ -154,16 +119,56 @@
 
     <dl class="function">
     <dt>
-    <a name = "last"></a>
-    <strong>last</strong>
+    <a name = "time"></a>
+    <strong>time</strong>
     </dt>
     <dd>
-    The last key that was pressed.
+    Get/Set the interval time (in seconds)
 
 
     <ul>
-        <li><span class="parameter">last</span>
+        <li><span class="parameter">time</span>
             <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "count"></a>
+    <strong>count</strong>
+    </dt>
+    <dd>
+    Get the current number of pictures that have been taken
+
+
+    <ul>
+        <li><span class="parameter">count</span>
+            <span class="types"><span class="type">integer</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "running"></a>
+    <strong>running</strong>
+    </dt>
+    <dd>
+    Get whether or not the intervalometer is currently running
+
+
+    <ul>
+        <li><span class="parameter">running</span>
+            <span class="types"><span class="type">boolean</span></span>
 
         </li>
     </ul>
