@@ -41,7 +41,7 @@
   <li><a href="../modules/event.html">event</a></li>
   <li><a href="../modules/battery.html">battery</a></li>
   <li><a href="../modules/camera.html">camera</a></li>
-  <li><strong>console</strong></li>
+  <li><a href="../modules/console.html">console</a></li>
   <li><a href="../modules/constants.html">constants</a></li>
   <li><a href="../modules/display.html">display</a></li>
   <li><a href="../modules/dryos.html">dryos</a></li>
@@ -52,15 +52,15 @@
   <li><a href="../modules/lv.html">lv</a></li>
   <li><a href="../modules/menu.html">menu</a></li>
   <li><a href="../modules/movie.html">movie</a></li>
-  <li><a href="../modules/task.html">task</a></li>
+  <li><strong>task</strong></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>console</code></h1>
-<p>Functions for writing data to the console</p>
+<h1>Module <code>task</code></h1>
+<p>Task functions</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -73,16 +73,12 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#show">show ()</a></td>
-	<td class="summary">Show the console</td>
+	<td class="name" nowrap><a href="#create">create (f[, priority[, stack_size]])</a></td>
+	<td class="summary">Creates a new task.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#hide">hide ()</a></td>
-	<td class="summary">Hide the console</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#write">write (text)</a></td>
-	<td class="summary">Write some text to the console</td>
+	<td class="name" nowrap><a href="#yield">yield (duration)</a></td>
+	<td class="summary">Yields execution of this script to other tasks and event handlers</td>
 	</tr>
 </table>
 
@@ -94,46 +90,49 @@
 
     <dl class="function">
     <dt>
-    <a name = "show"></a>
-    <strong>show ()</strong>
+    <a name = "create"></a>
+    <strong>create (f[, priority[, stack_size]])</strong>
     </dt>
     <dd>
-    Show the console
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "hide"></a>
-    <strong>hide ()</strong>
-    </dt>
-    <dd>
-    Hide the console
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "write"></a>
-    <strong>write (text)</strong>
-    </dt>
-    <dd>
-    Write some text to the console
+    Creates a new task.  It will begin executing when you return or call task.yield()
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">text</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-         the text to write
+        <li><span class="parameter">f</span>
+            <span class="types"><span class="type">function</span></span>
+         the function to run
+        </li>
+        <li><span class="parameter">priority</span>
+            <span class="types"><span class="type">integer</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">stack_size</span>
+            <span class="types"><span class="type">integer</span></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "yield"></a>
+    <strong>yield (duration)</strong>
+    </dt>
+    <dd>
+    Yields execution of this script to other tasks and event handlers
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">duration</span>
+            <span class="types"><span class="type">integer</span></span>
+         how long to sleep for in ms
         </li>
     </ul>
 
