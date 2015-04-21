@@ -54,6 +54,12 @@
   <li><a href="../modules/movie.html">movie</a></li>
   <li><a href="../modules/task.html">task</a></li>
 </ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+</ul>
 
 </div>
 
@@ -61,7 +67,9 @@
 
 <h1>Module <code>display</code></h1>
 <p>Display and bmp drawing functions</p>
-<p></p>
+<p>
+
+</p>
     <h3>Info:</h3>
     <ul>
         <li><strong>Copyright</strong>: 2014</li>
@@ -159,10 +167,14 @@
         <li><span class="parameter">filename</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
          (<em>optional</em>)
         </li>
         <li><span class="parameter">mode</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
          (<em>optional</em>)
         </li>
@@ -200,13 +212,19 @@
         <li><span class="parameter">text</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
         </li>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">font</span>
@@ -215,12 +233,12 @@
          (<em>optional</em>)
         </li>
         <li><span class="parameter">fg</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          foreground <a href="../modules/constants.html#COLOR">constants.COLOR</a>
          (<em>optional</em>)
         </li>
         <li><span class="parameter">bg</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          background <a href="../modules/constants.html#COLOR">constants.COLOR</a>
          (<em>optional</em>)
         </li>
@@ -243,15 +261,19 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">color</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          <a href="../modules/constants.html#COLOR">constants.COLOR</a>
          (<em>optional</em>)
         </li>
@@ -278,23 +300,31 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x1</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">y1</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">x2</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">y2</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">color</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          <a href="../modules/constants.html#COLOR">constants.COLOR</a>
         </li>
     </ul>
@@ -315,27 +345,35 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">w</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">h</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
         <li><span class="parameter">stroke</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          outline <a href="../modules/constants.html#COLOR">constants.COLOR</a>
         </li>
         <li><span class="parameter">fill</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          fill <a href="../modules/constants.html#COLOR">constants.COLOR</a>
          (<em>optional</em>)
         </li>
@@ -357,23 +395,23 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          center x
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          center y
         </li>
         <li><span class="parameter">r</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          radius
         </li>
         <li><span class="parameter">stroke</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          outline <a href="../modules/constants.html#COLOR">constants.COLOR</a>
         </li>
         <li><span class="parameter">fill</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          fill <a href="../modules/constants.html#COLOR">constants.COLOR</a>
          (<em>optional</em>)
         </li>
@@ -391,7 +429,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-19 21:18:08 </i>
+<i style="float:right;">Last updated 2015-04-21 18:10:51 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

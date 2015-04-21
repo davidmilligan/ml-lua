@@ -56,6 +56,12 @@
   <li><a href="../modules/movie.html">movie</a></li>
   <li><a href="../modules/task.html">task</a></li>
 </ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+</ul>
 
 </div>
 
@@ -63,7 +69,9 @@
 
 <h1>Module <code>menu</code></h1>
 <p>Functions for interacting with the ML menu</p>
-<p></p>
+<p>
+
+</p>
     <h3>Info:</h3>
     <ul>
         <li><strong>Copyright</strong>: 2014</li>
@@ -230,6 +238,8 @@
         <li><span class="parameter">definition</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
 
+
+
         </li>
     </ul>
 
@@ -354,7 +364,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">visible</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -379,7 +391,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">value</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span> or <a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
 
         </li>
     </ul>
@@ -401,6 +415,8 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
         <li><span class="parameter">name</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
         </li>
     </ul>
 
@@ -420,6 +436,8 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
     <ul>
         <li><span class="parameter">help</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
 
         </li>
     </ul>
@@ -441,6 +459,8 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
         <li><span class="parameter">help2</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
         </li>
     </ul>
 
@@ -459,7 +479,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">advanced</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -480,7 +502,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">depends_on</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          <a href="../modules/constants.html#DEPENDS_ON">constants.DEPENDS_ON</a>
         </li>
     </ul>
@@ -500,7 +522,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">edit_mode</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -520,7 +544,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">hidden</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -540,7 +566,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">icon_type</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          <a href="../modules/constants.html#ICON_TYPE">constants.ICON_TYPE</a>
         </li>
     </ul>
@@ -560,7 +586,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">jhidden</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -580,7 +608,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">max</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -600,7 +630,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">min</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -620,7 +652,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">selected</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -640,7 +674,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">shidden</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -660,7 +696,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">starred</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -680,7 +718,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">submenu_height</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -700,7 +740,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">submenu_width</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -720,7 +762,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">unit</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          <a href="../modules/constants.html#UNIT">constants.UNIT</a>
         </li>
     </ul>
@@ -740,7 +782,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">works_best_in</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
          <a href="../modules/constants.html#DEPENDS_ON">constants.DEPENDS_ON</a>
         </li>
     </ul>
@@ -760,7 +802,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 
     <ul>
         <li><span class="parameter">run_in_separate_task</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -781,7 +825,9 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">delta</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -879,6 +925,8 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
         <li><span class="parameter">choices</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
 
+
+
         </li>
     </ul>
 
@@ -898,6 +946,8 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
     <ul>
         <li><span class="parameter">submenu</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+
 
         </li>
     </ul>
@@ -928,7 +978,7 @@ mymenu.submenu[<span class="string">"Run"</span>].<span class="global">select</s
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-19 21:18:08 </i>
+<i style="float:right;">Last updated 2015-04-21 18:10:51 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

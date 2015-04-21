@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><strong>recdelay.lua</strong></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>recdelay.lua</h2>
+<pre>
+<span class="comment">-- starts movie recording after a delay
+</span>
+recdelay_running = <span class="keyword">false</span>
+recdelay_stop = <span class="keyword">false</span>
+
+<span class="keyword">function</span> recdelay_main()
+    <span class="keyword">if</span> recdelay_running <span class="keyword">then</span> recdelay_stop = <span class="keyword">true</span> <span class="keyword">return</span> <span class="keyword">end</span>
+    <span class="keyword">if</span> camera.mode == MODE.MOVIE <span class="keyword">and</span> movie.recording == <span class="keyword">false</span> <span class="keyword">and</span> recdelay_menu.submenu[<span class="string">"Delay Amount"</span>].value &gt; <span class="number">0</span> <span class="keyword">then</span>
+        recdelay_running = <span class="keyword">true</span>
+        recdelay_stop = <span class="keyword">false</span>
+        <span class="keyword">local</span> i
+        <span class="keyword">for</span> i = recdelay_menu.submenu[<span class="string">"Delay Amount"</span>].value, <span class="number">0</span>, -<span class="number">1</span> <span class="keyword">do</span>
+            display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Start in %ds"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+            task.yield(<span class="number">1000</span>)
+            <span class="keyword">if</span> movie.recording <span class="keyword">or</span> recdelay_stop <span class="keyword">then</span>
+                display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Start Canceled"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+                recdelay_running = <span class="keyword">false</span>
+                recdelay_stop = <span class="keyword">false</span>
+                <span class="keyword">return</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        movie.start()
+        <span class="keyword">if</span> recdelay_menu.submenu[<span class="string">"Stop After"</span>].value &gt; <span class="number">0</span> <span class="keyword">then</span>
+            <span class="keyword">for</span> i = recdelay_menu.submenu[<span class="string">"Stop After"</span>].value, <span class="number">0</span>, -<span class="number">1</span> <span class="keyword">do</span>
+                display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Stop in %ds"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+                task.yield(<span class="number">1000</span>)
+                <span class="keyword">if</span> movie.recording == <span class="keyword">false</span> <span class="keyword">or</span> recdelay_stop <span class="keyword">then</span>
+                    display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Stop Canceled"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+                    recdelay_running = <span class="keyword">false</span>
+                    recdelay_stop = <span class="keyword">false</span>
+                    <span class="keyword">return</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> movie.recording <span class="keyword">then</span> movie.stop() <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        recdelay_running = <span class="keyword">false</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+recdelay_menu = menu.new
+{
+    parent = <span class="string">"Movie"</span>,
+    name = <span class="string">"Delayed Start"</span>,
+    help = <span class="string">"Start movie recording after a delay"</span>,
+    help2 = <span class="string">"Use SET to start or cancel the delay"</span>,
+    depends_on = DEPENDS_ON.MOVIE_MODE,
+    unit = UNIT.TIME,
+    submenu =
+    {
+        {
+            name = <span class="string">"Run"</span>,
+            help = <span class="string">"Start the delay count down now"</span>,
+            help2 = <span class="string">"You can also use SET to start or cancel the delay"</span>,
+            icon_type = ICON_TYPE.ACTION,
+            run_in_separate_task = <span class="keyword">true</span>,
+            update = <span class="keyword">function</span>(this) <span class="keyword">return</span> <span class="string">""</span> <span class="keyword">end</span>,
+            depends_on = DEPENDS_ON.MOVIE_MODE,
+            <span class="global">select</span> = recdelay_main
+        },
+        {
+            name = <span class="string">"Delay Amount"</span>,
+            min = <span class="number">0</span>,
+            max = <span class="number">600</span>,
+            unit = UNIT.TIME,
+            update = <span class="keyword">function</span>(this) recdelay_menu.value = this.value <span class="keyword">end</span>,
+        },
+        {
+            name = <span class="string">"Stop After"</span>,
+            min = <span class="number">0</span>,
+            max = <span class="number">1800</span>,
+            unit = UNIT.TIME
+        }
+    }
+}
+
+event.keypress = <span class="keyword">function</span>(key)
+    <span class="keyword">if</span> key == KEY.SET <span class="keyword">and</span> camera.mode == MODE.MOVIE <span class="keyword">and</span> menu.visible == <span class="keyword">false</span> <span class="keyword">then</span>
+        <span class="keyword">if</span> recdelay_running <span class="keyword">then</span>
+            recdelay_stop = <span class="keyword">true</span>
+        <span class="keyword">elseif</span> recdelay_menu.submenu[<span class="string">"Delay Amount"</span>].value &gt; <span class="number">0</span> <span class="keyword">then</span>
+            task.create(recdelay_main)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span></pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-21 18:10:51 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

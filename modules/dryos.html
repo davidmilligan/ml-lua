@@ -35,6 +35,7 @@
 <li><a href="#Functions">Functions</a></li>
 <li><a href="#Fields">Fields</a></li>
 <li><a href="#Class_date">Class date </a></li>
+<li><a href="#Class_directory">Class directory </a></li>
 <li><a href="#Class_card">Class card </a></li>
 </ul>
 
@@ -57,6 +58,12 @@
   <li><a href="../modules/movie.html">movie</a></li>
   <li><a href="../modules/task.html">task</a></li>
 </ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+</ul>
 
 </div>
 
@@ -64,7 +71,9 @@
 
 <h1>Module <code>dryos</code></h1>
 <p>DryOS functions</p>
-<p></p>
+<p>
+
+</p>
     <h3>Info:</h3>
     <ul>
         <li><strong>Copyright</strong>: 2014</li>
@@ -78,6 +87,13 @@
 	<tr>
 	<td class="name" nowrap><a href="#call">call (function[, arg])</a></td>
 	<td class="summary">Calls an eventproc (a function from the camera firmware which can be called by name).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#directory">directory (path)</a></td>
+	<td class="summary">Creates a <a href="../modules/dryos.html#directory">directory</a> object that is used to get information about a directory</p>
+
+<p> This function does not actually create a directory on the file system, it just creates
+ an object that represents a directory.</td>
 	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
@@ -150,6 +166,29 @@
 	<td class="summary">Daylight Savings</td>
 	</tr>
 </table>
+<h2><a href="#Class_directory">Class directory </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#directory:create">directory:create ()</a></td>
+	<td class="summary">Creates a directory</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#directory:children">directory:children ()</a></td>
+	<td class="summary">Get a table (of <a href="../modules/dryos.html#directory">directory</a> objects) containing this directory's child directories</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#directory:files">directory:files ()</a></td>
+	<td class="summary">Get a table (of <a href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a>s) that are the file names of this directory's files</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#directory.path">directory.path</a></td>
+	<td class="summary">Get the full path of the directory</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#directory.exists">directory.exists</a></td>
+	<td class="summary">Get whether or not the directory exists</td>
+	</tr>
+</table>
 <h2><a href="#Class_card">Class card </a></h2>
 <table class="function_list">
 	<tr>
@@ -211,6 +250,52 @@
 
 
 </dd>
+    <dt>
+    <a name = "directory"></a>
+    <strong>directory (path)</strong>
+    </dt>
+    <dd>
+    Creates a <a href="../modules/dryos.html#directory">directory</a> object that is used to get information about a directory</p>
+
+<p> This function does not actually create a directory on the file system, it just creates
+ an object that represents a directory.  To actually create the directory in the file system
+ call directory:create()
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">path</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../modules/dryos.html#directory">directory</a></span>
+
+
+
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">
+ <span class="keyword">local</span> mydir = dryos.directory(<span class="string">"mydir"</span>)
+ <span class="keyword">if</span> mydir.exists == <span class="keyword">false</span> <span class="keyword">then</span>
+    mydir:create()
+ <span class="keyword">end</span>
+ <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(mydir:files()) <span class="keyword">do</span>
+    <span class="global">print</span>(<span class="string">"filename: "</span>..v)
+ <span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
 </dl>
     <h2><a name="Fields"></a>Fields</h2>
 
@@ -225,7 +310,9 @@
 
     <ul>
         <li><span class="parameter">clock</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -245,7 +332,9 @@
 
     <ul>
         <li><span class="parameter">ms_clock</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -267,6 +356,8 @@
         <li><span class="parameter">prefix</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
         </li>
     </ul>
 
@@ -286,6 +377,8 @@
     <ul>
         <li><span class="parameter">dcim_dir</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
 
         </li>
     </ul>
@@ -307,6 +400,8 @@
         <li><span class="parameter">ml_card</span>
             <span class="types"><a class="type" href="../modules/dryos.html#card">card</a></span>
 
+
+
         </li>
     </ul>
 
@@ -327,6 +422,8 @@
         <li><span class="parameter">shooting_card</span>
             <span class="types"><a class="type" href="../modules/dryos.html#card">card</a></span>
 
+
+
         </li>
     </ul>
 
@@ -346,6 +443,8 @@
     <ul>
         <li><span class="parameter">date</span>
             <span class="types"><a class="type" href="../modules/dryos.html#date">date</a></span>
+
+
 
         </li>
     </ul>
@@ -370,7 +469,9 @@
 
     <ul>
         <li><span class="parameter">sec</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -390,7 +491,9 @@
 
     <ul>
         <li><span class="parameter">min</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -410,7 +513,9 @@
 
     <ul>
         <li><span class="parameter">hour</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -430,7 +535,9 @@
 
     <ul>
         <li><span class="parameter">day</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -450,7 +557,9 @@
 
     <ul>
         <li><span class="parameter">month</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -470,7 +579,9 @@
 
     <ul>
         <li><span class="parameter">year</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -490,7 +601,9 @@
 
     <ul>
         <li><span class="parameter">wday</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -510,7 +623,9 @@
 
     <ul>
         <li><span class="parameter">yday</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -530,7 +645,122 @@
 
     <ul>
         <li><span class="parameter">isdst</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">bool</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_directory"></a>Class directory </h2>
+
+        Represents a directory
+    <dl class="function">
+    <dt>
+    <a name = "directory:create"></a>
+    <strong>directory:create ()</strong>
+    </dt>
+    <dd>
+    Creates a directory
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        whether or not the directory was sucessfully created
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "directory:children"></a>
+    <strong>directory:children ()</strong>
+    </dt>
+    <dd>
+    Get a table (of <a href="../modules/dryos.html#directory">directory</a> objects) containing this directory's child directories
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../modules/dryos.html#directory">{directory,...}</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "directory:files"></a>
+    <strong>directory:files ()</strong>
+    </dt>
+    <dd>
+    Get a table (of <a href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a>s) that are the file names of this directory's files
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">{string,...}</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "directory.path"></a>
+    <strong>directory.path</strong>
+    </dt>
+    <dd>
+    Get the full path of the directory
+
+
+    <ul>
+        <li><span class="parameter">path</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "directory.exists"></a>
+    <strong>directory.exists</strong>
+    </dt>
+    <dd>
+    Get whether or not the directory exists
+
+
+    <ul>
+        <li><span class="parameter">exists</span>
+            <span class="types"><span class="type">bool</span></span>
+
+
 
         </li>
     </ul>
@@ -544,6 +774,7 @@
     <h2><a name="Class_card"></a>Class card </h2>
 
         Represents a card (storage media)
+ Inherits from <a href="../modules/dryos.html#directory">directory</a>
     <dl class="function">
     <dt>
     <a name = "card.cluster_size"></a>
@@ -555,7 +786,9 @@
 
     <ul>
         <li><span class="parameter">cluster_size</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -577,6 +810,8 @@
         <li><span class="parameter">drive_letter</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
         </li>
     </ul>
 
@@ -595,7 +830,9 @@
 
     <ul>
         <li><span class="parameter">file_number</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -615,7 +852,9 @@
 
     <ul>
         <li><span class="parameter">folder_number</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -635,7 +874,9 @@
 
     <ul>
         <li><span class="parameter">free_space</span>
-            <span class="types"><span class="type">integer</span></span>
+            <span class="types"><span class="type">int</span></span>
+
+
 
         </li>
     </ul>
@@ -657,6 +898,8 @@
         <li><span class="parameter">type</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
+
+
         </li>
     </ul>
 
@@ -672,7 +915,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-19 21:18:08 </i>
+<i style="float:right;">Last updated 2015-04-21 18:10:51 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
