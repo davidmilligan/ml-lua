@@ -34,6 +34,7 @@
 <ul>
 <li><a href="#Functions">Functions</a></li>
 <li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_lvinfo">Class lvinfo </a></li>
 </ul>
 
 
@@ -57,9 +58,11 @@
 </ul>
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/clock.lua.html">clock.lua</a></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
   <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/test.lua.html">test.lua</a></li>
 </ul>
 
 </div>
@@ -97,12 +100,75 @@
 	<td class="name" nowrap><a href="#stop">stop ()</a></td>
 	<td class="summary">Exit LiveView.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#info">info (definition)</a></td>
+	<td class="summary">Create a new LV info item</td>
+	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#enabled">enabled</a></td>
 	<td class="summary">Whether or not LV is running.</td>
+	</tr>
+</table>
+<h2><a href="#Class_lvinfo">Class lvinfo </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo:update">lvinfo:update ()</a></td>
+	<td class="summary">Function called before displaying; can override strings, dimensions and so on</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.name">lvinfo.name</a></td>
+	<td class="summary">Get/Set the item name (for menu)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.value">lvinfo.value</a></td>
+	<td class="summary">Get/Set the item value</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.background">lvinfo.background</a></td>
+	<td class="summary">Get/Set the item background color</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.foreground">lvinfo.foreground</a></td>
+	<td class="summary">Get/Set the item foreground color</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.custom_drawing">lvinfo.custom_drawing</a></td>
+	<td class="summary">Get/Set if the item uses custom drawing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.font">lvinfo.font</a></td>
+	<td class="summary">Get the item font assigned by the backend</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.height">lvinfo.height</a></td>
+	<td class="summary">Get/Set the item height</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.preferred_position">lvinfo.preferred_position</a></td>
+	<td class="summary">Get/Set the item's preferred position</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.priority">lvinfo.priority</a></td>
+	<td class="summary">Get/Set the item priority: if there's not enough space, the items with low priority will disappear</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.bar">lvinfo.bar</a></td>
+	<td class="summary">Get/Set the which bar the item appears on</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.width">lvinfo.width</a></td>
+	<td class="summary">Get/Set the item width; default: measured from value and fontspec; 0 = do not display this item at all</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.x">lvinfo.x</a></td>
+	<td class="summary">Get the item x position</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lvinfo.y">lvinfo.y</a></td>
+	<td class="summary">Get the item y position</td>
 	</tr>
 </table>
 
@@ -169,6 +235,35 @@
 
 
 </dd>
+    <dt>
+    <a name = "info"></a>
+    <strong>info (definition)</strong>
+    </dt>
+    <dd>
+    Create a new LV info item
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">definition</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+         A table with the inital values for properties of the item
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../modules/lv.html#lvinfo">lvinfo</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
 </dl>
     <h2><a name="Fields"></a>Fields</h2>
 
@@ -196,13 +291,312 @@
 
 </dd>
 </dl>
+    <h2><a name="Class_lvinfo"></a>Class lvinfo </h2>
+
+        Represents an info item that is displayed in the ML info bars in LiveView
+    <dl class="function">
+    <dt>
+    <a name = "lvinfo:update"></a>
+    <strong>lvinfo:update ()</strong>
+    </dt>
+    <dd>
+    Function called before displaying; can override strings, dimensions and so on
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.name"></a>
+    <strong>lvinfo.name</strong>
+    </dt>
+    <dd>
+    Get/Set the item name (for menu)
+
+
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.value"></a>
+    <strong>lvinfo.value</strong>
+    </dt>
+    <dd>
+    Get/Set the item value
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.background"></a>
+    <strong>lvinfo.background</strong>
+    </dt>
+    <dd>
+    Get/Set the item background color
+
+
+    <ul>
+        <li><span class="parameter">background</span>
+            <span class="types"><span class="type">int</span></span>
+         see <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.foreground"></a>
+    <strong>lvinfo.foreground</strong>
+    </dt>
+    <dd>
+    Get/Set the item foreground color
+
+
+    <ul>
+        <li><span class="parameter">foreground</span>
+            <span class="types"><span class="type">int</span></span>
+         see <a href="../modules/constants.html#COLOR">constants.COLOR</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.custom_drawing"></a>
+    <strong>lvinfo.custom_drawing</strong>
+    </dt>
+    <dd>
+    Get/Set if the item uses custom drawing
+
+
+    <ul>
+        <li><span class="parameter">custom_drawing</span>
+            <span class="types"><span class="type">bool</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.font"></a>
+    <strong>lvinfo.font</strong>
+    </dt>
+    <dd>
+    Get the item font assigned by the backend
+
+
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         see <a href="../modules/constants.html#FONT">constants.FONT</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.height"></a>
+    <strong>lvinfo.height</strong>
+    </dt>
+    <dd>
+    Get/Set the item height
+
+
+    <ul>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.preferred_position"></a>
+    <strong>lvinfo.preferred_position</strong>
+    </dt>
+    <dd>
+    Get/Set the item's preferred position
+
+
+    <ul>
+        <li><span class="parameter">preferred_position</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.priority"></a>
+    <strong>lvinfo.priority</strong>
+    </dt>
+    <dd>
+    Get/Set the item priority: if there's not enough space, the items with low priority will disappear
+
+
+    <ul>
+        <li><span class="parameter">priority</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.bar"></a>
+    <strong>lvinfo.bar</strong>
+    </dt>
+    <dd>
+    Get/Set the which bar the item appears on
+
+
+    <ul>
+        <li><span class="parameter">bar</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.width"></a>
+    <strong>lvinfo.width</strong>
+    </dt>
+    <dd>
+    Get/Set the item width; default: measured from value and fontspec; 0 = do not display this item at all
+
+
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.x"></a>
+    <strong>lvinfo.x</strong>
+    </dt>
+    <dd>
+    Get the item x position
+
+
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lvinfo.y"></a>
+    <strong>lvinfo.y</strong>
+    </dt>
+    <dd>
+    Get the item y position
+
+
+    <ul>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-21 18:10:51 </i>
+<i style="float:right;">Last updated 2015-04-22 16:59:31 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -34,9 +34,11 @@
 
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/clock.lua.html">clock.lua</a></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
   <li><strong>recdelay.lua</strong></li>
   <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/test.lua.html">test.lua</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
@@ -67,6 +69,7 @@
 </span>
 recdelay_running = <span class="keyword">false</span>
 recdelay_stop = <span class="keyword">false</span>
+recdelay_countdown = <span class="number">0</span>
 
 <span class="keyword">function</span> recdelay_main()
     <span class="keyword">if</span> recdelay_running <span class="keyword">then</span> recdelay_stop = <span class="keyword">true</span> <span class="keyword">return</span> <span class="keyword">end</span>
@@ -75,7 +78,11 @@ recdelay_stop = <span class="keyword">false</span>
         recdelay_stop = <span class="keyword">false</span>
         <span class="keyword">local</span> i
         <span class="keyword">for</span> i = recdelay_menu.submenu[<span class="string">"Delay Amount"</span>].value, <span class="number">0</span>, -<span class="number">1</span> <span class="keyword">do</span>
-            display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Start in %ds"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+            recdelay_countdown = i
+            <span class="keyword">if</span> menu.visible <span class="keyword">then</span>
+                display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Start in %ds"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+                <span class="comment">-- else we'll just let lvinfo item take care of notification
+</span>            <span class="keyword">end</span>
             task.yield(<span class="number">1000</span>)
             <span class="keyword">if</span> movie.recording <span class="keyword">or</span> recdelay_stop <span class="keyword">then</span>
                 display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Start Canceled"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
@@ -87,7 +94,7 @@ recdelay_stop = <span class="keyword">false</span>
         movie.start()
         <span class="keyword">if</span> recdelay_menu.submenu[<span class="string">"Stop After"</span>].value &gt; <span class="number">0</span> <span class="keyword">then</span>
             <span class="keyword">for</span> i = recdelay_menu.submenu[<span class="string">"Stop After"</span>].value, <span class="number">0</span>, -<span class="number">1</span> <span class="keyword">do</span>
-                display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Stop in %ds"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
+                recdelay_countdown = -i
                 task.yield(<span class="number">1000</span>)
                 <span class="keyword">if</span> movie.recording == <span class="keyword">false</span> <span class="keyword">or</span> recdelay_stop <span class="keyword">then</span>
                     display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"Movie Stop Canceled"</span>, i), <span class="number">20</span>, <span class="number">20</span>)
@@ -146,14 +153,34 @@ event.keypress = <span class="keyword">function</span>(key)
             task.create(recdelay_main)
         <span class="keyword">end</span>
     <span class="keyword">end</span>
-<span class="keyword">end</span></pre>
+<span class="keyword">end</span>
+
+lv.info
+{
+    name = <span class="string">"Delayed Start Info"</span>,
+    value = <span class="string">""</span>,
+    priority = <span class="number">100</span>,
+    update = <span class="keyword">function</span>(this)
+        <span class="keyword">if</span> recdelay_running <span class="keyword">then</span>
+            this.background = COLOR.RED
+            this.foreground = COLOR.WHITE
+            <span class="keyword">if</span> recdelay_countdown &gt; <span class="number">0</span> <span class="keyword">then</span>
+                this.value = <span class="global">string</span>.format(<span class="string">"Start in %ds"</span>,recdelay_countdown)
+            <span class="keyword">else</span>
+                this.value = <span class="global">string</span>.format(<span class="string">"Stop in %ds"</span>,-recdelay_countdown)
+            <span class="keyword">end</span>
+        <span class="keyword">else</span>
+            this.value = <span class="string">""</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+}</pre>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-21 18:10:51 </i>
+<i style="float:right;">Last updated 2015-04-22 16:59:31 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -34,10 +34,10 @@
 
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
-  <li><a href="../examples/clock.lua.html">clock.lua</a></li>
+  <li><strong>clock.lua</strong></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
-  <li><strong>scrnshot.lua</strong></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><a href="../examples/test.lua.html">test.lua</a></li>
 </ul>
 <h2>Modules</h2>
@@ -63,21 +63,18 @@
 
 <div id="content">
 
-    <h2>scrnshot.lua</h2>
+    <h2>clock.lua</h2>
 <pre>
-<span class="comment">-- take a screenshot every time a key is pressed
+<span class="comment">-- draws a clock
 </span>
-scrnshot_menu = menu.new
-{
-    parent = <span class="string">"Debug"</span>,
-    name = <span class="string">"Screenshot on Keypress"</span>,
-    choices = { <span class="string">"Off"</span>, <span class="string">"On"</span> },
-    value = <span class="string">"Off"</span>,
-}
-
-<span class="keyword">function</span> event.keypress(key)
-    <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">and</span> scrnshot_menu.value == <span class="string">"On"</span> <span class="keyword">then</span>
-        display.screenshot()
+<span class="keyword">function</span> event.seconds_clock()
+    <span class="keyword">if</span> menu.visible == <span class="keyword">false</span> <span class="keyword">and</span> lv.enabled == <span class="keyword">false</span> <span class="keyword">then</span>
+        <span class="keyword">local</span> current_time = dryos.date
+        <span class="keyword">local</span> ampm = <span class="string">"AM"</span>
+        <span class="keyword">local</span> bg = display.pixel(<span class="number">339</span>,<span class="number">410</span>)
+        <span class="keyword">if</span> current_time.hour &gt; <span class="number">11</span> <span class="keyword">then</span> ampm = <span class="string">"PM"</span> <span class="keyword">end</span>
+        <span class="keyword">local</span> time_str = <span class="global">string</span>.format(<span class="string">"%d:%02d:%02d %s"</span>,(current_time.hour + <span class="number">11</span>) % <span class="number">12</span> + <span class="number">1</span>,current_time.min,current_time.sec,ampm)
+        display.<span class="global">print</span>(time_str,<span class="number">340</span>,<span class="number">410</span>,FONT.LARGE,COLOR.WHITE,bg)
     <span class="keyword">end</span>
 <span class="keyword">end</span></pre>
 
