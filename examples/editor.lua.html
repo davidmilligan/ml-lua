@@ -78,21 +78,71 @@
     <span class="keyword">return</span> val - <span class="number">1</span>
 <span class="keyword">end</span>
 
+keyhandler = {}
+keyhandler.halfshutter = <span class="keyword">false</span>
+keyhandler.runnning = <span class="keyword">false</span>
+
+<span class="comment">--starts the keyhandler if not already running, returns whether or not it was started
+</span><span class="keyword">function</span> keyhandler:start()
+    <span class="keyword">if</span> keyhandler.running <span class="keyword">then</span> self:reset() <span class="keyword">return</span> <span class="keyword">false</span> <span class="keyword">end</span>
+    <span class="comment">--save any previous keypress handler so we can restore it when finished
+</span>    self.old_keypress = event.keypress
+    self.halfshutter = <span class="keyword">false</span>
+    self.keys = {}
+    self.key_count = <span class="number">0</span>
+    self.running = <span class="keyword">true</span>
+    event.keypress = <span class="keyword">function</span>(key)
+        <span class="keyword">if</span> key == KEY.HALFSHUTTER <span class="keyword">then</span> keyhandler.halfshutter = <span class="keyword">true</span> <span class="keyword">end</span>
+        <span class="keyword">if</span> key == KEY.UNPRESS_HALFSHUTTER <span class="keyword">then</span> keyhandler.halfshutter = <span class="keyword">false</span> <span class="keyword">end</span>
+        <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">then</span>
+            keyhandler.key_count = keyhandler.key_count + <span class="number">1</span>
+            keyhandler.keys[keyhandler.key_count] = key
+        <span class="keyword">end</span>
+        <span class="keyword">return</span> <span class="keyword">false</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="keyword">true</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- returns a table of all the keys that have been pressed since the last time getkeys was called
+</span><span class="keyword">function</span> keyhandler:getkeys()
+    <span class="keyword">if</span> self.key_count == <span class="number">0</span> <span class="keyword">then</span>
+        <span class="keyword">return</span> <span class="keyword">nil</span>
+    <span class="keyword">else</span>
+        <span class="keyword">local</span> result = self.keys
+        self:reset()
+        <span class="keyword">return</span> result
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> keyhandler:reset()
+    self.key_count = <span class="number">0</span>
+    self.keys = {}
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> keyhandler:stop()
+    self:reset()
+    self.running = <span class="keyword">false</span>
+    event.keypress = self.old_keypress
+<span class="keyword">end</span>
+
+<span class="comment">--blocks until any key is pressed
+</span><span class="keyword">function</span> keyhandler:anykey()
+    <span class="keyword">local</span> started = self:start()
+    <span class="comment">--ignore any immediate keys
+</span>    task.yield(<span class="number">100</span>)
+    self:getkeys()
+    <span class="keyword">while</span> self:getkeys() == <span class="keyword">nil</span> <span class="keyword">do</span>
+        task.yield(<span class="number">100</span>)
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> started <span class="keyword">then</span> self:stop() <span class="keyword">end</span>
+<span class="keyword">end</span>
+
 filedialog = {}
 filedialog.font = FONT.MED_LARGE
 filedialog.top = <span class="number">60</span>
 filedialog.height = <span class="number">380</span>
 filedialog.left = <span class="number">100</span>
 filedialog.width = <span class="number">520</span>
-
-event.keypress = <span class="keyword">function</span>(key)
-    <span class="keyword">if</span> editor.running <span class="keyword">then</span>
-        <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">and</span> lastkey == <span class="number">0</span> <span class="keyword">then</span>
-            lastkey = key
-        <span class="keyword">end</span>
-        <span class="keyword">return</span> <span class="keyword">false</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
 
 <span class="keyword">function</span> filedialog:updatefiles()
     <span class="keyword">local</span> status,items = <span class="global">xpcall</span>(self.current.children,<span class="global">debug</span>.traceback,self.current)
@@ -107,55 +157,72 @@ event.keypress = <span class="keyword">function</span>(key)
     <span class="keyword">if</span> status <span class="keyword">then</span> self.files = items <span class="keyword">else</span> self.children = <span class="keyword">nil</span> <span class="keyword">end</span>
 <span class="keyword">end</span>
 
+<span class="keyword">function</span> filedialog:handle_key(k)
+    <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"cancel"</span>
+    <span class="keyword">elseif</span> k == KEY.UP <span class="keyword">or</span> k == KEY.WHEEL_UP <span class="keyword">or</span> k == KEY.WHEEL_LEFT <span class="keyword">then</span>
+        <span class="keyword">if</span> self.selected &gt; <span class="number">0</span> <span class="keyword">then</span>
+            self.selected = self.selected - <span class="number">1</span>
+            <span class="keyword">if</span> self.selected &lt;= self.scroll <span class="keyword">then</span>
+                self.scroll = self.selected
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">elseif</span> k == KEY.DOWN <span class="keyword">or</span> k == KEY.WHEEL_DOWN <span class="keyword">or</span> k == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+        <span class="keyword">if</span> self.selected &lt; #(self.files) <span class="keyword">then</span>
+            self.selected = self.selected + <span class="number">1</span>
+            <span class="keyword">if</span> self.selected &gt;= self.scroll + (self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">1</span>  <span class="keyword">then</span>
+                self.scroll = self.scroll + <span class="number">1</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
+        <span class="keyword">if</span> self.selected == <span class="number">0</span> <span class="keyword">then</span>
+            self.current = dryos.directory(<span class="global">string</span>.gsub(self.current.path,<span class="string">"/.+$"</span>,<span class="string">""</span>))
+            self.selected = <span class="number">1</span>
+            self.scroll = <span class="number">0</span>
+            self:updatefiles()
+        <span class="keyword">elseif</span> self.is_dir_selected <span class="keyword">and</span> self.selected_value ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            self.current = self.selected_value
+            self.selected = <span class="number">1</span>
+            self.scroll = <span class="number">0</span>
+            self:updatefiles()
+        <span class="keyword">else</span>
+            <span class="keyword">return</span> self.selected_value
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
 <span class="keyword">function</span> filedialog:open()
     self.current = dryos.directory(<span class="string">"ML/SCRIPTS"</span>)
     self.selected = <span class="number">1</span>
     self.scroll = <span class="number">0</span>
     self:updatefiles()
     self:draw()
+    <span class="keyword">local</span> started = keyhandler:start()
     <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-        <span class="keyword">local</span> k = lastkey
-        lastkey = <span class="number">0</span>
-        <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span> <span class="comment">-- cancel
-</span>        <span class="keyword">elseif</span> k == KEY.UP <span class="keyword">then</span>
-            <span class="keyword">if</span> self.selected &gt; <span class="number">0</span> <span class="keyword">then</span>
-                self.selected = self.selected - <span class="number">1</span>
-                <span class="keyword">if</span> self.selected &lt;= self.scroll <span class="keyword">then</span>
-                    self.scroll = self.selected
+        <span class="keyword">local</span> keys = keyhandler:getkeys()
+        <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
+                <span class="keyword">local</span> result = self:handle_key(v)
+                <span class="keyword">if</span> result == <span class="string">"cancel"</span> <span class="keyword">then</span>
+                    <span class="keyword">if</span> started <span class="keyword">then</span> keyhandler:stop() <span class="keyword">end</span>
+                    <span class="keyword">return</span> <span class="keyword">nil</span>
+                <span class="keyword">elseif</span> result ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                    <span class="keyword">if</span> started <span class="keyword">then</span> keyhandler:stop() <span class="keyword">end</span>
+                    <span class="keyword">return</span> result
                 <span class="keyword">end</span>
-                self:draw()
             <span class="keyword">end</span>
-        <span class="keyword">elseif</span> k == KEY.DOWN <span class="keyword">then</span>
-            <span class="keyword">if</span> self.selected &lt; #(self.files) <span class="keyword">then</span>
-                self.selected = self.selected + <span class="number">1</span>
-                <span class="keyword">if</span> self.selected &gt;= self.scroll + (self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">1</span>  <span class="keyword">then</span>
-                    self.scroll = self.scroll + <span class="number">1</span>
-                <span class="keyword">end</span>
-                self:draw()
-            <span class="keyword">end</span>
-        <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
-            <span class="keyword">if</span> self.selected == <span class="number">0</span> <span class="keyword">then</span>
-                self.current = dryos.directory(<span class="global">string</span>.gsub(self.current.path,<span class="string">"/.+$"</span>,<span class="string">""</span>))
-                self.selected = <span class="number">1</span>
-                self.scroll = <span class="number">0</span>
-                self:updatefiles()
-                self:draw()
-            <span class="keyword">elseif</span> self.is_dir_selected <span class="keyword">and</span> self.selected_value ~= <span class="keyword">nil</span> <span class="keyword">then</span>
-                self.current = self.selected_value
-                self.selected = <span class="number">1</span>
-                self.scroll = <span class="number">0</span>
-                self:updatefiles()
-                self:draw()
-            <span class="keyword">else</span>
-                <span class="keyword">return</span> self.selected_value
-            <span class="keyword">end</span>
-        <span class="keyword">else</span>
-            task.yield(<span class="number">100</span>)
+            self:draw()
         <span class="keyword">end</span>
+        task.yield(<span class="number">100</span>)
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> filedialog:draw()
+    display.draw_start()
+    self:draw_main()
+    display.draw_end()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> filedialog:draw_main()
     display.rect(self.left, self.top, self.width, self.height, COLOR.WHITE, COLOR.BLACK)
     display.rect(self.left, self.top, self.width, <span class="number">20</span> + FONT.LARGE.height, COLOR.WHITE, COLOR.gray(<span class="number">5</span>))
     display.<span class="global">print</span>(<span class="string">"Select File"</span>, self.left + <span class="number">10</span>, self.top + <span class="number">10</span>, FONT.LARGE,COLOR.WHITE,COLOR.gray(<span class="number">5</span>))
@@ -218,8 +285,19 @@ editor =
     min_char = <span class="number">32</span>,
     max_char = <span class="number">127</span>,
     show_line_numbers = <span class="keyword">true</span>,
-    menu = {<span class="string">"New"</span>,<span class="string">"Open"</span>,<span class="string">"Save"</span>,<span class="string">"Save As"</span>,<span class="string">"Exit"</span>},
+    menu =
+    {
+        {
+            name = <span class="string">"File"</span>,
+            items = {<span class="string">"New"</span>,<span class="string">"Open"</span>,<span class="string">"Save"</span>,<span class="string">"Save As"</span>,<span class="string">"Exit"</span>},
+        },
+        {
+            name = <span class="string">"Edit"</span>,
+            items = {<span class="string">"Cut"</span>,<span class="string">"Copy"</span>,<span class="string">"Paste"</span>,<span class="string">"Select All"</span>},
+        }
+    },
     menu_index = <span class="number">1</span>,
+    submenu_index = <span class="number">1</span>,
     font = FONT.MONO_20
 }
 
@@ -248,13 +326,24 @@ editor.mlmenu = menu.new
             self.menu_open = <span class="keyword">false</span>
         <span class="keyword">end</span>
         self:draw()
+        keyhandler:start()
         <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-            <span class="keyword">local</span> k = lastkey
-            lastkey = <span class="number">0</span>
-            <span class="keyword">if</span> self.menu_open <span class="keyword">then</span>
-                <span class="keyword">if</span> self:handle_menu_key(k) == <span class="keyword">false</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-            <span class="keyword">else</span>
-                self:handle_key(k)
+            <span class="keyword">local</span> keys = keyhandler:getkeys()
+            <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                <span class="keyword">local</span> exit = <span class="keyword">false</span>
+                <span class="keyword">local</span> redraw = <span class="keyword">false</span>
+                <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
+                    <span class="keyword">if</span> self.menu_open <span class="keyword">then</span>
+                        <span class="keyword">if</span> self:handle_menu_key(v) == <span class="keyword">false</span> <span class="keyword">then</span>
+                            exit = <span class="keyword">true</span>
+                            <span class="keyword">break</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">else</span>
+                        self:handle_key(v)
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+                <span class="keyword">if</span> exit <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+                self:draw()
             <span class="keyword">end</span>
             task.yield(<span class="number">100</span>)
         <span class="keyword">end</span>
@@ -262,6 +351,7 @@ editor.mlmenu = menu.new
     <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
         handle_error(error)
     <span class="keyword">end</span>
+    keyhandler:stop()
     menu.block(<span class="keyword">false</span>)
     self.running = <span class="keyword">false</span>
 <span class="keyword">end</span>
@@ -269,31 +359,24 @@ editor.mlmenu = menu.new
 <span class="keyword">function</span> editor:handle_key(k)
     <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span>
         self.menu_open = <span class="keyword">true</span>
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.WHEEL_DOWN <span class="keyword">then</span>
         self.scroll = inc(self.scroll,<span class="number">1</span>,#(self.lines))
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.WHEEL_UP <span class="keyword">then</span>
         self.scroll = dec(self.scroll,<span class="number">1</span>,#(self.lines))
-        self:draw()
     <span class="keyword">elseif</span> k ==  KEY.DOWN <span class="keyword">then</span>
         self.line = inc(self.line,<span class="number">1</span>,#(self.lines))
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k ==  KEY.UP <span class="keyword">then</span>
         self.line = dec(self.line,<span class="number">1</span>,#(self.lines))
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k ==  KEY.RIGHT <span class="keyword">then</span>
         self.col = inc(self.col,<span class="number">1</span>,#(self.lines[self.line]) + <span class="number">1</span>)
         <span class="keyword">if</span> self.col == <span class="number">1</span> <span class="keyword">then</span> self.line = inc(self.line,<span class="number">1</span>,#(self.lines)) <span class="keyword">end</span>
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k ==  KEY.LEFT <span class="keyword">then</span>
         <span class="keyword">if</span> self.col == <span class="number">1</span> <span class="keyword">then</span> self.line = dec(self.line,<span class="number">1</span>,#(self.lines)) <span class="keyword">end</span>
         self.col = dec(self.col,<span class="number">1</span>,#(self.lines[self.line]) + <span class="number">1</span>)
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.WHEEL_LEFT <span class="keyword">then</span>
         <span class="comment">--mod char
 </span>        self:update_title(<span class="keyword">true</span>)
@@ -306,7 +389,6 @@ editor.mlmenu = menu.new
             self.lines[self.line] = l..<span class="global">string</span>.char(self.min_char)
         <span class="keyword">end</span>
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.WHEEL_RIGHT <span class="keyword">then</span>
         <span class="comment">--mod char
 </span>        self:update_title(<span class="keyword">true</span>)
@@ -319,21 +401,23 @@ editor.mlmenu = menu.new
             self.lines[self.line] = l..<span class="global">string</span>.char(self.max_char)
         <span class="keyword">end</span>
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.TRASH <span class="keyword">then</span>
         <span class="comment">--delete
 </span>        self:update_title(<span class="keyword">true</span>)
-        <span class="keyword">local</span> l = self.lines[self.line]
-        <span class="keyword">if</span> #l == <span class="number">0</span> <span class="keyword">then</span>
-            <span class="global">table</span>.remove(self.lines,self.line)
-        <span class="keyword">elseif</span> self.col &gt; #l <span class="keyword">and</span> self.line &lt; #(self.lines) <span class="keyword">then</span>
-            self.lines[self.line] = l..self.lines[self.line + <span class="number">1</span>]
-            <span class="global">table</span>.remove(self.lines,self.line + <span class="number">1</span>)
+        <span class="keyword">if</span> self.selection_start ~= <span class="keyword">nil</span> <span class="keyword">and</span> self.selection_end ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            self:delete_selection()
         <span class="keyword">else</span>
-            self.lines[self.line] = <span class="global">string</span>.format(<span class="string">"%s%s"</span>,l:sub(<span class="number">1</span>,self.col - <span class="number">1</span>),l:sub(self.col + <span class="number">1</span>))
+            <span class="keyword">local</span> l = self.lines[self.line]
+            <span class="keyword">if</span> #l == <span class="number">0</span> <span class="keyword">then</span>
+                <span class="global">table</span>.remove(self.lines,self.line)
+            <span class="keyword">elseif</span> self.col &gt; #l <span class="keyword">and</span> self.line &lt; #(self.lines) <span class="keyword">then</span>
+                self.lines[self.line] = l..self.lines[self.line + <span class="number">1</span>]
+                <span class="global">table</span>.remove(self.lines,self.line + <span class="number">1</span>)
+            <span class="keyword">else</span>
+                self.lines[self.line] = <span class="global">string</span>.format(<span class="string">"%s%s"</span>,l:sub(<span class="number">1</span>,self.col - <span class="number">1</span>),l:sub(self.col + <span class="number">1</span>))
+            <span class="keyword">end</span>
         <span class="keyword">end</span>
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
         <span class="comment">--insert char
 </span>        self:update_title(<span class="keyword">true</span>)
@@ -341,7 +425,6 @@ editor.mlmenu = menu.new
         self.lines[self.line] = <span class="global">string</span>.format(<span class="string">"%s %s"</span>,l:sub(<span class="number">1</span>,self.col),l:sub(self.col + <span class="number">1</span>))
         self.col = self.col + <span class="number">1</span>
         self:scroll_into_view()
-        self:draw()
     <span class="keyword">elseif</span> k == KEY.PLAY <span class="keyword">then</span>
         <span class="comment">--insert line return
 </span>        self:update_title(<span class="keyword">true</span>)
@@ -351,7 +434,20 @@ editor.mlmenu = menu.new
         self.line = self.line + <span class="number">1</span>
         self.col = <span class="number">1</span>
         self:scroll_into_view()
-        self:draw()
+    <span class="keyword">elseif</span> k == KEY.INFO <span class="keyword">then</span>
+        <span class="keyword">if</span> self.selection_start == <span class="keyword">nil</span> <span class="keyword">or</span> self.selection_end ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            self.selection_start = {self.line,self.col}
+            self.selection_end = <span class="keyword">nil</span>
+            <span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"sel start %d,%d"</span>, self.line, self.col))
+        <span class="keyword">else</span>
+            <span class="keyword">if</span> self.selection_start[<span class="number">1</span>] &gt; self.line <span class="keyword">or</span> (self.selection_start[<span class="number">1</span>] == self.line <span class="keyword">and</span> self.selection_start[<span class="number">2</span>] &gt; self.col) <span class="keyword">then</span>
+                self.selection_end = self.selection_start
+                self.selection_start = {self.line,self.col}
+            <span class="keyword">else</span>
+                self.selection_end = {self.line,self.col}
+            <span class="keyword">end</span>
+            <span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"sel end %d,%d"</span>, self.line, self.col))
+        <span class="keyword">end</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
@@ -376,20 +472,29 @@ editor.mlmenu = menu.new
 <span class="keyword">function</span> editor:handle_menu_key(k)
     <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span>
         self.menu_open = <span class="keyword">false</span>
-        self:draw()
-    <span class="keyword">elseif</span> k == KEY.DOWN <span class="keyword">or</span> k == KEY.WHEEL_LEFT <span class="keyword">then</span>
-        self.menu_index = inc(self.menu_index, <span class="number">1</span>, #(self.menu))
-        self:draw()
-    <span class="keyword">elseif</span> k == KEY.UP <span class="keyword">or</span> k == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+    <span class="keyword">elseif</span> k == KEY.LEFT <span class="keyword">or</span> k == KEY.WHEEL_LEFT <span class="keyword">then</span>
         self.menu_index = dec(self.menu_index, <span class="number">1</span>, #(self.menu))
-        self:draw()
-    <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
+        self.submenu_index = <span class="number">1</span>
+    <span class="keyword">elseif</span> k == KEY.RIGHT <span class="keyword">or</span> k == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+        self.menu_index = inc(self.menu_index, <span class="number">1</span>, #(self.menu))
+        self.submenu_index = <span class="number">1</span>
+    <span class="keyword">elseif</span> k == KEY.DOWN <span class="keyword">or</span> k == KEY.WHEEL_DOWN <span class="keyword">then</span>
         <span class="keyword">local</span> m = self.menu[self.menu_index]
+        self.submenu_index = inc(self.submenu_index,<span class="number">1</span>,#(m.items))
+    <span class="keyword">elseif</span> k == KEY.UP <span class="keyword">or</span> k == KEY.WHEEL_UP <span class="keyword">then</span>
+        <span class="keyword">local</span> m = self.menu[self.menu_index]
+        self.submenu_index = dec(self.submenu_index,<span class="number">1</span>,#(m.items))
+    <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
+        <span class="keyword">local</span> m = self.menu[self.menu_index].items[self.submenu_index]
         <span class="keyword">if</span> m == <span class="string">"Exit"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">false</span>
         <span class="keyword">elseif</span> m == <span class="string">"Save"</span> <span class="keyword">then</span> self:save(self.filename)
         <span class="keyword">elseif</span> m == <span class="string">"Save As"</span> <span class="keyword">then</span> self:save()
         <span class="keyword">elseif</span> m == <span class="string">"New"</span> <span class="keyword">then</span> self:new()
-        <span class="keyword">elseif</span> m == <span class="string">"Open"</span> <span class="keyword">then</span> self:open() <span class="keyword">end</span>
+        <span class="keyword">elseif</span> m == <span class="string">"Open"</span> <span class="keyword">then</span> self:open()
+        <span class="keyword">elseif</span> m == <span class="string">"Cut"</span> <span class="keyword">then</span> self:copy() self:delete_selection()
+        <span class="keyword">elseif</span> m == <span class="string">"Copy"</span> <span class="keyword">then</span> self:copy()
+        <span class="keyword">elseif</span> m == <span class="string">"Paste"</span> <span class="keyword">then</span> self:paste()
+        <span class="keyword">end</span>
     <span class="keyword">end</span>
     <span class="keyword">return</span> <span class="keyword">true</span>
 <span class="keyword">end</span>
@@ -409,7 +514,6 @@ editor.mlmenu = menu.new
         self.scroll = <span class="number">1</span>
     <span class="keyword">end</span>
     self.menu_open = <span class="keyword">false</span>
-    self:draw()
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:new()
@@ -420,7 +524,6 @@ editor.mlmenu = menu.new
     self.line = <span class="number">1</span>
     self.col = <span class="number">1</span>
     self.scroll = <span class="number">1</span>
-    self:draw()
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:save(filename)
@@ -436,7 +539,75 @@ editor.mlmenu = menu.new
     <span class="keyword">end</span>
     self:update_title(<span class="keyword">false</span>, <span class="keyword">true</span>)
     self.menu_open = <span class="keyword">false</span>
-    self:draw()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:copy()
+    <span class="keyword">if</span> self.selection_start ~= <span class="keyword">nil</span> <span class="keyword">and</span> self.selection_end ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        self.clipboard = {}
+        <span class="keyword">if</span> self.selection_start[<span class="number">1</span>] == self.selection_end[<span class="number">1</span>] <span class="keyword">then</span>
+            <span class="comment">--single line selection
+</span>            self.clipboard[<span class="number">1</span>] = self.lines[self.selection_start[<span class="number">1</span>]]:sub(self.selection_start[<span class="number">2</span>], self.selection_end[<span class="number">2</span>])
+        <span class="keyword">else</span>
+            <span class="comment">--multiline selection
+</span>            self.clipboard[<span class="number">1</span>] = self.lines[self.selection_start[<span class="number">1</span>]]:sub(self.selection_start[<span class="number">2</span>])
+            <span class="keyword">for</span> i = self.selection_start[<span class="number">1</span>] + <span class="number">1</span>,self.selection_end[<span class="number">1</span>] - <span class="number">1</span>,<span class="number">1</span> <span class="keyword">do</span>
+                <span class="global">table</span>.insert(self.clipboard,self.lines[i])
+            <span class="keyword">end</span>
+            <span class="global">table</span>.insert(self.clipboard,self.lines[self.selection_end[<span class="number">1</span>]]:sub(<span class="number">1</span>,self.selection_end[<span class="number">2</span>]))
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        editor:message(<span class="string">"Error: Nothing Selected!"</span>)
+    <span class="keyword">end</span>
+    self.menu_open = <span class="keyword">false</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:paste()
+    <span class="keyword">if</span> self.clipboard ~= <span class="keyword">nil</span> <span class="keyword">and</span> #(self.clipboard) &gt; <span class="number">0</span> <span class="keyword">then</span>
+        <span class="keyword">local</span> c = #(self.clipboard)
+        <span class="keyword">if</span> c == <span class="number">1</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> l = self.lines[self.line]
+            self.lines[self.line] = <span class="global">string</span>.format(<span class="string">"%s%s%s"</span>,l:sub(<span class="number">1</span>,self.col),self.clipboard[<span class="number">1</span>],l:sub(self.col + <span class="number">1</span>))
+        <span class="keyword">else</span>
+            <span class="keyword">local</span> l = self.lines[self.line]
+            self.lines[self.line] = <span class="global">string</span>.format(<span class="string">"%s%s"</span>,l:sub(<span class="number">1</span>,self.col),self.clipboard[<span class="number">1</span>])
+            <span class="keyword">for</span> i = <span class="number">2</span>,c - <span class="number">1</span>,<span class="number">1</span> <span class="keyword">do</span>
+                <span class="global">table</span>.insert(self.lines,self.line + i - <span class="number">1</span>,self.clipboard[i])
+            <span class="keyword">end</span>
+            <span class="global">table</span>.insert(self.lines,self.line + c - <span class="number">1</span>, <span class="global">string</span>.format(<span class="string">"%s%s"</span>,self.clipboard[c],l:sub(self.col + <span class="number">1</span>)))
+        <span class="keyword">end</span>
+        self:update_title(<span class="keyword">true</span>)
+    <span class="keyword">else</span>
+        editor:message(<span class="string">"Error: Clipboard Empty!"</span>)
+    <span class="keyword">end</span>
+    self.menu_open = <span class="keyword">false</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:delete_selection()
+    <span class="keyword">if</span> self.selection_start ~= <span class="keyword">nil</span> <span class="keyword">and</span> self.selection_end ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        <span class="keyword">if</span> self.selection_start[<span class="number">1</span>] == self.selection_end[<span class="number">1</span>] <span class="keyword">then</span>
+            <span class="comment">--single line selection
+</span>            self.lines[self.selection_start[<span class="number">1</span>]] =
+                self.lines[self.selection_start[<span class="number">1</span>]]:sub(<span class="number">1</span>,self.selection_start[<span class="number">2</span>] - <span class="number">1</span>)..
+                self.lines[self.selection_start[<span class="number">1</span>]]:sub(self.selection_end[<span class="number">2</span>] + <span class="number">1</span>)
+        <span class="keyword">else</span>
+            <span class="comment">--multiline selection
+</span>            self.lines[self.selection_start[<span class="number">1</span>]] =  self.lines[self.selection_start[<span class="number">1</span>]]:sub(<span class="number">1</span>,self.selection_start[<span class="number">2</span>] - <span class="number">1</span>)
+            self.lines[self.selection_end[<span class="number">1</span>]] = self.lines[self.selection_end[<span class="number">1</span>]]:sub(self.selection_end[<span class="number">2</span>] + <span class="number">1</span>)
+            <span class="keyword">for</span> i = self.selection_start[<span class="number">1</span>] + <span class="number">1</span>,self.selection_end[<span class="number">1</span>] - <span class="number">1</span>,<span class="number">1</span> <span class="keyword">do</span>
+                <span class="global">table</span>.remove(self.lines,self.selection_start[<span class="number">1</span>] + <span class="number">1</span>)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        self:update_title(<span class="keyword">true</span>)
+        self.line = self.selection_start[<span class="number">1</span>]
+        self.selection_start = <span class="keyword">nil</span>
+        self.selection_end = <span class="keyword">nil</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:message(msg)
+    self:draw_status(msg)
+    beep()
+    keyhandler:anykey()
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:draw_status(msg)
@@ -446,6 +617,15 @@ editor.mlmenu = menu.new
     <span class="keyword">local</span> y = <span class="number">240</span> - h / <span class="number">2</span>
     display.rect(x,y,w,h,COLOR.WHITE,COLOR.BLACK)
     display.<span class="global">print</span>(msg,x+<span class="number">20</span>,y+<span class="number">20</span>,FONT.LARGE,COLOR.WHITE,COLOR.BLACK)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:draw()
+    display.draw_start()
+    self:draw_main()
+    <span class="keyword">if</span> self.menu_open <span class="keyword">then</span>
+        self:draw_menu()
+    <span class="keyword">end</span>
+    display.draw_end()
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:draw_title()
@@ -462,86 +642,126 @@ editor.mlmenu = menu.new
         display.<span class="global">print</span>(<span class="string">"Q"</span>,<span class="number">10</span>,<span class="number">10</span>,FONT.LARGE,COLOR.WHITE,bg)
     <span class="keyword">end</span>
     display.<span class="global">print</span>(self.title,w + <span class="number">10</span>,<span class="number">10</span>,FONT.LARGE,COLOR.WHITE,bg)
-    <span class="keyword">return</span> h + <span class="number">10</span>
+    <span class="keyword">return</span> h
 <span class="keyword">end</span>
 
-<span class="keyword">function</span> editor:draw()
-    <span class="keyword">if</span> self.menu_open <span class="keyword">then</span>
-        <span class="keyword">local</span> bg = COLOR.gray(<span class="number">5</span>)
-        <span class="keyword">local</span> fg = COLOR.GRAY
-        <span class="keyword">local</span> f = FONT.LARGE
-        <span class="keyword">local</span> h = #(self.menu) * f.height + <span class="number">10</span>
-        <span class="keyword">local</span> w = <span class="number">180</span>
-        <span class="keyword">local</span> x = <span class="number">0</span>
-        <span class="keyword">local</span> y = self:draw_title() - <span class="number">10</span>
-        display.rect(x,y,w,h, fg, bg)
-        x = x + <span class="number">5</span>
-        y = y + <span class="number">5</span>
-        <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.menu) <span class="keyword">do</span>
-            <span class="keyword">if</span> i == self.menu_index <span class="keyword">then</span>
-                display.rect(x,y,w-<span class="number">10</span>,f.height,COLOR.BLUE,COLOR.BLUE)
-                display.<span class="global">print</span>(v,x,y,f,COLOR.WHITE,COLOR.BLUE)
-            <span class="keyword">else</span>
-                display.<span class="global">print</span>(v,x,y,f,COLOR.WHITE,bg)
-            <span class="keyword">end</span>
-            y = y + f.height
+<span class="keyword">function</span> editor:draw_submenu(m,x,y)
+    <span class="keyword">local</span> bg = COLOR.gray(<span class="number">5</span>)
+    <span class="keyword">local</span> fg = COLOR.GRAY
+    <span class="keyword">local</span> f = FONT.LARGE
+    <span class="keyword">local</span> h = #m * f.height + <span class="number">10</span>
+    <span class="keyword">local</span> w = <span class="number">180</span>
+    display.rect(x,y,w,h,fg,bg)
+    x = x + <span class="number">5</span>
+    y = y + <span class="number">5</span>
+    <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(m) <span class="keyword">do</span>
+        <span class="keyword">if</span> i == self.submenu_index <span class="keyword">then</span>
+            display.rect(x,y,w-<span class="number">10</span>,f.height,COLOR.BLUE,COLOR.BLUE)
+            display.<span class="global">print</span>(v,x,y,f,COLOR.WHITE,COLOR.BLUE)
+        <span class="keyword">else</span>
+            display.<span class="global">print</span>(v,x,y,f,COLOR.WHITE,bg)
         <span class="keyword">end</span>
-    <span class="keyword">else</span>
-        display.rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">720</span>,<span class="number">480</span>,COLOR.BLACK,COLOR.BLACK)
-        <span class="keyword">local</span> pos = self:draw_title()
-        <span class="keyword">local</span> pad = <span class="number">10</span>
-        <span class="keyword">if</span> self.show_line_numbers <span class="keyword">then</span>
-            pad = pad + self.font:width(<span class="string">"0000"</span>)
-            display.line(pad-<span class="number">5</span>,pos,pad-<span class="number">5</span>,<span class="number">480</span>,COLOR.BLUE)
+        y = y + f.height
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:draw_menu()
+    <span class="keyword">local</span> bg = COLOR.gray(<span class="number">5</span>)
+    <span class="keyword">local</span> fg = COLOR.GRAY
+    <span class="keyword">local</span> f = FONT.LARGE
+    <span class="keyword">local</span> h = f.height + <span class="number">10</span>
+    <span class="keyword">local</span> x = <span class="number">0</span>
+    <span class="keyword">local</span> y = self:draw_title()
+    <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.menu) <span class="keyword">do</span>
+        <span class="keyword">local</span> w = f:width(v.name) + <span class="number">20</span>
+        <span class="keyword">if</span> i == self.menu_index <span class="keyword">then</span>
+            display.rect(x,y,w,h,fg,COLOR.BLUE)
+            display.<span class="global">print</span>(v.name,x + <span class="number">10</span>,y + <span class="number">5</span>,f,COLOR.WHITE,COLOR.BLUE)
+            self:draw_submenu(v.items,x,y+h)
+        <span class="keyword">else</span>
+            display.rect(x,y,w,h,fg,bg)
+            display.<span class="global">print</span>(v.name,x + <span class="number">10</span>,y + <span class="number">5</span>,f,COLOR.WHITE,bg)
         <span class="keyword">end</span>
-        <span class="keyword">if</span> self.lines == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-        <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.lines) <span class="keyword">do</span>
-            <span class="keyword">if</span> i &gt;= self.scroll <span class="keyword">then</span>
-                <span class="keyword">if</span> self.show_line_numbers <span class="keyword">then</span>
-                    display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"%4d"</span>,i),<span class="number">0</span>,pos,self.font,COLOR.BLUE,COLOR.BLACK)
-                <span class="keyword">end</span>
-                <span class="keyword">local</span> clipped = display.<span class="global">print</span>(v,pad,pos,self.font)
-                <span class="keyword">local</span> actual_pos = pos
-                <span class="keyword">local</span> sublines = {}
-                <span class="keyword">if</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">then</span> <span class="global">table</span>.insert(sublines,v:sub(<span class="number">1</span>,#v - #clipped)) <span class="keyword">end</span>
-                <span class="keyword">while</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">do</span>
-                    pos = pos + self.font.height
-                    <span class="keyword">local</span> prev = clipped
-                    clipped = display.<span class="global">print</span>(clipped,pad,pos,self.font)
-                    <span class="keyword">if</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">then</span>
-                        <span class="global">table</span>.insert(sublines,prev:sub(<span class="number">1</span>,#prev - #clipped))
-                    <span class="keyword">else</span>
-                        <span class="global">table</span>.insert(sublines,prev)
-                    <span class="keyword">end</span>
-                <span class="keyword">end</span>
-                <span class="keyword">if</span> i == self.line <span class="keyword">then</span>
-                    <span class="keyword">if</span> self.col &gt; #v <span class="keyword">then</span>
-                        <span class="keyword">local</span> x = pad + self.font:width(v)
-                        <span class="keyword">if</span> #sublines &gt; <span class="number">0</span> <span class="keyword">then</span>
-                            x = pad + self.font:width(sublines[#sublines])
-                        <span class="keyword">end</span>
-                        display.<span class="global">print</span>(<span class="string">" "</span>,x,pos,self.font,COLOR.BLACK,COLOR.WHITE)
-                    <span class="keyword">else</span>
-                        <span class="keyword">local</span> x = pad
-                        <span class="keyword">local</span> actual_col = self.col
-                        <span class="keyword">local</span> actual_line = v
-                        <span class="keyword">if</span> #sublines &gt; <span class="number">0</span> <span class="keyword">then</span>
-                            <span class="comment">--figure out what subline we should be on
-</span>                            <span class="keyword">for</span> si,sv <span class="keyword">in</span> <span class="global">ipairs</span>(sublines) <span class="keyword">do</span>
-                                <span class="keyword">if</span> actual_col &lt;= #sv <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
-                                actual_pos = actual_pos + self.font.height
-                                actual_col = actual_col - #sv
-                                actual_line = sv
-                            <span class="keyword">end</span>
-                        <span class="keyword">end</span>
-                        <span class="keyword">if</span> actual_col &gt; <span class="number">1</span> <span class="keyword">then</span> x = x + self.font:width(actual_line:sub(<span class="number">1</span>,actual_col - <span class="number">1</span>)) <span class="keyword">end</span>
-                        <span class="keyword">local</span> ch = v:sub(self.col,self.col)
-                        display.<span class="global">print</span>(ch,x,actual_pos,self.font,COLOR.BLACK,COLOR.WHITE)
-                    <span class="keyword">end</span>
-                <span class="keyword">end</span>
-                pos = pos + self.font.height
-                <span class="keyword">if</span> pos &gt; <span class="number">480</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+        x = x + w
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:draw_selection(line_num,line,x,y,sublines)
+    <span class="keyword">if</span> self.selection_start ~= <span class="keyword">nil</span> <span class="keyword">and</span> self.selection_end ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        <span class="keyword">if</span> self.selection_start[<span class="number">1</span>] &lt;= line_num <span class="keyword">and</span> self.selection_end[<span class="number">1</span>] &gt;=line_num <span class="keyword">then</span>
+            <span class="keyword">local</span> start_offset = <span class="number">1</span>
+            <span class="keyword">if</span> self.selection_start[<span class="number">1</span>] == line_num <span class="keyword">then</span> start_offset = self.selection_start[<span class="number">2</span>] <span class="keyword">end</span>
+            <span class="keyword">local</span> end_offset = #line
+            <span class="keyword">if</span> self.selection_end[<span class="number">1</span>] == line_num <span class="keyword">then</span> end_offset = self.selection_end[<span class="number">2</span>] <span class="keyword">end</span>
+            <span class="keyword">if</span> start_offset &gt; <span class="number">1</span> <span class="keyword">then</span>
+                x = x + self.font:width(line:sub(<span class="number">1</span>,start_offset - <span class="number">1</span>))
             <span class="keyword">end</span>
+            <span class="keyword">local</span> s = line:sub(start_offset,end_offset)
+            display.<span class="global">print</span>(s,x,y,self.font,COLOR.WHITE,COLOR.BLUE)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> editor:draw_main()
+    display.rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">720</span>,<span class="number">480</span>,COLOR.BLACK,COLOR.BLACK)
+    <span class="keyword">local</span> pos = self:draw_title()
+    pos = pos + <span class="number">10</span>
+    <span class="keyword">local</span> pad = <span class="number">10</span>
+    <span class="keyword">local</span> h = self.font.height
+    <span class="keyword">if</span> self.show_line_numbers <span class="keyword">then</span>
+        pad = pad + self.font:width(<span class="string">"0000"</span>)
+        display.line(pad-<span class="number">5</span>,pos,pad-<span class="number">5</span>,<span class="number">480</span>,COLOR.BLUE)
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> self.lines == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+    <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.lines) <span class="keyword">do</span>
+        <span class="keyword">if</span> i &gt;= self.scroll <span class="keyword">then</span>
+            <span class="keyword">if</span> self.show_line_numbers <span class="keyword">then</span>
+                display.<span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"%4d"</span>,i),<span class="number">0</span>,pos,self.font,COLOR.BLUE,COLOR.BLACK)
+            <span class="keyword">end</span>
+            <span class="keyword">local</span> clipped = display.<span class="global">print</span>(v,pad,pos,self.font)
+            <span class="keyword">local</span> actual_pos = pos
+            <span class="keyword">local</span> sublines = {}
+            <span class="keyword">if</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                <span class="global">table</span>.insert(sublines,v:sub(<span class="number">1</span>,#v - #clipped))
+            <span class="keyword">end</span>
+            <span class="keyword">while</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">do</span>
+                pos = pos + h
+                <span class="keyword">local</span> prev = clipped
+                clipped = display.<span class="global">print</span>(clipped,pad,pos,self.font)
+                <span class="keyword">if</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                    <span class="global">table</span>.insert(sublines,prev:sub(<span class="number">1</span>,#prev - #clipped))
+                <span class="keyword">else</span>
+                    <span class="global">table</span>.insert(sublines,prev)
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            self:draw_selection(i,v,pad,pos,sublines)
+            <span class="keyword">if</span> i == self.line <span class="keyword">then</span>
+                <span class="keyword">if</span> self.col &gt; #v <span class="keyword">then</span>
+                    <span class="keyword">local</span> x = pad + self.font:width(v)
+                    <span class="keyword">if</span> #sublines &gt; <span class="number">0</span> <span class="keyword">then</span>
+                        x = pad + self.font:width(sublines[#sublines])
+                    <span class="keyword">end</span>
+                    display.<span class="global">print</span>(<span class="string">" "</span>,x,pos,self.font,COLOR.BLACK,COLOR.WHITE)
+                <span class="keyword">else</span>
+                    <span class="keyword">local</span> x = pad
+                    <span class="keyword">local</span> actual_col = self.col
+                    <span class="keyword">local</span> actual_line = v
+                    <span class="keyword">if</span> #sublines &gt; <span class="number">0</span> <span class="keyword">then</span>
+                        <span class="comment">--figure out what subline we should be on
+</span>                        <span class="keyword">for</span> si,sv <span class="keyword">in</span> <span class="global">ipairs</span>(sublines) <span class="keyword">do</span>
+                            <span class="keyword">if</span> actual_col &lt;= #sv <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+                            actual_pos = actual_pos + self.font.height
+                            actual_col = actual_col - #sv
+                            actual_line = sv
+                        <span class="keyword">end</span>
+                    <span class="keyword">end</span>
+                    <span class="keyword">if</span> actual_col &gt; <span class="number">1</span> <span class="keyword">then</span> x = x + self.font:width(actual_line:sub(<span class="number">1</span>,actual_col - <span class="number">1</span>)) <span class="keyword">end</span>
+                    <span class="keyword">local</span> ch = v:sub(self.col,self.col)
+                    display.<span class="global">print</span>(ch,x,actual_pos,self.font,COLOR.BLACK,COLOR.WHITE)
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            pos = pos + h
+            <span class="keyword">if</span> pos &gt;= <span class="number">480</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
         <span class="keyword">end</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
@@ -560,11 +780,7 @@ editor.mlmenu = menu.new
         <span class="keyword">end</span>
         pos = pos + f.height
     <span class="keyword">end</span>
-    task.yield(<span class="number">1000</span>)
-    lastkey = <span class="number">0</span>
-    <span class="keyword">while</span> lastkey == <span class="number">0</span> <span class="keyword">do</span>
-        task.yield(<span class="number">100</span>)
-    <span class="keyword">end</span>
+    keyhandler:anykey()
 <span class="keyword">end</span></pre>
 
 
@@ -572,7 +788,7 @@ editor.mlmenu = menu.new
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-25 22:20:02 </i>
+<i style="float:right;">Last updated 2015-04-27 18:58:47 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
