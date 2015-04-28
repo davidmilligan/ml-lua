@@ -145,40 +145,55 @@ filedialog.left = <span class="number">100</span>
 filedialog.width = <span class="number">520</span>
 
 <span class="keyword">function</span> filedialog:updatefiles()
+    self.item_count = <span class="number">0</span>
     <span class="keyword">local</span> status,items = <span class="global">xpcall</span>(self.current.children,<span class="global">debug</span>.traceback,self.current)
     <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
         handle_error(items)
     <span class="keyword">end</span>
-    <span class="keyword">if</span> status <span class="keyword">then</span> self.children = items <span class="keyword">else</span> self.children = <span class="keyword">nil</span> <span class="keyword">end</span>
+    <span class="keyword">if</span> status <span class="keyword">then</span>
+        self.children = items
+        self.item_count = #items
+        <span class="global">table</span>.sort(self.children, <span class="keyword">function</span>(d1,d2) <span class="keyword">return</span> d1.path &lt; d2.path <span class="keyword">end</span>)
+    <span class="keyword">else</span>
+        self.children = <span class="keyword">nil</span>
+    <span class="keyword">end</span>
     status,items = <span class="global">xpcall</span>(self.current.files,<span class="global">debug</span>.traceback,self.current)
     <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
         handle_error(items)
     <span class="keyword">end</span>
-    <span class="keyword">if</span> status <span class="keyword">then</span> self.files = items <span class="keyword">else</span> self.children = <span class="keyword">nil</span> <span class="keyword">end</span>
+    <span class="keyword">if</span> status <span class="keyword">then</span>
+        self.files = items
+        self.item_count = self.item_count + #items
+        <span class="global">table</span>.sort(self.files)
+    <span class="keyword">else</span>
+        self.files = <span class="keyword">nil</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> filedialog:scroll_into_view()
+    <span class="keyword">if</span> self.selected &lt; self.scroll <span class="keyword">then</span>
+        self.scroll = self.selected - <span class="number">1</span>
+    <span class="keyword">elseif</span> self.selected &gt;= self.scroll + (self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">1</span>  <span class="keyword">then</span>
+        self.scroll = self.selected - ((self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">1</span>)
+    <span class="keyword">end</span>
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> filedialog:handle_key(k)
     <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"cancel"</span>
     <span class="keyword">elseif</span> k == KEY.UP <span class="keyword">or</span> k == KEY.WHEEL_UP <span class="keyword">or</span> k == KEY.WHEEL_LEFT <span class="keyword">then</span>
-        <span class="keyword">if</span> self.selected &gt; <span class="number">0</span> <span class="keyword">then</span>
-            self.selected = self.selected - <span class="number">1</span>
-            <span class="keyword">if</span> self.selected &lt;= self.scroll <span class="keyword">then</span>
-                self.scroll = self.selected
-            <span class="keyword">end</span>
-        <span class="keyword">end</span>
+        self.selected = dec(self.selected,<span class="number">0</span>,self.item_count)
+        self:scroll_into_view()
     <span class="keyword">elseif</span> k == KEY.DOWN <span class="keyword">or</span> k == KEY.WHEEL_DOWN <span class="keyword">or</span> k == KEY.WHEEL_RIGHT <span class="keyword">then</span>
-        <span class="keyword">if</span> self.selected &lt; #(self.files) <span class="keyword">then</span>
-            self.selected = self.selected + <span class="number">1</span>
-            <span class="keyword">if</span> self.selected &gt;= self.scroll + (self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">1</span>  <span class="keyword">then</span>
-                self.scroll = self.scroll + <span class="number">1</span>
-            <span class="keyword">end</span>
-        <span class="keyword">end</span>
+        self.selected = inc(self.selected,<span class="number">0</span>,self.item_count)
+        self:scroll_into_view()
     <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
         <span class="keyword">if</span> self.selected == <span class="number">0</span> <span class="keyword">then</span>
-            self.current = dryos.directory(<span class="global">string</span>.gsub(self.current.path,<span class="string">"/.+$"</span>,<span class="string">""</span>))
-            self.selected = <span class="number">1</span>
-            self.scroll = <span class="number">0</span>
-            self:updatefiles()
+            <span class="keyword">if</span> self.current.parent ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                self.current = self.current.parent
+                self.selected = <span class="number">1</span>
+                self.scroll = <span class="number">0</span>
+                self:updatefiles()
+            <span class="keyword">end</span>
         <span class="keyword">elseif</span> self.is_dir_selected <span class="keyword">and</span> self.selected_value ~= <span class="keyword">nil</span> <span class="keyword">then</span>
             self.current = self.selected_value
             self.selected = <span class="number">1</span>
@@ -190,10 +205,22 @@ filedialog.width = <span class="number">520</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
+<span class="keyword">function</span> filedialog:save()
+    self.save_mode = <span class="keyword">true</span>
+    <span class="keyword">return</span> self:show()
+<span class="keyword">end</span>
+
 <span class="keyword">function</span> filedialog:open()
-    self.current = dryos.directory(<span class="string">"ML/SCRIPTS"</span>)
-    self.selected = <span class="number">1</span>
-    self.scroll = <span class="number">0</span>
+    self.save_mode = <span class="keyword">false</span>
+    <span class="keyword">return</span> self:show()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> filedialog:show()
+    <span class="keyword">if</span> self.current == <span class="keyword">nil</span> <span class="keyword">then</span>
+        self.current = dryos.directory(<span class="string">"ML/SCRIPTS"</span>)
+        self.selected = <span class="number">1</span>
+        self.scroll = <span class="number">0</span>
+    <span class="keyword">end</span>
     self:updatefiles()
     self:draw()
     <span class="keyword">local</span> started = keyhandler:start()
@@ -224,8 +251,8 @@ filedialog.width = <span class="number">520</span>
 
 <span class="keyword">function</span> filedialog:draw_main()
     display.rect(self.left, self.top, self.width, self.height, COLOR.WHITE, COLOR.BLACK)
-    display.rect(self.left, self.top, self.width, <span class="number">20</span> + FONT.LARGE.height, COLOR.WHITE, COLOR.gray(<span class="number">5</span>))
-    display.<span class="global">print</span>(<span class="string">"Select File"</span>, self.left + <span class="number">10</span>, self.top + <span class="number">10</span>, FONT.LARGE,COLOR.WHITE,COLOR.gray(<span class="number">5</span>))
+    display.rect(self.left, self.top, self.width, <span class="number">20</span> + FONT.LARGE.height, COLOR.WHITE, COLOR.gray(<span class="number">10</span>))
+    display.<span class="global">print</span>(<span class="string">"Select File"</span>, self.left + <span class="number">10</span>, self.top + <span class="number">10</span>, FONT.LARGE,COLOR.WHITE,COLOR.gray(<span class="number">10</span>))
     <span class="keyword">local</span> pos = self.top + <span class="number">20</span> + FONT.LARGE.height
     display.line(self.left, pos, self.width - self.left, pos, COLOR.WHITE)
     <span class="keyword">local</span> x = self.left + <span class="number">10</span>
@@ -294,6 +321,10 @@ editor =
         {
             name = <span class="string">"Edit"</span>,
             items = {<span class="string">"Cut"</span>,<span class="string">"Copy"</span>,<span class="string">"Paste"</span>,<span class="string">"Select All"</span>},
+        },
+        {
+            name = <span class="string">"Debug"</span>,
+            items = {<span class="string">"Run"</span>},
         }
     },
     menu_index = <span class="number">1</span>,
@@ -301,7 +332,7 @@ editor =
     font = FONT.MONO_20
 }
 
-editor.lines_per_page = (<span class="number">460</span> - FONT.LARGE.height) / editor.font.height - <span class="number">1</span>
+editor.lines_per_page = (<span class="number">460</span> - FONT.LARGE.height) / editor.font.height / <span class="number">2</span>
 
 editor.mlmenu = menu.new
 {
@@ -438,7 +469,6 @@ editor.mlmenu = menu.new
         <span class="keyword">if</span> self.selection_start == <span class="keyword">nil</span> <span class="keyword">or</span> self.selection_end ~= <span class="keyword">nil</span> <span class="keyword">then</span>
             self.selection_start = {self.line,self.col}
             self.selection_end = <span class="keyword">nil</span>
-            <span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"sel start %d,%d"</span>, self.line, self.col))
         <span class="keyword">else</span>
             <span class="keyword">if</span> self.selection_start[<span class="number">1</span>] &gt; self.line <span class="keyword">or</span> (self.selection_start[<span class="number">1</span>] == self.line <span class="keyword">and</span> self.selection_start[<span class="number">2</span>] &gt; self.col) <span class="keyword">then</span>
                 self.selection_end = self.selection_start
@@ -446,7 +476,6 @@ editor.mlmenu = menu.new
             <span class="keyword">else</span>
                 self.selection_end = {self.line,self.col}
             <span class="keyword">end</span>
-            <span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"sel end %d,%d"</span>, self.line, self.col))
         <span class="keyword">end</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
@@ -494,6 +523,12 @@ editor.mlmenu = menu.new
         <span class="keyword">elseif</span> m == <span class="string">"Cut"</span> <span class="keyword">then</span> self:copy() self:delete_selection()
         <span class="keyword">elseif</span> m == <span class="string">"Copy"</span> <span class="keyword">then</span> self:copy()
         <span class="keyword">elseif</span> m == <span class="string">"Paste"</span> <span class="keyword">then</span> self:paste()
+        <span class="keyword">elseif</span> m == <span class="string">"Select All"</span> <span class="keyword">then</span>
+            self.selection_start = {<span class="number">1</span>,<span class="number">1</span>}
+            self.selection_end = {#(self.lines),#(self.lines[self.line])}
+        <span class="keyword">elseif</span> m == <span class="string">"Run"</span> <span class="keyword">then</span>
+            self:save(self.filename)
+            self:<span class="global">debug</span>()
         <span class="keyword">end</span>
     <span class="keyword">end</span>
     <span class="keyword">return</span> <span class="keyword">true</span>
@@ -788,7 +823,7 @@ editor.mlmenu = menu.new
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-27 18:58:47 </i>
+<i style="float:right;">Last updated 2015-04-28 16:57:09 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
