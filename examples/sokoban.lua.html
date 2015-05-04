@@ -1,0 +1,549 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><strong>sokoban.lua</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>sokoban.lua</h2>
+<pre>
+<span class="comment">--[[
+ Sokoban Game
+ Ported to Lua from the original PicoC version
+
+ This is a playable demo for Lua scripting.
+
+ It should help you understand:
+ - Basic key processing
+ - Simple graphics
+ - Lua programming basics
+
+ Enjoy!
+]]</span>
+
+<span class="comment">--printf
+</span><span class="keyword">function</span> printf(...) console.write(<span class="global">string</span>.format(...)) <span class="keyword">end</span>
+
+<span class="comment">-- http://www.sokobano.de/wiki/index.php?title=Sok_format
+</span>
+WALL = <span class="string">'#'</span>
+SPACE  = <span class="string">' '</span>
+PLAYER  = <span class="string">'@'</span>
+BOX  = <span class="string">'$'</span>
+
+TARGET  = <span class="string">'.'</span>
+PLAYER_ON_TARGET  = <span class="string">'+'</span>
+BOX_ON_TARGET  = <span class="string">'*'</span>
+
+<span class="comment">-- from Wikipedia
+</span>maze1 = {
+    <span class="string">"  ##### "</span>,
+    <span class="string">"###   # "</span>,
+    <span class="string">"#.@$  # "</span>,
+    <span class="string">"### $.# "</span>,
+    <span class="string">"#.##$ # "</span>,
+    <span class="string">"# # . ##"</span>,
+    <span class="string">"#$ *$$.#"</span>,
+    <span class="string">"#   .  #"</span>,
+    <span class="string">"########"</span>
+};
+
+<span class="comment">-- Level 1 from http://sneezingtiger.com/sokoban/levels/minicosmosText.html
+</span>maze2 = {
+    <span class="string">"  ##### "</span>,
+    <span class="string">"###   # "</span>,
+    <span class="string">"# $ # ##"</span>,
+    <span class="string">"# #  . #"</span>,
+    <span class="string">"#    # #"</span>,
+    <span class="string">"## #   #"</span>,
+    <span class="string">" #@  ###"</span>,
+    <span class="string">" #####  "</span>
+};
+
+<span class="comment">-- Level 2 from http://sneezingtiger.com/sokoban/levels/minicosmosText.html
+</span>maze3 = {
+    <span class="string">"  ##### "</span>,
+    <span class="string">"###   # "</span>,
+    <span class="string">"# $ # ##"</span>,
+    <span class="string">"# #  . #"</span>,
+    <span class="string">"#    # #"</span>,
+    <span class="string">"##$#.  #"</span>,
+    <span class="string">" #@  ###"</span>,
+    <span class="string">" #####  "</span>
+};
+
+<span class="comment">-- Level 23 from http://sneezingtiger.com/sokoban/levels/minicosmosText.html
+</span>
+maze4 = {
+    <span class="string">"      #### "</span>,
+    <span class="string">"#######  # "</span>,
+    <span class="string">"#        # "</span>,
+    <span class="string">"#  $ #.# # "</span>,
+    <span class="string">"#  $## # ##"</span>,
+    <span class="string">"###   @   #"</span>,
+    <span class="string">"  ###  #  #"</span>,
+    <span class="string">"    ##.  ##"</span>,
+    <span class="string">"     ##### "</span>
+};
+
+
+<span class="comment">-- Level 1 from http://sneezingtiger.com/sokoban/levels/nabokosmosText.html
+</span>maze5 = {
+    <span class="string">" #####  "</span>,
+    <span class="string">" #   ## "</span>,
+    <span class="string">"## * .##"</span>,
+    <span class="string">"# $$*  #"</span>,
+    <span class="string">"#  * . #"</span>,
+    <span class="string">"## @ ###"</span>,
+    <span class="string">" #####  "</span>
+};
+
+<span class="comment">-- Level 2 from http://sneezingtiger.com/sokoban/levels/nabokosmosText.html
+</span>maze6 = {
+    <span class="string">"  ####  "</span>,
+    <span class="string">"###  ###"</span>,
+    <span class="string">"#   *$ #"</span>,
+    <span class="string">"# #  # #"</span>,
+    <span class="string">"#   ** #"</span>,
+    <span class="string">"###  #@#"</span>,
+    <span class="string">"  # ** #"</span>,
+    <span class="string">"  #  # #"</span>,
+    <span class="string">"  # *. #"</span>,
+    <span class="string">"  #  ###"</span>,
+    <span class="string">"  ####  "</span>
+};
+
+<span class="keyword">function</span> string_to_table(str)
+    <span class="keyword">local</span> t = {}
+    <span class="keyword">for</span> i = <span class="number">1</span>,#str,<span class="number">1</span> <span class="keyword">do</span>
+        t[i] = <span class="global">string</span>.sub(str,i,i)
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> t
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> convert_maze(m)
+    <span class="keyword">local</span> r = {}
+    <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(m) <span class="keyword">do</span>
+        r[i] = string_to_table(v)
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> r
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> setup(a)
+    <span class="keyword">if</span> (a == <span class="number">1</span>) <span class="keyword">then</span>
+
+        maze = convert_maze(maze1);
+        LINES = <span class="number">9</span>;
+        COLUMNS = <span class="number">8</span>;
+
+    <span class="keyword">elseif</span> (a == <span class="number">2</span>) <span class="keyword">then</span>
+
+        maze = convert_maze(maze2);
+        LINES = <span class="number">8</span>;
+        COLUMNS = <span class="number">8</span>;
+
+    <span class="keyword">elseif</span> (a == <span class="number">3</span>) <span class="keyword">then</span>
+
+        maze = convert_maze(maze3);
+        LINES = <span class="number">8</span>;
+        COLUMNS = <span class="number">8</span>;
+
+    <span class="keyword">elseif</span> (a == <span class="number">4</span>) <span class="keyword">then</span>
+
+        maze = convert_maze(maze4);
+        LINES = <span class="number">9</span>;
+        COLUMNS = <span class="number">11</span>;
+
+    <span class="keyword">elseif</span> (a == <span class="number">5</span>) <span class="keyword">then</span>
+
+        maze = convert_maze(maze5);
+        LINES = <span class="number">7</span>;
+        COLUMNS = <span class="number">8</span>;
+
+    <span class="keyword">elseif</span> (a == <span class="number">6</span>) <span class="keyword">then</span>
+
+        maze = convert_maze(maze6);
+        LINES = <span class="number">11</span>;
+        COLUMNS = <span class="number">8</span>;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+targets = {}
+<span class="keyword">function</span> print_maze()
+
+    <span class="keyword">for</span> i = <span class="number">1</span>,LINES,<span class="number">1</span> <span class="keyword">do</span>
+
+        <span class="keyword">for</span> j = <span class="number">1</span>,COLUMNS,<span class="number">1</span> <span class="keyword">do</span>
+            <span class="keyword">local</span> c = <span class="string">' '</span>
+            <span class="keyword">if</span> targets[i*COLUMNS + j] ~= <span class="keyword">nil</span> <span class="keyword">then</span> c= c <span class="string">'*'</span> <span class="keyword">end</span>
+            printf(<span class="string">"%s%s"</span>, maze[i][j], c);
+        <span class="keyword">end</span>
+        printf(<span class="string">"\n"</span>);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> draw_wall(x, y, a)
+
+    display.rect(x, y, a, a, COLOR.BLACK);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> draw_space(x, y, a, on_target)
+
+    display.rect(x, y, a, a, COLOR.gray(<span class="number">80</span>), COLOR.gray(<span class="number">80</span>));
+    <span class="keyword">if</span> (on_target) <span class="keyword">then</span>
+        display.circle(x + <span class="global">math</span>.floor(a/<span class="number">2</span>), y + <span class="global">math</span>.floor(a/<span class="number">2</span>), <span class="global">math</span>.floor(a/<span class="number">4</span>), COLOR.ORANGE);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> draw_box(x, y, a, on_target)
+
+    <span class="keyword">local</span> pad = <span class="number">3</span>;
+
+    <span class="keyword">for</span> i = <span class="number">0</span>, pad, <span class="number">1</span> <span class="keyword">do</span>
+        display.rect(x + i, y + i, a - i*<span class="number">2</span>, a - i*<span class="number">2</span>, COLOR.gray(<span class="number">80</span>));
+    <span class="keyword">end</span>
+    <span class="keyword">local</span> color = COLOR.YELLOW;
+    <span class="keyword">if</span> on_target <span class="keyword">then</span> color = COLOR.ORANGE <span class="keyword">end</span>
+    display.rect(x + pad, y + pad, a - pad*<span class="number">2</span>, a - pad*<span class="number">2</span>, color,color);
+    display.rect(x + pad, y + pad, a - pad*<span class="number">2</span>, a - pad*<span class="number">2</span>, COLOR.BLACK);
+    pad = pad+<span class="number">1</span>;
+    display.rect(x + pad, y + pad, a - pad*<span class="number">2</span>, a - pad*<span class="number">2</span>, COLOR.BLACK);
+
+    display.line(x + pad, y + pad, x + a - pad, y + a - pad, COLOR.BLACK);
+    display.line(x + pad - <span class="number">1</span>, y + pad, x + a - pad - <span class="number">1</span>, y + a - pad, COLOR.BLACK);
+
+    display.line(x + pad, y + a - pad, x + a - pad, y + pad, COLOR.BLACK);
+    display.line(x + pad - <span class="number">1</span>, y + a - pad, x + a - pad - <span class="number">1</span>, y + pad, COLOR.BLACK);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> draw_player(x, y, a, on_target)
+
+    draw_space(x, y, a, <span class="number">0</span>);
+
+    <span class="keyword">local</span> xc = <span class="global">math</span>.floor(x + a/<span class="number">2</span>);
+    <span class="keyword">local</span> yc = <span class="global">math</span>.floor(y + a/<span class="number">2</span>);
+    <span class="keyword">local</span> r = <span class="global">math</span>.floor(a * <span class="number">3</span>/<span class="number">8</span>);
+    <span class="keyword">local</span> y_eye = <span class="global">math</span>.floor(yc - r * <span class="number">3</span>/<span class="number">8</span>);
+    <span class="keyword">local</span> y_mouth = yc + r * <span class="number">3</span>/<span class="number">8</span>;
+    display.circle(xc, yc, r, COLOR.YELLOW, COLOR.YELLOW);
+    display.circle(xc, yc, r, COLOR.BLACK);
+    display.circle(xc, yc, r-<span class="number">1</span>, COLOR.BLACK);
+    display.circle(xc - <span class="global">math</span>.floor(r/<span class="number">3</span>), y_eye, <span class="global">math</span>.floor(r/<span class="number">5</span>), COLOR.BLACK, COLOR.BLACK);
+    display.circle(xc + <span class="global">math</span>.floor(r/<span class="number">3</span>), y_eye, <span class="global">math</span>.floor(r/<span class="number">5</span>), COLOR.BLACK, COLOR.BLACK);
+
+    <span class="keyword">local</span> r_mouth = r*<span class="number">2</span>/<span class="number">3</span>;
+    <span class="keyword">for</span> t = <span class="number">45</span>, <span class="number">180</span>-<span class="number">45</span>, <span class="number">2</span> <span class="keyword">do</span>
+
+        <span class="keyword">local</span> xp = <span class="global">math</span>.floor(xc + r_mouth * <span class="global">math</span>.cos(t*<span class="global">math</span>.pi/<span class="number">180</span>));
+        <span class="keyword">local</span> yp = <span class="global">math</span>.floor(yc - r/<span class="number">8</span> + r_mouth * <span class="global">math</span>.sin(t*<span class="global">math</span>.pi/<span class="number">180</span>));
+        display.pixel(xp, yp, COLOR.BLACK);
+        display.pixel(xp, yp+<span class="number">1</span>, COLOR.BLACK);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> draw_maze()
+
+    display.rect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">720</span>, <span class="number">480</span>, COLOR.BLACK, COLOR.BLACK);
+    <span class="keyword">local</span> a = <span class="global">math</span>.floor(<span class="global">math</span>.min(<span class="number">400</span> / LINES, <span class="number">700</span> / COLUMNS));
+    <span class="keyword">local</span> total_w = a * COLUMNS;
+    <span class="keyword">local</span> total_h = a * LINES;
+    <span class="keyword">local</span> x0 = <span class="number">360</span> - <span class="global">math</span>.floor(total_w / <span class="number">2</span>);
+    <span class="keyword">local</span> y0 = <span class="number">240</span> - <span class="global">math</span>.floor(total_h / <span class="number">2</span>);
+
+    <span class="keyword">for</span> i = <span class="number">1</span>, LINES, <span class="number">1</span> <span class="keyword">do</span>
+
+        <span class="keyword">for</span> j = <span class="number">1</span>, COLUMNS, <span class="number">1</span> <span class="keyword">do</span>
+
+            <span class="comment">-- top-left corner of current cell
+</span>            <span class="keyword">local</span> x = x0 + (j-<span class="number">1</span>) * a;
+            <span class="keyword">local</span> y = y0 + (i-<span class="number">1</span>) * a;
+
+            <span class="keyword">if</span> maze[i][j] == BOX <span class="keyword">then</span>
+                draw_box(x, y, a, targets[i*COLUMNS + j]);
+            <span class="keyword">elseif</span> maze[i][j] == SPACE <span class="keyword">then</span>
+                draw_space(x, y, a, targets[i*COLUMNS + j]);
+            <span class="keyword">elseif</span> maze[i][j] == WALL <span class="keyword">then</span>
+                draw_wall(x, y, a);
+            <span class="keyword">elseif</span> maze[i][j] == PLAYER <span class="keyword">then</span>
+                draw_player(x, y, a, targets[i*COLUMNS + j]);
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span> <span class="keyword">do</span>
+        display.rect(x0-i, y0-i, total_w+<span class="number">2</span>*i, total_h+<span class="number">2</span>*i, COLOR.WHITE);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> victory()
+
+    beep();
+    draw_maze();
+    display.<span class="global">print</span>(<span class="string">"YOU WIN :)"</span>, <span class="number">300</span>, <span class="number">200</span>, FONT.LARGE );
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> split_target()
+
+    <span class="keyword">for</span> i = <span class="number">1</span>, LINES, <span class="number">1</span> <span class="keyword">do</span>
+
+        <span class="keyword">for</span> j = <span class="number">1</span>, COLUMNS, <span class="number">1</span> <span class="keyword">do</span>
+
+            <span class="keyword">if</span> (maze[i][j] == TARGET) <span class="keyword">then</span>
+
+                targets[i*COLUMNS + j] = <span class="keyword">true</span>;
+                maze[i][j] = SPACE;
+
+            <span class="keyword">elseif</span> (maze[i][j] == BOX_ON_TARGET) <span class="keyword">then</span>
+
+                targets[i*COLUMNS + j] = <span class="keyword">true</span>;
+                maze[i][j] = BOX;
+
+            <span class="keyword">elseif</span> (maze[i][j] == PLAYER_ON_TARGET) <span class="keyword">then</span>
+
+                targets[i*COLUMNS + j] = <span class="keyword">true</span>;
+                maze[i][j] = PLAYER;
+
+            <span class="keyword">else</span> targets[i*COLUMNS + j] = <span class="keyword">false</span>; <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> get_current_pos()
+
+    <span class="keyword">for</span> i = <span class="number">1</span>, LINES, <span class="number">1</span> <span class="keyword">do</span>
+
+        <span class="keyword">for</span> j = <span class="number">1</span>, COLUMNS, <span class="number">1</span> <span class="keyword">do</span>
+
+            <span class="keyword">if</span> (maze[i][j] == PLAYER) <span class="keyword">then</span>
+
+                <span class="keyword">return</span> i,j;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="comment">-- error
+</span>    <span class="keyword">return</span> -<span class="number">1</span>,-<span class="number">1</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> move(dl, dc)
+
+    <span class="keyword">local</span> l,c
+    l,c = get_current_pos();
+
+    <span class="keyword">if</span> (maze[l][c] ~= PLAYER) <span class="keyword">then</span> printf(<span class="string">"whoops"</span>); <span class="keyword">return</span>; <span class="keyword">end</span>
+
+    <span class="keyword">if</span> (maze[l+dl][c+dc] == SPACE) <span class="keyword">then</span><span class="comment">-- what's in the destination box?
+</span>
+        <span class="comment">-- simple, just move
+</span>        maze[l][c] = SPACE;
+        maze[l+dl][c+dc] = PLAYER;
+
+    <span class="keyword">elseif</span> (maze[l+dl][c+dc] == BOX) <span class="keyword">then</span> <span class="comment">-- move only if we can push the box in a free space
+</span>
+        <span class="keyword">if</span> (maze[l+dl*<span class="number">2</span>][c+dc*<span class="number">2</span>] == SPACE) <span class="keyword">then</span>
+
+            maze[l+dl*<span class="number">2</span>][c+dc*<span class="number">2</span>] = BOX;
+            maze[l+dl][c+dc] = PLAYER;
+            maze[l][c] = SPACE;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> check_solution()
+
+    <span class="keyword">for</span> i = <span class="number">1</span>, LINES, <span class="number">1</span> <span class="keyword">do</span>
+
+        <span class="keyword">for</span> j = <span class="number">1</span>, COLUMNS, <span class="number">1</span> <span class="keyword">do</span>
+
+            <span class="keyword">if</span> ((targets[i*COLUMNS + j]) <span class="keyword">and</span> (maze[i][j] ~= BOX)) <span class="keyword">then</span>
+                <span class="keyword">return</span> <span class="number">0</span>;<span class="comment">-- at least one box not on target position
+</span>            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">-- looks alright
+</span><span class="keyword">end</span>
+
+<span class="keyword">function</span> main()
+
+    setup(sokobanmenu.submenu[<span class="string">"Level"</span>].value)
+
+    menu.block(<span class="keyword">true</span>);
+    <span class="keyword">local</span> status,error = <span class="global">xpcall</span>(<span class="keyword">function</span>()
+        split_target();
+        keyhandler:start()
+        draw_maze();
+        <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+
+            <span class="comment">-- print_maze();
+</span>            <span class="keyword">local</span> keys = keyhandler:getkeys();
+            <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                <span class="keyword">for</span> i,key <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
+                    <span class="keyword">if</span> key == KEY.LEFT <span class="keyword">or</span> key == KEY.WHEEL_LEFT <span class="keyword">then</span>
+                        move(<span class="number">0</span>, -<span class="number">1</span>);
+                    <span class="keyword">elseif</span> key == KEY.RIGHT <span class="keyword">or</span> key == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+                        move(<span class="number">0</span>, <span class="number">1</span>);
+                    <span class="keyword">elseif</span> key == KEY.UP <span class="keyword">or</span> key == KEY.WHEEL_UP <span class="keyword">then</span>
+                        move(-<span class="number">1</span>, <span class="number">0</span>);
+                    <span class="keyword">elseif</span> key == KEY.DOWN <span class="keyword">or</span> key == KEY.WHEEL_DOWN <span class="keyword">then</span>
+                        move(<span class="number">1</span>, <span class="number">0</span>);
+                    <span class="keyword">elseif</span> key == KEY.SET <span class="keyword">or</span> key == KEY.UNPRESS_SET <span class="keyword">then</span>
+                    <span class="keyword">elseif</span> key == KEY.Q <span class="keyword">or</span> key == KEY.TRASH <span class="keyword">or</span> key == KEY.MENU <span class="keyword">then</span>
+                        printf(<span class="string">"Exiting...\n"</span>);
+                        menu.block(<span class="keyword">false</span>);
+                        keyhandler:stop()
+                        <span class="keyword">return</span>;
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+                display.draw(draw_maze)
+                <span class="keyword">if</span> check_solution() ~= <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            task.yield(<span class="number">100</span>)
+        <span class="keyword">end</span>
+
+        printf(<span class="string">"You win!\n"</span>);
+        victory();
+
+        task.yield(<span class="number">5000</span>)
+    <span class="keyword">end</span>,<span class="global">debug</span>.traceback)
+    <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
+        <span class="global">print</span>(error)
+    <span class="keyword">end</span>
+    menu.block(<span class="keyword">false</span>);
+    keyhandler:stop()
+<span class="keyword">end</span>
+
+keyhandler = {}
+keyhandler.runnning = <span class="keyword">false</span>
+
+<span class="comment">--starts the keyhandler if not already running, returns whether or not it was started
+</span><span class="keyword">function</span> keyhandler:start()
+    <span class="keyword">if</span> keyhandler.running <span class="keyword">then</span> self:reset() <span class="keyword">return</span> <span class="keyword">false</span> <span class="keyword">end</span>
+    <span class="comment">--save any previous keypress handler so we can restore it when finished
+</span>    self.old_keypress = event.keypress
+    self.keys = {}
+    self.key_count = <span class="number">0</span>
+    self.running = <span class="keyword">true</span>
+    event.keypress = <span class="keyword">function</span>(key)
+        <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">then</span>
+            keyhandler.key_count = keyhandler.key_count + <span class="number">1</span>
+            keyhandler.keys[keyhandler.key_count] = key
+        <span class="keyword">end</span>
+        <span class="keyword">return</span> <span class="keyword">false</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="keyword">true</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- returns a table of all the keys that have been pressed since the last time getkeys was called
+</span><span class="keyword">function</span> keyhandler:getkeys()
+    <span class="keyword">if</span> self.key_count == <span class="number">0</span> <span class="keyword">then</span>
+        <span class="keyword">return</span> <span class="keyword">nil</span>
+    <span class="keyword">else</span>
+        <span class="keyword">local</span> result = self.keys
+        self:reset()
+        <span class="keyword">return</span> result
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> keyhandler:reset()
+    self.key_count = <span class="number">0</span>
+    self.keys = {}
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> keyhandler:stop()
+    self:reset()
+    self.running = <span class="keyword">false</span>
+    event.keypress = self.old_keypress
+<span class="keyword">end</span>
+
+sokobanmenu = menu.new
+{
+    parent = <span class="string">"Games"</span>,
+    name = <span class="string">"Sokoban"</span>,
+    value = <span class="number">1</span>,
+    update = <span class="keyword">function</span>() <span class="keyword">return</span> <span class="string">""</span> <span class="keyword">end</span>,
+    submenu =
+    {
+        {
+            name = <span class="string">"Play"</span>,
+            icon_type = ICON_TYPE.ACTION,
+            update = <span class="keyword">function</span>() <span class="keyword">return</span> <span class="string">""</span> <span class="keyword">end</span>,
+            <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(main) <span class="keyword">end</span>,
+        },
+        {
+            name = <span class="string">"Level"</span>,
+            value = <span class="number">1</span>,
+            min = <span class="number">1</span>,
+            max = <span class="number">6</span>
+        }
+    }
+}</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-05-03 19:50:33 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
