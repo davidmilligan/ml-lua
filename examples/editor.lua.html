@@ -199,6 +199,46 @@ button.__index = button
     <span class="keyword">if</span> k == KEY.SET <span class="keyword">and</span> self.focused <span class="keyword">and</span> self.disabled == <span class="keyword">false</span> <span class="keyword">then</span> <span class="keyword">return</span> self.caption <span class="keyword">end</span>
 <span class="keyword">end</span>
 
+scrollbar = {}
+scrollbar.__index = scrollbar
+
+<span class="keyword">function</span> scrollbar.create(step,min,max,x,y,w,h)
+    <span class="keyword">local</span> sb = {}
+    <span class="global">setmetatable</span>(sb,scrollbar)
+    sb.step = step
+    sb.min = min
+    sb.max = max
+    sb.value = min
+    sb.top = y
+    sb.left = x
+    sb.width = w
+    sb.foreground = COLOR.BLUE
+    <span class="keyword">if</span> width == <span class="keyword">nil</span> <span class="keyword">then</span> sb.w = <span class="number">2</span> <span class="keyword">end</span>
+    sb.height = h
+    <span class="keyword">if</span> h == <span class="keyword">nil</span> <span class="keyword">then</span> sb.height = display.height - y <span class="keyword">end</span>
+    <span class="keyword">return</span> sb
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> scrollbar:draw()
+    <span class="comment">--update max automatically from 'table'
+</span>    <span class="keyword">if</span> self.<span class="global">table</span> ~= <span class="keyword">nil</span> <span class="keyword">then</span> self.max = #(self.<span class="global">table</span>) <span class="keyword">end</span>
+    <span class="comment">--don't draw if we are not needed
+</span>    <span class="keyword">if</span> (self.max - self.min + <span class="number">1</span>) * self.step &lt;= self.height <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+
+    <span class="keyword">local</span> total_height = (self.max - self.min + <span class="number">1</span>) * self.step
+    <span class="keyword">local</span> thumb_height = <span class="global">math</span>.floor(self.height * self.height / total_height)
+    <span class="keyword">local</span> offset = <span class="global">math</span>.floor((self.value - self.min) * self.step * self.height / total_height)
+    display.rect(self.left,self.top + offset,self.width,thumb_height,self.foreground,self.foreground)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> scrollbar:up()
+    self.value = dec(self.value,self.min,self.max)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> scrollbar:down()
+    self.value = inc(self.value,self.min,self.max)
+<span class="keyword">end</span>
+
 textbox = {}
 textbox.__index = textbox
 <span class="keyword">function</span> textbox.create(value,x,y,w,font,h)
@@ -299,6 +339,8 @@ filedialog.__index = filedialog
     <span class="keyword">local</span> w = self.width / <span class="number">2</span>
     self.ok_button = button.create(<span class="string">"OK"</span>,self.left,self.top+self.height,self.font,w)
     self.cancel_button = button.create(<span class="string">"Cancel"</span>,self.left + w,self.top+self.height,self.font,w)
+    <span class="keyword">local</span> title_height = <span class="number">20</span> + FONT.LARGE.height
+    self.scrollbar = scrollbar.create(self.font.height,<span class="number">0</span>,<span class="number">1</span>,self.left + self.width - <span class="number">6</span>,self.top + title_height, <span class="number">2</span>, self.height - title_height - self.save_box.height)
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> filedialog:updatefiles()
@@ -325,13 +367,14 @@ filedialog.__index = filedialog
     <span class="keyword">else</span>
         self.files = <span class="keyword">nil</span>
     <span class="keyword">end</span>
+    self.scrollbar.max = self.item_count
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> filedialog:scroll_into_view()
-    <span class="keyword">if</span> self.selected &lt; self.scroll <span class="keyword">then</span>
-        self.scroll = self.selected - <span class="number">1</span>
-    <span class="keyword">elseif</span> self.selected &gt;= self.scroll + (self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">2</span>  <span class="keyword">then</span>
-        self.scroll = self.selected - ((self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">2</span>)
+    <span class="keyword">if</span> self.selected &lt; self.scrollbar.value <span class="keyword">then</span>
+        self.scrollbar.value = self.selected
+    <span class="keyword">elseif</span> self.selected &gt;= self.scrollbar.value + (self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">3</span>  <span class="keyword">then</span>
+        self.scrollbar.value = <span class="global">math</span>.floor(self.selected - ((self.height - <span class="number">20</span> - FONT.LARGE.height) / self.font.height - <span class="number">3</span>))
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
@@ -374,20 +417,19 @@ filedialog.__index = filedialog
         self:scroll_into_view()
     <span class="keyword">elseif</span> k == KEY.DOWN <span class="keyword">or</span> k == KEY.WHEEL_DOWN <span class="keyword">then</span>
         self.selected = inc(self.selected,<span class="number">0</span>,self.item_count)
-        <span class="global">print</span>(<span class="global">string</span>.format(<span class="string">"fd: %d %d"</span>,self.selected,self.item_count))
         self:scroll_into_view()
     <span class="keyword">elseif</span> k == KEY.SET <span class="keyword">then</span>
         <span class="keyword">if</span> self.selected == <span class="number">0</span> <span class="keyword">then</span>
             <span class="keyword">if</span> self.current.parent ~= <span class="keyword">nil</span> <span class="keyword">then</span>
                 self.current = self.current.parent
                 self.selected = <span class="number">1</span>
-                self.scroll = <span class="number">0</span>
+                self.scrollbar.value = <span class="number">0</span>
                 self:updatefiles()
             <span class="keyword">end</span>
         <span class="keyword">elseif</span> self.is_dir_selected <span class="keyword">and</span> self.selected_value ~= <span class="keyword">nil</span> <span class="keyword">then</span>
             self.current = self.selected_value
             self.selected = <span class="number">1</span>
-            self.scroll = <span class="number">0</span>
+            self.scrollbar.value = <span class="number">0</span>
             self:updatefiles()
         <span class="keyword">elseif</span> self.save_mode <span class="keyword">then</span>
             <span class="keyword">local</span> found = self.current.path:find(<span class="string">"/[^/]+$"</span>)
@@ -418,7 +460,7 @@ filedialog.__index = filedialog
     <span class="keyword">if</span> self.current == <span class="keyword">nil</span> <span class="keyword">then</span>
         self.current = dryos.directory(<span class="string">"ML/SCRIPTS"</span>)
         self.selected = <span class="number">1</span>
-        self.scroll = <span class="number">0</span>
+        self.scrollbar.value = <span class="number">0</span>
     <span class="keyword">end</span>
     self.focused_index = <span class="number">1</span>
     self:update_focus()
@@ -452,6 +494,7 @@ filedialog.__index = filedialog
 <span class="keyword">function</span> filedialog:draw()
     display.draw(<span class="keyword">function</span>()
         self:draw_main()
+        self.scrollbar:draw()
         <span class="keyword">if</span> self.save_mode <span class="keyword">then</span>
             self.save_box:draw()
         <span class="keyword">else</span>
@@ -475,13 +518,13 @@ filedialog.__index = filedialog
     <span class="keyword">local</span> x = self.left + <span class="number">10</span>
     <span class="keyword">local</span> r = self.left + self.width
     pos = pos + <span class="number">10</span>
-    <span class="keyword">local</span> dir_count = <span class="number">0</span>
+    <span class="keyword">local</span> dir_count = #(self.children)
     <span class="keyword">local</span> status,items
     <span class="keyword">local</span> sel_color = COLOR.DARK_GRAY
     <span class="keyword">if</span> self.focused <span class="keyword">then</span> sel_color = COLOR.BLUE <span class="keyword">end</span>
     self.is_dir_selected = <span class="keyword">false</span>
     <span class="keyword">if</span> self.current.exists ~= <span class="keyword">true</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-    <span class="keyword">if</span> self.scroll &lt;= <span class="number">0</span> <span class="keyword">then</span>
+    <span class="keyword">if</span> self.scrollbar.value == <span class="number">0</span> <span class="keyword">then</span>
         <span class="keyword">if</span> self.selected == <span class="number">0</span> <span class="keyword">then</span>
             display.rect(self.left + <span class="number">1</span>,pos,self.width - <span class="number">2</span>,self.font.height,sel_color,sel_color)
             display.<span class="global">print</span>(<span class="string">".."</span>, x, pos, self.font, COLOR.WHITE, sel_color)
@@ -492,7 +535,7 @@ filedialog.__index = filedialog
     <span class="keyword">end</span>
     <span class="keyword">if</span> self.children ~= <span class="keyword">nil</span> <span class="keyword">then</span>
         <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.children) <span class="keyword">do</span>
-            <span class="keyword">if</span> i &gt; self.scroll <span class="keyword">then</span>
+            <span class="keyword">if</span> i &gt;= self.scrollbar.value <span class="keyword">then</span>
                 <span class="keyword">if</span> i == self.selected <span class="keyword">then</span>
                     self.is_dir_selected = <span class="keyword">true</span>
                     self.selected_value = v
@@ -502,14 +545,13 @@ filedialog.__index = filedialog
                     display.<span class="global">print</span>(v.path, x, pos, self.font)
                 <span class="keyword">end</span>
                 pos = pos + self.font.height
-                dir_count = i
                 <span class="keyword">if</span> (pos + self.font.height) &gt; (self.top + self.height) <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
             <span class="keyword">end</span>
         <span class="keyword">end</span>
     <span class="keyword">end</span>
     <span class="keyword">if</span> self.files ~= <span class="keyword">nil</span> <span class="keyword">then</span>
         <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.files) <span class="keyword">do</span>
-            <span class="keyword">if</span> dir_count + i &gt; self.scroll <span class="keyword">then</span>
+            <span class="keyword">if</span> dir_count + i &gt;= self.scrollbar.value <span class="keyword">then</span>
                 <span class="keyword">if</span> dir_count + i == self.selected <span class="keyword">then</span>
                     self.selected_value = v
                     display.rect(self.left + <span class="number">1</span>,pos,self.width - <span class="number">2</span>,self.font.height,sel_color,sel_color)
@@ -565,7 +607,8 @@ editor =
 <span class="keyword">end</span>
 <span class="global">table</span>.sort(editor.menu[<span class="number">4</span>].items)
 
-editor.lines_per_page = (<span class="number">460</span> - FONT.LARGE.height) / editor.font.height / <span class="number">2</span>
+editor.lines_per_page = <span class="global">math</span>.floor((display.height - <span class="number">20</span> - FONT.LARGE.height) / editor.font.height / <span class="number">2</span>)
+editor.scrollbar = scrollbar.create(editor.font.height,<span class="number">1</span>,<span class="number">1</span>,display.width - <span class="number">2</span>,<span class="number">20</span> + FONT.LARGE.height,<span class="number">2</span>)
 
 editor.mlmenu = menu.new
 {
@@ -601,8 +644,6 @@ editor.mlmenu = menu.new
     <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
         <span class="global">debug</span>.sethook()
         self.debugging = <span class="keyword">false</span>
-        <span class="comment">--if there was an error during a drawing operation, then make sure to free the lock
-</span>        <span class="keyword">if</span> self.drawing <span class="keyword">then</span> display.draw_end() <span class="keyword">end</span>
         handle_error(error)
     <span class="keyword">end</span>
     keyhandler:stop()
@@ -648,9 +689,9 @@ editor.mlmenu = menu.new
     <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span>
         self.menu_open = <span class="keyword">true</span>
     <span class="keyword">elseif</span> k == KEY.WHEEL_DOWN <span class="keyword">then</span>
-        self.scroll = inc(self.scroll,<span class="number">1</span>,#(self.lines))
+        self.scrollbar:down()
     <span class="keyword">elseif</span> k == KEY.WHEEL_UP <span class="keyword">then</span>
-        self.scroll = dec(self.scroll,<span class="number">1</span>,#(self.lines))
+        self.scrollbar:up()
     <span class="keyword">elseif</span> k ==  KEY.DOWN <span class="keyword">then</span>
         self.line = inc(self.line,<span class="number">1</span>,#(self.lines))
         self:scroll_into_view()
@@ -740,8 +781,8 @@ editor.mlmenu = menu.new
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:scroll_into_view()
-    <span class="keyword">if</span> self.line &lt; self.scroll <span class="keyword">then</span> self.scroll = self.line
-    <span class="keyword">elseif</span> self.line &gt; (self.scroll + self.lines_per_page) <span class="keyword">then</span> self.scroll = self.line - self.lines_per_page  + <span class="number">1</span> <span class="keyword">end</span>
+    <span class="keyword">if</span> self.line &lt; self.scrollbar.value <span class="keyword">then</span> self.scrollbar.value = self.line
+    <span class="keyword">elseif</span> self.line &gt; (self.scrollbar.value + self.lines_per_page) <span class="keyword">then</span> self.scrollbar.value = self.line - self.lines_per_page  + <span class="number">1</span> <span class="keyword">end</span>
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:update_title(mod, force)
@@ -803,6 +844,7 @@ editor.mlmenu = menu.new
                 self:draw_text(self.locals)
             <span class="keyword">elseif</span> FONT[m] ~= <span class="keyword">nil</span> <span class="keyword">then</span>
                 self.font = FONT[m]
+                self.scrollbar.step = self.font.height
             <span class="keyword">end</span>
         <span class="keyword">end</span>
     <span class="keyword">end</span>
@@ -834,7 +876,8 @@ editor.mlmenu = menu.new
         <span class="keyword">end</span>
         self.line = <span class="number">1</span>
         self.col = <span class="number">1</span>
-        self.scroll = <span class="number">1</span>
+        self.scrollbar.<span class="global">table</span> = self.lines
+        self.scrollbar.value = <span class="number">1</span>
         self.breakpoints = {}
     <span class="keyword">end</span>
     self.menu_open = <span class="keyword">false</span>
@@ -847,7 +890,8 @@ editor.mlmenu = menu.new
     self.menu_open = <span class="keyword">false</span>
     self.line = <span class="number">1</span>
     self.col = <span class="number">1</span>
-    self.scroll = <span class="number">1</span>
+    self.scrollbar.<span class="global">table</span> = self.lines
+    self.scrollbar.value = <span class="number">1</span>
     self.breakpoints = {}
 <span class="keyword">end</span>
 
@@ -866,6 +910,7 @@ editor.mlmenu = menu.new
             f:write(v,<span class="string">"\n"</span>)
         <span class="keyword">end</span>
         f:close()
+        self.filename = filename
         self:update_title(<span class="keyword">false</span>, <span class="keyword">true</span>)
         self.menu_open = <span class="keyword">false</span>
         <span class="keyword">return</span> <span class="keyword">true</span>
@@ -1012,9 +1057,9 @@ editor.mlmenu = menu.new
     <span class="keyword">if</span> k == KEY.Q <span class="keyword">then</span>
         self.menu_open = <span class="keyword">true</span>
     <span class="keyword">elseif</span> k == KEY.WHEEL_DOWN <span class="keyword">then</span>
-        self.scroll = inc(self.scroll,<span class="number">1</span>,#(self.lines))
+        self.scrollbar:down()
     <span class="keyword">elseif</span> k == KEY.WHEEL_UP <span class="keyword">then</span>
-        self.scroll = dec(self.scroll,<span class="number">1</span>,#(self.lines))
+        self.scrollbar:up()
     <span class="keyword">elseif</span> k ==  KEY.DOWN <span class="keyword">then</span>
         self.line = inc(self.line,<span class="number">1</span>,#(self.lines))
         self:scroll_into_view()
@@ -1083,6 +1128,7 @@ editor.mlmenu = menu.new
     display.draw(<span class="keyword">function</span>()
         self.drawing = <span class="keyword">true</span>
         self:draw_main()
+        self.scrollbar:draw()
         <span class="keyword">if</span> self.menu_open <span class="keyword">then</span>
             self:draw_menu()
         <span class="keyword">end</span>
@@ -1095,10 +1141,10 @@ editor.mlmenu = menu.new
 
 <span class="keyword">function</span> editor:draw_debug_error()
     <span class="keyword">if</span> self.debug_error <span class="keyword">and</span> self.debug_error_msg ~= <span class="keyword">nil</span> <span class="keyword">then</span>
-        display.rect(<span class="number">0</span>,<span class="number">480</span> - self.font.height * <span class="number">2</span> - <span class="number">10</span>,<span class="number">720</span>,self.font.height*<span class="number">2</span> + <span class="number">10</span>,COLOR.RED,COLOR.BLACK)
-        <span class="keyword">local</span> clipped = display.<span class="global">print</span>(self.debug_error_msg,<span class="number">10</span>,<span class="number">480</span> - self.font.height*<span class="number">2</span> - <span class="number">5</span>,self.font,COLOR.RED,COLOR.BLACK)
+        display.rect(<span class="number">0</span>,display.height - self.font.height * <span class="number">2</span> - <span class="number">10</span>,display.width,self.font.height*<span class="number">2</span> + <span class="number">10</span>,COLOR.RED,COLOR.BLACK)
+        <span class="keyword">local</span> clipped = display.<span class="global">print</span>(self.debug_error_msg,<span class="number">10</span>,display.height - self.font.height*<span class="number">2</span> - <span class="number">5</span>,self.font,COLOR.RED,COLOR.BLACK)
         <span class="keyword">if</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">then</span>
-            display.<span class="global">print</span>(clipped,<span class="number">10</span>,<span class="number">480</span> - self.font.height - <span class="number">5</span>,self.font,COLOR.RED,COLOR.BLACK)
+            display.<span class="global">print</span>(clipped,<span class="number">10</span>,display.height - self.font.height - <span class="number">5</span>,self.font,COLOR.RED,COLOR.BLACK)
         <span class="keyword">end</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
@@ -1106,7 +1152,7 @@ editor.mlmenu = menu.new
 <span class="keyword">function</span> editor:draw_text(text)
     self.menu_open = <span class="keyword">false</span>
     <span class="keyword">local</span> pos = self:draw_title()
-    display.rect(<span class="number">0</span>,pos,<span class="number">720</span>,<span class="number">480</span>-pos,COLOR.BLACK,COLOR.BLACK)
+    display.rect(<span class="number">0</span>,pos,display.width,display.height-pos,COLOR.BLACK,COLOR.BLACK)
     <span class="keyword">for</span> line <span class="keyword">in</span> text:gmatch(<span class="string">"[^\r\n]+"</span>) <span class="keyword">do</span>
         <span class="keyword">local</span> clipped = display.<span class="global">print</span>(line,<span class="number">10</span>,pos,self.font)
         <span class="keyword">while</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">do</span>
@@ -1131,7 +1177,7 @@ editor.mlmenu = menu.new
             bg = COLOR.DARK_GREEN1_MOD
         <span class="keyword">end</span>
     <span class="keyword">end</span>
-    display.rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">720</span>,h,fg,bg)
+    display.rect(<span class="number">0</span>,<span class="number">0</span>,display.width,h,fg,bg)
     <span class="keyword">if</span> self.menu_open <span class="keyword">then</span>
         display.rect(<span class="number">0</span>,<span class="number">0</span>,w,h,fg,COLOR.BLUE)
         display.<span class="global">print</span>(<span class="string">"Q"</span>,<span class="number">10</span>,<span class="number">10</span>,FONT.LARGE,COLOR.WHITE,COLOR.BLUE)
@@ -1210,18 +1256,19 @@ editor.mlmenu = menu.new
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> editor:draw_main()
-    display.rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">720</span>,<span class="number">480</span>,COLOR.BLACK,COLOR.BLACK)
+    display.rect(<span class="number">0</span>,<span class="number">0</span>,display.width,display.height,COLOR.BLACK,COLOR.BLACK)
     <span class="keyword">local</span> pos = self:draw_title()
     pos = pos + <span class="number">10</span>
     <span class="keyword">local</span> pad = <span class="number">10</span>
     <span class="keyword">local</span> h = self.font.height
     <span class="keyword">if</span> self.show_line_numbers <span class="keyword">then</span>
         pad = pad + self.font:width(<span class="string">"0000"</span>)
-        display.line(pad-<span class="number">5</span>,pos,pad-<span class="number">5</span>,<span class="number">480</span>,COLOR.BLUE)
+        display.line(pad-<span class="number">5</span>,pos,pad-<span class="number">5</span>,display.height,COLOR.BLUE)
     <span class="keyword">end</span>
     <span class="keyword">if</span> self.lines == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+    <span class="keyword">local</span> scroll = self.scrollbar.value
     <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(self.lines) <span class="keyword">do</span>
-        <span class="keyword">if</span> i &gt;= self.scroll <span class="keyword">then</span>
+        <span class="keyword">if</span> i &gt;= scroll <span class="keyword">then</span>
             <span class="keyword">if</span> self.show_line_numbers <span class="keyword">then</span>
                 <span class="keyword">if</span> self.breakpoints[i] <span class="keyword">then</span>
                     display.rect(<span class="number">0</span>,pos,pad - <span class="number">5</span>,h,COLOR.RED,COLOR.RED)
@@ -1278,7 +1325,7 @@ editor.mlmenu = menu.new
                 <span class="keyword">end</span>
             <span class="keyword">end</span>
             pos = pos + h
-            <span class="keyword">if</span> pos &gt;= <span class="number">480</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+            <span class="keyword">if</span> pos &gt;= display.height <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
         <span class="keyword">end</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
@@ -1287,7 +1334,7 @@ editor.mlmenu = menu.new
     <span class="keyword">if</span> error == <span class="keyword">nil</span> <span class="keyword">then</span> error = <span class="string">"Unknown Error!\n"</span> <span class="keyword">end</span>
     <span class="keyword">local</span> f = FONT.MONO_20
     <span class="global">print</span>(error)
-    display.rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">720</span>,<span class="number">480</span>,COLOR.RED,COLOR.BLACK)
+    display.rect(<span class="number">0</span>,<span class="number">0</span>,display.width,display.height,COLOR.RED,COLOR.BLACK)
     <span class="keyword">local</span> pos = <span class="number">10</span>
     <span class="keyword">for</span> line <span class="keyword">in</span> error:gmatch(<span class="string">"[^\r\n]+"</span>) <span class="keyword">do</span>
         <span class="keyword">local</span> clipped = display.<span class="global">print</span>(line,<span class="number">10</span>,pos,f)
@@ -1305,7 +1352,7 @@ editor.mlmenu = menu.new
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-03 19:50:33 </i>
+<i style="float:right;">Last updated 2015-05-06 17:06:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

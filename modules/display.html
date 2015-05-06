@@ -33,6 +33,8 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
+<li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_bitmap">Class bitmap </a></li>
 </ul>
 
 
@@ -120,14 +122,68 @@
 	<td class="summary">Draw a circle</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#load">load (filename)</a></td>
+	<td class="summary">Loads a bitmap file so it can be drawn on the screen</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#draw">draw (draw_func)</a></td>
 	<td class="summary">Runs the given function and double-buffers all the drawing done by the function
  Then copies the buffer back to the actual screen buffer when the function returns
- Use this to avoid flicking when drawing</td>
+ Use this to avoid flickering when drawing</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#circle">circle (text[, timeout=1000])</a></td>
+	<td class="name" nowrap><a href="#notify_box">notify_box (text[, timeout=1000])</a></td>
 	<td class="summary">Prints a message on the screen for a period of time</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#width">width</a></td>
+	<td class="summary">The width of the display (720)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#height">height</a></td>
+	<td class="summary">The height of the display (480)</td>
+	</tr>
+</table>
+<h2><a href="#Class_bitmap">Class bitmap </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#bitmap:draw">bitmap:draw (x, y[, w[, h]])</a></td>
+	<td class="summary">Draws this bitmap image to the screen</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.bits_per_pixel">bitmap.bits_per_pixel</a></td>
+	<td class="summary">Get the bits per pixel</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.width">bitmap.width</a></td>
+	<td class="summary">Get the image width</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.height">bitmap.height</a></td>
+	<td class="summary">Get the image height</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.num_colors">bitmap.num_colors</a></td>
+	<td class="summary">Get the number of colors</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.size">bitmap.size</a></td>
+	<td class="summary">Get the image size</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.signature">bitmap.signature</a></td>
+	<td class="summary">Get the image signature</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.hpix_per_meter">bitmap.hpix_per_meter</a></td>
+	<td class="summary">Get the image horizontal resolution</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#bitmap.vpix_per_meter">bitmap.vpix_per_meter</a></td>
+	<td class="summary">Get the image vertical resolution</td>
 	</tr>
 </table>
 
@@ -448,13 +504,44 @@
 
 </dd>
     <dt>
+    <a name = "load"></a>
+    <strong>load (filename)</strong>
+    </dt>
+    <dd>
+    Loads a bitmap file so it can be drawn on the screen
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">filename</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../modules/display.html#bitmap">bitmap</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "draw"></a>
     <strong>draw (draw_func)</strong>
     </dt>
     <dd>
     Runs the given function and double-buffers all the drawing done by the function
  Then copies the buffer back to the actual screen buffer when the function returns
- Use this to avoid flicking when drawing
+ Use this to avoid flickering when drawing
 
 
     <h3>Parameters:</h3>
@@ -473,8 +560,8 @@
 
 </dd>
     <dt>
-    <a name = "circle"></a>
-    <strong>circle (text[, timeout=1000])</strong>
+    <a name = "notify_box"></a>
+    <strong>notify_box (text[, timeout=1000])</strong>
     </dt>
     <dd>
     Prints a message on the screen for a period of time
@@ -501,13 +588,285 @@
 
 </dd>
 </dl>
+    <h2><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "width"></a>
+    <strong>width</strong>
+    </dt>
+    <dd>
+    The width of the display (720)
+
+
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "height"></a>
+    <strong>height</strong>
+    </dt>
+    <dd>
+    The height of the display (480)
+
+
+    <ul>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_bitmap"></a>Class bitmap </h2>
+
+        Represents a bitmap file that has been loaded
+    <dl class="function">
+    <dt>
+    <a name = "bitmap:draw"></a>
+    <strong>bitmap:draw (x, y[, w[, h]])</strong>
+    </dt>
+    <dd>
+    Draws this bitmap image to the screen
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">w</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">h</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.bits_per_pixel"></a>
+    <strong>bitmap.bits_per_pixel</strong>
+    </dt>
+    <dd>
+    Get the bits per pixel
+
+
+    <ul>
+        <li><span class="parameter">bits_per_pixel</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.width"></a>
+    <strong>bitmap.width</strong>
+    </dt>
+    <dd>
+    Get the image width
+
+
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.height"></a>
+    <strong>bitmap.height</strong>
+    </dt>
+    <dd>
+    Get the image height
+
+
+    <ul>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.num_colors"></a>
+    <strong>bitmap.num_colors</strong>
+    </dt>
+    <dd>
+    Get the number of colors
+
+
+    <ul>
+        <li><span class="parameter">num_colors</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.size"></a>
+    <strong>bitmap.size</strong>
+    </dt>
+    <dd>
+    Get the image size
+
+
+    <ul>
+        <li><span class="parameter">size</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.signature"></a>
+    <strong>bitmap.signature</strong>
+    </dt>
+    <dd>
+    Get the image signature
+
+
+    <ul>
+        <li><span class="parameter">signature</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.hpix_per_meter"></a>
+    <strong>bitmap.hpix_per_meter</strong>
+    </dt>
+    <dd>
+    Get the image horizontal resolution
+
+
+    <ul>
+        <li><span class="parameter">hpix_per_meter</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "bitmap.vpix_per_meter"></a>
+    <strong>bitmap.vpix_per_meter</strong>
+    </dt>
+    <dd>
+    Get the image vertical resolution
+
+
+    <ul>
+        <li><span class="parameter">vpix_per_meter</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-03 19:50:33 </i>
+<i style="float:right;">Last updated 2015-05-06 17:06:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
