@@ -249,7 +249,7 @@ targets = {}
 
     display.rect(x, y, a, a, COLOR.gray(<span class="number">80</span>), COLOR.gray(<span class="number">80</span>));
     <span class="keyword">if</span> (on_target) <span class="keyword">then</span>
-        display.circle(x + <span class="global">math</span>.floor(a/<span class="number">2</span>), y + <span class="global">math</span>.floor(a/<span class="number">2</span>), <span class="global">math</span>.floor(a/<span class="number">4</span>), COLOR.ORANGE);
+        display.circle(x + a//<span class="number">2</span>, y + a//<span class="number">2</span>, a//<span class="number">4</span>, COLOR.ORANGE);
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
@@ -278,22 +278,22 @@ targets = {}
 
     draw_space(x, y, a, <span class="number">0</span>);
 
-    <span class="keyword">local</span> xc = <span class="global">math</span>.floor(x + a/<span class="number">2</span>);
-    <span class="keyword">local</span> yc = <span class="global">math</span>.floor(y + a/<span class="number">2</span>);
-    <span class="keyword">local</span> r = <span class="global">math</span>.floor(a * <span class="number">3</span>/<span class="number">8</span>);
-    <span class="keyword">local</span> y_eye = <span class="global">math</span>.floor(yc - r * <span class="number">3</span>/<span class="number">8</span>);
-    <span class="keyword">local</span> y_mouth = yc + r * <span class="number">3</span>/<span class="number">8</span>;
+    <span class="keyword">local</span> xc = x + a//<span class="number">2</span>;
+    <span class="keyword">local</span> yc = y + a//<span class="number">2</span>;
+    <span class="keyword">local</span> r = a * <span class="number">3</span>//<span class="number">8</span>;
+    <span class="keyword">local</span> y_eye = yc - r * <span class="number">3</span>//<span class="number">8</span>;
+    <span class="keyword">local</span> y_mouth = yc + r * <span class="number">3</span>//<span class="number">8</span>;
     display.circle(xc, yc, r, COLOR.YELLOW, COLOR.YELLOW);
     display.circle(xc, yc, r, COLOR.BLACK);
     display.circle(xc, yc, r-<span class="number">1</span>, COLOR.BLACK);
-    display.circle(xc - <span class="global">math</span>.floor(r/<span class="number">3</span>), y_eye, <span class="global">math</span>.floor(r/<span class="number">5</span>), COLOR.BLACK, COLOR.BLACK);
-    display.circle(xc + <span class="global">math</span>.floor(r/<span class="number">3</span>), y_eye, <span class="global">math</span>.floor(r/<span class="number">5</span>), COLOR.BLACK, COLOR.BLACK);
+    display.circle(xc - r//<span class="number">3</span>, y_eye, r//<span class="number">5</span>, COLOR.BLACK, COLOR.BLACK);
+    display.circle(xc + r//<span class="number">3</span>, y_eye, r//<span class="number">5</span>, COLOR.BLACK, COLOR.BLACK);
 
-    <span class="keyword">local</span> r_mouth = r*<span class="number">2</span>/<span class="number">3</span>;
+    <span class="keyword">local</span> r_mouth = r*<span class="number">2</span>//<span class="number">3</span>;
     <span class="keyword">for</span> t = <span class="number">45</span>, <span class="number">180</span>-<span class="number">45</span>, <span class="number">2</span> <span class="keyword">do</span>
 
-        <span class="keyword">local</span> xp = <span class="global">math</span>.floor(xc + r_mouth * <span class="global">math</span>.cos(t*<span class="global">math</span>.pi/<span class="number">180</span>));
-        <span class="keyword">local</span> yp = <span class="global">math</span>.floor(yc - r/<span class="number">8</span> + r_mouth * <span class="global">math</span>.sin(t*<span class="global">math</span>.pi/<span class="number">180</span>));
+        <span class="keyword">local</span> xp = xc + r_mouth * <span class="global">math</span>.cos(t*<span class="global">math</span>.pi/<span class="number">180</span>);
+        <span class="keyword">local</span> yp = yc - r/<span class="number">8</span> + r_mouth * <span class="global">math</span>.sin(t*<span class="global">math</span>.pi/<span class="number">180</span>);
         display.pixel(xp, yp, COLOR.BLACK);
         display.pixel(xp, yp+<span class="number">1</span>, COLOR.BLACK);
     <span class="keyword">end</span>
@@ -302,11 +302,11 @@ targets = {}
 <span class="keyword">function</span> draw_maze()
 
     display.rect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">720</span>, <span class="number">480</span>, COLOR.BLACK, COLOR.BLACK);
-    <span class="keyword">local</span> a = <span class="global">math</span>.floor(<span class="global">math</span>.min(<span class="number">400</span> / LINES, <span class="number">700</span> / COLUMNS));
+    <span class="keyword">local</span> a = <span class="global">math</span>.min(<span class="number">400</span> // LINES, <span class="number">700</span> // COLUMNS);
     <span class="keyword">local</span> total_w = a * COLUMNS;
     <span class="keyword">local</span> total_h = a * LINES;
-    <span class="keyword">local</span> x0 = <span class="number">360</span> - <span class="global">math</span>.floor(total_w / <span class="number">2</span>);
-    <span class="keyword">local</span> y0 = <span class="number">240</span> - <span class="global">math</span>.floor(total_h / <span class="number">2</span>);
+    <span class="keyword">local</span> x0 = <span class="number">360</span> - total_w // <span class="number">2</span>;
+    <span class="keyword">local</span> y0 = <span class="number">240</span> - total_h // <span class="number">2</span>;
 
     <span class="keyword">for</span> i = <span class="number">1</span>, LINES, <span class="number">1</span> <span class="keyword">do</span>
 
@@ -542,7 +542,7 @@ sokobanmenu = menu.new
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-06 17:06:45 </i>
+<i style="float:right;">Last updated 2015-05-09 15:09:29 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

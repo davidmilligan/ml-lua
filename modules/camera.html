@@ -34,6 +34,10 @@
 <ul>
 <li><a href="#Functions">Functions</a></li>
 <li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_shutter">Class shutter </a></li>
+<li><a href="#Class_aperture">Class aperture </a></li>
+<li><a href="#Class_iso">Class iso </a></li>
+<li><a href="#Class_ec">Class ec </a></li>
 </ul>
 
 
@@ -96,23 +100,23 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#shutter">shutter</a></td>
-	<td class="summary">Get/Set shutter speed in apex units x10</td>
+	<td class="summary">Gets a <a href="../modules/camera.html#shutter">shutter</a> object that represents the camera's current shutter speed</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#aperture">aperture</a></td>
-	<td class="summary">Get/Set lens aperture in apex units x10</td>
+	<td class="summary">Gets an <a href="../modules/camera.html#aperture">aperture</a> object that represents the lens' aperture</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#iso">iso</a></td>
-	<td class="summary">Get/Set ISO in apex units x10</td>
+	<td class="summary">Gets an <a href="../modules/camera.html#iso">iso</a> object that represents camera's ISO</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ec">ec</a></td>
-	<td class="summary">Get/Set exposure compensation in apex units x10</td>
+	<td class="summary">Gets an <a href="../modules/camera.html#ec">ec</a> object that represents exposure compensation</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#flash_ec">flash_ec</a></td>
-	<td class="summary">Get/Set flash exposure compensation in apex units x10</td>
+	<td class="summary">Gets an <a href="../modules/camera.html#ec">ec</a> object that represents flash exposure compensation</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#kelvin">kelvin</a></td>
@@ -153,6 +157,102 @@
 	<tr>
 	<td class="name" nowrap><a href="#state">state</a></td>
 	<td class="summary">Get the current Canon GUI state of the camera (PLAY, QR, LV, etc)</td>
+	</tr>
+</table>
+<h2><a href="#Class_shutter">Class shutter </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#shutter.raw">shutter.raw</a></td>
+	<td class="summary">Get/Set shutter speed in Canon raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#shutter.apex">shutter.apex</a></td>
+	<td class="summary">Get/Set shutter speed in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#shutter.apexf">shutter.apexf</a></td>
+	<td class="summary">Get/Set shutter speed in apex units (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#shutter.ms">shutter.ms</a></td>
+	<td class="summary">Get/Set shutter speed in milliseconds</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#shutter.value">shutter.value</a></td>
+	<td class="summary">Get/Set shutter speed in seconds (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#shutter:tostring">shutter:tostring ()</a></td>
+	<td class="summary">Pretty prints the current shutter speed as a string</td>
+	</tr>
+</table>
+<h2><a href="#Class_aperture">Class aperture </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#aperture.raw">aperture.raw</a></td>
+	<td class="summary">Get/Set aperture in Canon raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.apex">aperture.apex</a></td>
+	<td class="summary">Get/Set aperture in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.apexf">aperture.apexf</a></td>
+	<td class="summary">Get/Set aperture in apex units (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.value">aperture.value</a></td>
+	<td class="summary">Get/Set aperture as f-number (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture:tostring">aperture:tostring ()</a></td>
+	<td class="summary">Pretty prints the current aperture as a string</td>
+	</tr>
+</table>
+<h2><a href="#Class_iso">Class iso </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#iso.raw">iso.raw</a></td>
+	<td class="summary">Get/Set ISO in Canon raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iso.apex">iso.apex</a></td>
+	<td class="summary">Get/Set ISO in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iso.apexf">iso.apexf</a></td>
+	<td class="summary">Get/Set ISO in apex units (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iso.value">iso.value</a></td>
+	<td class="summary">Get/Set ISO</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iso:tostring">iso:tostring ()</a></td>
+	<td class="summary">Pretty prints the current ISO as a string</td>
+	</tr>
+</table>
+<h2><a href="#Class_ec">Class ec </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ec.raw">ec.raw</a></td>
+	<td class="summary">Get/Set aperture in Canon raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ec.apex">ec.apex</a></td>
+	<td class="summary">Get/Set aperture in apex units x10</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ec.apexf">ec.apexf</a></td>
+	<td class="summary">Get/Set exposure compensation in EVs (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ec.value">ec.value</a></td>
+	<td class="summary">Get/Set exposure compensation in EVs</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ec:tostring">ec:tostring ()</a></td>
+	<td class="summary">Pretty prints the exposure compensation as a string</td>
 	</tr>
 </table>
 
@@ -220,12 +320,12 @@
     <strong>shutter</strong>
     </dt>
     <dd>
-    Get/Set shutter speed in apex units x10
+    Gets a <a href="../modules/camera.html#shutter">shutter</a> object that represents the camera's current shutter speed
 
 
     <ul>
         <li><span class="parameter">shutter</span>
-            <span class="types"><span class="type">int</span></span>
+            <span class="types"><a class="type" href="../modules/camera.html#shutter">shutter</a></span>
 
 
 
@@ -242,12 +342,12 @@
     <strong>aperture</strong>
     </dt>
     <dd>
-    Get/Set lens aperture in apex units x10
+    Gets an <a href="../modules/camera.html#aperture">aperture</a> object that represents the lens' aperture
 
 
     <ul>
         <li><span class="parameter">aperture</span>
-            <span class="types"><span class="type">int</span></span>
+            <span class="types"><a class="type" href="../modules/camera.html#aperture">aperture</a></span>
 
 
 
@@ -264,12 +364,12 @@
     <strong>iso</strong>
     </dt>
     <dd>
-    Get/Set ISO in apex units x10
+    Gets an <a href="../modules/camera.html#iso">iso</a> object that represents camera's ISO
 
 
     <ul>
         <li><span class="parameter">iso</span>
-            <span class="types"><span class="type">int</span></span>
+            <span class="types"><a class="type" href="../modules/camera.html#iso">iso</a></span>
 
 
 
@@ -286,12 +386,12 @@
     <strong>ec</strong>
     </dt>
     <dd>
-    Get/Set exposure compensation in apex units x10
+    Gets an <a href="../modules/camera.html#ec">ec</a> object that represents exposure compensation
 
 
     <ul>
         <li><span class="parameter">ec</span>
-            <span class="types"><span class="type">int</span></span>
+            <span class="types"><a class="type" href="../modules/camera.html#ec">ec</a></span>
 
 
 
@@ -308,12 +408,12 @@
     <strong>flash_ec</strong>
     </dt>
     <dd>
-    Get/Set flash exposure compensation in apex units x10
+    Gets an <a href="../modules/camera.html#ec">ec</a> object that represents flash exposure compensation
 
 
     <ul>
         <li><span class="parameter">flash_ec</span>
-            <span class="types"><span class="type">int</span></span>
+            <span class="types"><a class="type" href="../modules/camera.html#ec">ec</a></span>
 
 
 
@@ -530,13 +630,495 @@
 
 </dd>
 </dl>
+    <h2><a name="Class_shutter"></a>Class shutter </h2>
+
+        Represents the camera's shutter speed setting
+    <dl class="function">
+    <dt>
+    <a name = "shutter.raw"></a>
+    <strong>shutter.raw</strong>
+    </dt>
+    <dd>
+    Get/Set shutter speed in Canon raw units
+
+
+    <ul>
+        <li><span class="parameter">raw</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "shutter.apex"></a>
+    <strong>shutter.apex</strong>
+    </dt>
+    <dd>
+    Get/Set shutter speed in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">apex</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "shutter.apexf"></a>
+    <strong>shutter.apexf</strong>
+    </dt>
+    <dd>
+    Get/Set shutter speed in apex units (floating point)
+
+
+    <ul>
+        <li><span class="parameter">apexf</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "shutter.ms"></a>
+    <strong>shutter.ms</strong>
+    </dt>
+    <dd>
+    Get/Set shutter speed in milliseconds
+
+
+    <ul>
+        <li><span class="parameter">ms</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "shutter.value"></a>
+    <strong>shutter.value</strong>
+    </dt>
+    <dd>
+    Get/Set shutter speed in seconds (floating point)
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "shutter:tostring"></a>
+    <strong>shutter:tostring ()</strong>
+    </dt>
+    <dd>
+    Pretty prints the current shutter speed as a string
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_aperture"></a>Class aperture </h2>
+
+        Represents the lens's aperture
+    <dl class="function">
+    <dt>
+    <a name = "aperture.raw"></a>
+    <strong>aperture.raw</strong>
+    </dt>
+    <dd>
+    Get/Set aperture in Canon raw units
+
+
+    <ul>
+        <li><span class="parameter">raw</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.apex"></a>
+    <strong>aperture.apex</strong>
+    </dt>
+    <dd>
+    Get/Set aperture in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">apex</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.apexf"></a>
+    <strong>aperture.apexf</strong>
+    </dt>
+    <dd>
+    Get/Set aperture in apex units (floating point)
+
+
+    <ul>
+        <li><span class="parameter">apexf</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.value"></a>
+    <strong>aperture.value</strong>
+    </dt>
+    <dd>
+    Get/Set aperture as f-number (floating point)
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture:tostring"></a>
+    <strong>aperture:tostring ()</strong>
+    </dt>
+    <dd>
+    Pretty prints the current aperture as a string
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_iso"></a>Class iso </h2>
+
+        Represents the camera ISO
+    <dl class="function">
+    <dt>
+    <a name = "iso.raw"></a>
+    <strong>iso.raw</strong>
+    </dt>
+    <dd>
+    Get/Set ISO in Canon raw units
+
+
+    <ul>
+        <li><span class="parameter">raw</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "iso.apex"></a>
+    <strong>iso.apex</strong>
+    </dt>
+    <dd>
+    Get/Set ISO in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">apex</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "iso.apexf"></a>
+    <strong>iso.apexf</strong>
+    </dt>
+    <dd>
+    Get/Set ISO in apex units (floating point)
+
+
+    <ul>
+        <li><span class="parameter">apexf</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "iso.value"></a>
+    <strong>iso.value</strong>
+    </dt>
+    <dd>
+    Get/Set ISO
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "iso:tostring"></a>
+    <strong>iso:tostring ()</strong>
+    </dt>
+    <dd>
+    Pretty prints the current ISO as a string
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_ec"></a>Class ec </h2>
+
+        Represents the exposure compensation
+    <dl class="function">
+    <dt>
+    <a name = "ec.raw"></a>
+    <strong>ec.raw</strong>
+    </dt>
+    <dd>
+    Get/Set aperture in Canon raw units
+
+
+    <ul>
+        <li><span class="parameter">raw</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ec.apex"></a>
+    <strong>ec.apex</strong>
+    </dt>
+    <dd>
+    Get/Set aperture in apex units x10
+
+
+    <ul>
+        <li><span class="parameter">apex</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ec.apexf"></a>
+    <strong>ec.apexf</strong>
+    </dt>
+    <dd>
+    Get/Set exposure compensation in EVs (floating point)
+
+
+    <ul>
+        <li><span class="parameter">apexf</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ec.value"></a>
+    <strong>ec.value</strong>
+    </dt>
+    <dd>
+    Get/Set exposure compensation in EVs
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ec:tostring"></a>
+    <strong>ec:tostring ()</strong>
+    </dt>
+    <dd>
+    Pretty prints the exposure compensation as a string
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-06 17:06:45 </i>
+<i style="float:right;">Last updated 2015-05-09 15:09:29 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
