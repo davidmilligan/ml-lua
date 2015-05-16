@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><strong>calc.lua</strong></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>calc.lua</h2>
+<pre>
+<span class="comment">-- a simple calculator
+</span>calc = {}
+calc.value = <span class="string">""</span>
+calc.buttons =
+{
+    <span class="string">"lep()^/"</span>,
+    <span class="string">"sct789*"</span>,
+    <span class="string">"dvy456-"</span>,
+    <span class="string">"afg123+"</span>,
+    <span class="string">"rq,0.C="</span>
+}
+calc.row = <span class="number">5</span>
+calc.col = <span class="number">1</span>
+calc.rows = #(calc.buttons)
+calc.cols = #(calc.buttons[<span class="number">1</span>])
+calc.font = FONT.LARGE
+calc.pad = <span class="number">20</span>
+calc.cell_size = calc.pad * <span class="number">2</span> + calc.font.height
+calc.height = (calc.rows + <span class="number">1</span>) * calc.cell_size
+calc.width = (calc.cols) * calc.cell_size
+calc.left = display.width // <span class="number">2</span> - calc.width // <span class="number">2</span>
+calc.top = display.height // <span class="number">2</span> - calc.height // <span class="number">2</span>
+
+calc.mlmenu = menu.new
+{
+    parent = <span class="string">"Debug"</span>,
+    name = <span class="string">"Calculator"</span>,
+    icon_type = ICON_TYPE.ACTION,
+    <span class="global">select</span> = <span class="keyword">function</span>(this)
+        task.create(<span class="keyword">function</span>() calc:run() <span class="keyword">end</span>)
+    <span class="keyword">end</span>,
+    update = <span class="keyword">function</span>(this) <span class="keyword">return</span> calc.value <span class="keyword">end</span>
+}
+
+<span class="comment">-- The main program loop
+</span><span class="keyword">function</span> calc:run()
+    <span class="keyword">local</span> status, error = <span class="global">xpcall</span>(<span class="keyword">function</span>()
+        menu.block(<span class="keyword">true</span>)
+        self:main_loop()
+    <span class="keyword">end</span>, <span class="global">debug</span>.traceback)
+    <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
+        handle_error(error)
+    <span class="keyword">end</span>
+    menu.block(<span class="keyword">false</span>)
+    keyhandler:stop()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> calc:main_loop()
+    menu.block(<span class="keyword">true</span>)
+    self:draw()
+    keyhandler:start()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> keys = keyhandler:getkeys()
+        <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> exit = <span class="keyword">false</span>
+            <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
+                <span class="keyword">if</span> self:handle_key(v) == <span class="keyword">false</span> <span class="keyword">then</span>
+                    exit = <span class="keyword">true</span>
+                    <span class="keyword">break</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> exit <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+            self:draw()
+        <span class="keyword">end</span>
+        task.yield(<span class="number">100</span>)
+    <span class="keyword">end</span>
+    keyhandler:stop()
+    <span class="keyword">if</span> self.running == <span class="keyword">false</span> <span class="keyword">then</span> menu.block(<span class="keyword">false</span>) <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> calc:handle_key(key)
+    <span class="keyword">if</span> key == KEY.Q <span class="keyword">or</span> key == KEY.MENU <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">false</span>
+    <span class="keyword">elseif</span> key == KEY.UP <span class="keyword">or</span> key == KEY.WHEEL_UP <span class="keyword">then</span>
+        self.row = dec(self.row,<span class="number">1</span>,self.rows)
+    <span class="keyword">elseif</span> key == KEY.DOWN <span class="keyword">or</span> key == KEY.WHEEL_DOWN <span class="keyword">then</span>
+        self.row = inc(self.row,<span class="number">1</span>,self.rows)
+    <span class="keyword">elseif</span> key == KEY.LEFT <span class="keyword">or</span> key == KEY.WHEEL_LEFT <span class="keyword">then</span>
+        self.col = dec(self.col,<span class="number">1</span>,self.cols)
+    <span class="keyword">elseif</span> key == KEY.RIGHT <span class="keyword">or</span> key == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+        self.col = inc(self.col,<span class="number">1</span>,self.cols)
+    <span class="keyword">elseif</span> key == KEY.INFO <span class="keyword">then</span>
+        self:handle_button(<span class="string">"C"</span>)
+    <span class="keyword">elseif</span> key == KEY.PLAY <span class="keyword">then</span>
+        self:handle_button(<span class="string">"="</span>)
+    <span class="keyword">elseif</span> key == KEY.SET <span class="keyword">then</span>
+        <span class="keyword">local</span> row = self.buttons[self.row]
+        <span class="keyword">local</span> c = <span class="global">string</span>.sub(row,self.col,self.col)
+        self:handle_button(c)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> calc:handle_button(c)
+    <span class="keyword">if</span> c == <span class="string">"C"</span> <span class="keyword">then</span>
+        self.value = <span class="string">""</span>
+    <span class="keyword">elseif</span> c == <span class="string">"="</span> <span class="keyword">then</span>
+        <span class="keyword">local</span> status,result = <span class="global">pcall</span>(<span class="global">load</span>,<span class="string">"return "</span>..self.value)
+        <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">or</span> result == <span class="keyword">nil</span> <span class="keyword">then</span>
+            self.value = <span class="string">"syntax error"</span>
+        <span class="keyword">else</span>
+            status,self.value = <span class="global">pcall</span>(result)
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        <span class="keyword">local</span> str = self:c_to_str(c)
+        self.value = self.value..str
+        <span class="keyword">if</span> str ~= c <span class="keyword">and</span> str ~= <span class="string">"pi"</span> <span class="keyword">then</span>
+            self.value = self.value..<span class="string">"("</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> calc:c_to_str(c)
+    <span class="keyword">if</span> c== <span class="string">"l"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"log"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"e"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"exp"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"p"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"pi"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"s"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"sin"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"c"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"cos"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"t"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"tan"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"d"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"asin"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"v"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"acos"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"y"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"atan"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"a"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"abs"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"f"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"floor"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"g"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"ceil"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"r"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"rand"</span>
+    <span class="keyword">elseif</span> c == <span class="string">"q"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"sqrt"</span>
+    <span class="keyword">else</span> <span class="keyword">return</span> c <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> calc:draw()
+    display.draw(<span class="keyword">function</span>()
+        display.rect(self.left,self.top,self.width,self.cell_size,COLOR.WHITE,COLOR.BLACK)
+        display.<span class="global">print</span>(self.value,self.left + self.pad,self.top + self.pad,self.font,COLOR.WHITE,COLOR.BLACK)
+        <span class="keyword">for</span> i=<span class="number">1</span>,self.rows,<span class="number">1</span> <span class="keyword">do</span>
+            <span class="keyword">local</span> row = self.buttons[i]
+            <span class="keyword">for</span> j=<span class="number">1</span>,self.cols,<span class="number">1</span> <span class="keyword">do</span>
+                <span class="keyword">local</span> c = self:c_to_str(<span class="global">string</span>.sub(row,j,j))
+                <span class="keyword">local</span> x = self.left + (j - <span class="number">1</span>) * self.cell_size
+                <span class="keyword">local</span> y = self.top + i * self.cell_size
+                <span class="keyword">local</span> bg = COLOR.BLACK
+                <span class="keyword">if</span> i == self.row <span class="keyword">and</span> j == self.col <span class="keyword">then</span> bg = COLOR.BLUE <span class="keyword">end</span>
+                display.rect(x,y,self.cell_size,self.cell_size,COLOR.WHITE,bg)
+                <span class="keyword">local</span> pad = self.cell_size // <span class="number">2</span> - self.font:width(c) // <span class="number">2</span>
+                display.<span class="global">print</span>(c,x + pad, y + self.pad,self.font,COLOR.WHITE,bg)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--export all the math functions to the global namespace
+</span><span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(<span class="global">math</span>) <span class="keyword">do</span>
+    _G[k] = v
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> inc(val,min,max)
+    <span class="keyword">if</span> val == max <span class="keyword">then</span> <span class="keyword">return</span> min <span class="keyword">end</span>
+    <span class="keyword">if</span> val &lt; min <span class="keyword">then</span> <span class="keyword">return</span> min <span class="keyword">end</span>
+    <span class="keyword">return</span> val + <span class="number">1</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> dec(val,min,max)
+    <span class="keyword">if</span> val == min <span class="keyword">then</span> <span class="keyword">return</span> max <span class="keyword">end</span>
+    <span class="keyword">if</span> val &gt; max <span class="keyword">then</span> <span class="keyword">return</span> max <span class="keyword">end</span>
+    <span class="keyword">return</span> val - <span class="number">1</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- keyhandler class
+</span>
+keyhandler = {}
+keyhandler.halfshutter = <span class="keyword">false</span>
+keyhandler.runnning = <span class="keyword">false</span>
+
+<span class="comment">--starts the keyhandler if not already running, returns whether or not it was started
+</span><span class="keyword">function</span> keyhandler:start()
+    <span class="keyword">if</span> keyhandler.running <span class="keyword">then</span> self:reset() <span class="keyword">return</span> <span class="keyword">false</span> <span class="keyword">end</span>
+    <span class="comment">--save any previous keypress handler so we can restore it when finished
+</span>    self.old_keypress = event.keypress
+    self.halfshutter = <span class="keyword">false</span>
+    self.keys = {}
+    self.key_count = <span class="number">0</span>
+    self.running = <span class="keyword">true</span>
+    event.keypress = <span class="keyword">function</span>(key)
+        <span class="keyword">if</span> key == KEY.HALFSHUTTER <span class="keyword">then</span> keyhandler.halfshutter = <span class="keyword">true</span> <span class="keyword">end</span>
+        <span class="keyword">if</span> key == KEY.UNPRESS_HALFSHUTTER <span class="keyword">then</span> keyhandler.halfshutter = <span class="keyword">false</span> <span class="keyword">end</span>
+        <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">then</span>
+            keyhandler.key_count = keyhandler.key_count + <span class="number">1</span>
+            keyhandler.keys[keyhandler.key_count] = key
+        <span class="keyword">end</span>
+        <span class="keyword">return</span> <span class="keyword">false</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="keyword">true</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- returns a table of all the keys that have been pressed since the last time getkeys was called
+</span><span class="keyword">function</span> keyhandler:getkeys()
+    <span class="keyword">if</span> self.key_count == <span class="number">0</span> <span class="keyword">then</span>
+        <span class="keyword">return</span> <span class="keyword">nil</span>
+    <span class="keyword">else</span>
+        <span class="keyword">local</span> result = self.keys
+        self:reset()
+        <span class="keyword">return</span> result
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> keyhandler:reset()
+    self.key_count = <span class="number">0</span>
+    self.keys = {}
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> keyhandler:stop()
+    self:reset()
+    self.running = <span class="keyword">false</span>
+    event.keypress = self.old_keypress
+<span class="keyword">end</span>
+
+<span class="comment">--blocks until any key is pressed
+</span><span class="keyword">function</span> keyhandler:anykey()
+    <span class="keyword">local</span> started = self:start()
+    <span class="comment">--ignore any immediate keys
+</span>    task.yield(<span class="number">100</span>)
+    self:getkeys()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> keys = self:getkeys()
+        <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> exit = <span class="keyword">false</span>
+            <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
+                <span class="keyword">if</span> v ~= KEY.UNPRESS_SET <span class="keyword">then</span>
+                    exit = <span class="keyword">true</span>
+                    <span class="keyword">break</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> exit <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        task.yield(<span class="number">100</span>)
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> started <span class="keyword">then</span> self:stop() <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> handle_error(error)
+    <span class="keyword">if</span> error == <span class="keyword">nil</span> <span class="keyword">then</span> error = <span class="string">"Unknown Error!\n"</span> <span class="keyword">end</span>
+    <span class="keyword">local</span> f = FONT.MONO_20
+    <span class="global">print</span>(error)
+    display.rect(<span class="number">0</span>,<span class="number">0</span>,display.width,display.height,COLOR.RED,COLOR.BLACK)
+    <span class="keyword">local</span> pos = <span class="number">10</span>
+    <span class="keyword">for</span> line <span class="keyword">in</span> error:gmatch(<span class="string">"[^\r\n]+"</span>) <span class="keyword">do</span>
+        <span class="keyword">local</span> clipped = display.<span class="global">print</span>(line,<span class="number">10</span>,pos,f)
+        <span class="keyword">while</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">do</span>
+            pos = pos + f.height
+            clipped = display.<span class="global">print</span>(clipped,<span class="number">10</span>,pos,f)
+        <span class="keyword">end</span>
+        pos = pos + f.height
+    <span class="keyword">end</span>
+    keyhandler:anykey()
+<span class="keyword">end</span></pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-05-16 15:09:16 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
