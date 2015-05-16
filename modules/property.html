@@ -1,0 +1,2674 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_property">Class property </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><strong>property</strong></li>
+  <li><a href="../modules/task.html">task</a></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>property</code></h1>
+<p>Canon Properties</p>
+<p>
+
+</p>
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">
+ function property.SHUTTER:handler(value)
+     print(&quot;shutter: &quot;..value)
+ end</pre>
+    </ul>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2014</li>
+        <li><strong>License</strong>: GPL</li>
+        <li><strong>Author</strong>: Magic Lantern Team</li>
+    </ul>
+
+
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#BURST_COUNT">BURST_COUNT</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#BAT_INFO">BAT_INFO</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#TFT_STATUS">TFT_STATUS</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LENS_NAME">LENS_NAME</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LENS_SOMETHING">LENS_SOMETHING</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LENS">LENS</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#HDMI_CHANGE">HDMI_CHANGE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#HDMI_CHANGE_CODE">HDMI_CHANGE_CODE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#USBRCA_MONITOR">USBRCA_MONITOR</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MVR_REC_START">MVR_REC_START</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#REC_TIME">REC_TIME</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GUI_STATE">GUI_STATE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LIVE_VIEW_FACE_AF">LIVE_VIEW_FACE_AF</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_LOCK">LV_LOCK</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_ACTION">LV_ACTION</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LCD_POSITION">LCD_POSITION</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#USBDEVICE_CONNECT">USBDEVICE_CONNECT</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MVR_MOVW_START0">MVR_MOVW_START0</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MVR_MOVW_START1">MVR_MOVW_START1</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AF_MODE">AF_MODE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MVR_REC">MVR_REC</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_LENS">LV_LENS</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_LENS_STABILIZE">LV_LENS_STABILIZE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_MANIPULATION">LV_MANIPULATION</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_AFFRAME">LV_AFFRAME</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS">LV_FOCUS</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_DONE">LV_FOCUS_DONE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_STOP">LV_FOCUS_STOP</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_BAD">LV_FOCUS_BAD</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_STATE">LV_FOCUS_STATE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_STATUS">LV_FOCUS_STATUS</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_CMD">LV_FOCUS_CMD</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_FOCUS_DATA">LV_FOCUS_DATA</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_STATE">LV_STATE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_DISPSIZE">LV_DISPSIZE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LVCAF_STATE">LVCAF_STATE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#HALF_SHUTTER">HALF_SHUTTER</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ORIENTATION">ORIENTATION</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_LENS_DRIVE_REMOTE">LV_LENS_DRIVE_REMOTE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LIVE_VIEW_VIEWTYPE">LIVE_VIEW_VIEWTYPE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MODE">MODE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DRIVE">DRIVE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHUTTER">SHUTTER</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHUTTER_RANGE">SHUTTER_RANGE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#APERTURE">APERTURE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ISO">ISO</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AE">AE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#UILOCK">UILOCK</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ISO_AUTO">ISO_AUTO</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHUTTER_AUTO">SHUTTER_AUTO</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#APERTURE_AUTO">APERTURE_AUTO</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#APERTURE3">APERTURE3</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHUTTER_RELEASE">SHUTTER_RELEASE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AVAIL_SHOT">AVAIL_SHOT</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MIC_INSERTED">MIC_INSERTED</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SENSOR">SENSOR</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DISPSENSOR_CTRL">DISPSENSOR_CTRL</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_OUTPUT_DEVICE">LV_OUTPUT_DEVICE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#HOUTPUT_TYPE">HOUTPUT_TYPE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MIRROR_DOWN">MIRROR_DOWN</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MYMENU_LISTING">MYMENU_LISTING</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LV_MOVIE_SELECT">LV_MOVIE_SELECT</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHOOTING_TYPE">SHOOTING_TYPE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ERR_BATTERY">ERR_BATTERY</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CUSTOM_SETTING">CUSTOM_SETTING</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DEFAULT_CUSTOM">DEFAULT_CUSTOM</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DEFAULT_BRACKET">DEFAULT_BRACKET</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#PARTIAL_SETTING">PARTIAL_SETTING</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EMPOWER_OFF">EMPOWER_OFF</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LVAF_MODE">LVAF_MODE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ACTIVE_SWEEP_STATUS">ACTIVE_SWEEP_STATUS</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EFIC_TEMP">EFIC_TEMP</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LANGUAGE">LANGUAGE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#VIDEO_SYSTEM">VIDEO_SYSTEM</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DATE_FORMAT">DATE_FORMAT</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ICU_UILOCK">ICU_UILOCK</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHOOTING_MODE">SHOOTING_MODE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SHOOTING_MODE_2">SHOOTING_MODE_2</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WB_MODE_LV">WB_MODE_LV</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WB_KELVIN_LV">WB_KELVIN_LV</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WB_MODE_PH">WB_MODE_PH</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WB_KELVIN_PH">WB_KELVIN_PH</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WBS_GM">WBS_GM</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WBS_BA">WBS_BA</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CUSTOM_WB">CUSTOM_WB</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#METERING_MODE">METERING_MODE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#LAST_JOB_ID">LAST_JOB_ID</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#PROP_PICTURE_STYLE">PROP_PICTURE_STYLE</a></td>
+	<td class="summary">
+
+</td>
+	</tr>
+</table>
+<h2><a href="#Class_property">Class property </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#property:request_change">property:request_change (value, len[, wait=true[, timeout]])</a></td>
+	<td class="summary">Set the value of the property</p>
+
+<hr/>
+<p> <strong>WARNING</strong> This is very dangerous, setting invalid values for properties can brick your camera.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#property:handler">property:handler (value)</a></td>
+	<td class="summary">Called when the property value changes</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "BURST_COUNT"></a>
+    <strong>BURST_COUNT</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">BURST_COUNT</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "BAT_INFO"></a>
+    <strong>BAT_INFO</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">BAT_INFO</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "TFT_STATUS"></a>
+    <strong>TFT_STATUS</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">TFT_STATUS</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LENS_NAME"></a>
+    <strong>LENS_NAME</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LENS_NAME</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LENS_SOMETHING"></a>
+    <strong>LENS_SOMETHING</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LENS_SOMETHING</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LENS"></a>
+    <strong>LENS</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LENS</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "HDMI_CHANGE"></a>
+    <strong>HDMI_CHANGE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">HDMI_CHANGE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "HDMI_CHANGE_CODE"></a>
+    <strong>HDMI_CHANGE_CODE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">HDMI_CHANGE_CODE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "USBRCA_MONITOR"></a>
+    <strong>USBRCA_MONITOR</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">USBRCA_MONITOR</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MVR_REC_START"></a>
+    <strong>MVR_REC_START</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MVR_REC_START</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "REC_TIME"></a>
+    <strong>REC_TIME</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">REC_TIME</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GUI_STATE"></a>
+    <strong>GUI_STATE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">GUI_STATE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LIVE_VIEW_FACE_AF"></a>
+    <strong>LIVE_VIEW_FACE_AF</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LIVE_VIEW_FACE_AF</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_LOCK"></a>
+    <strong>LV_LOCK</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_LOCK</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_ACTION"></a>
+    <strong>LV_ACTION</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_ACTION</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LCD_POSITION"></a>
+    <strong>LCD_POSITION</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LCD_POSITION</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "USBDEVICE_CONNECT"></a>
+    <strong>USBDEVICE_CONNECT</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">USBDEVICE_CONNECT</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MVR_MOVW_START0"></a>
+    <strong>MVR_MOVW_START0</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MVR_MOVW_START0</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MVR_MOVW_START1"></a>
+    <strong>MVR_MOVW_START1</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MVR_MOVW_START1</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AF_MODE"></a>
+    <strong>AF_MODE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">AF_MODE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MVR_REC"></a>
+    <strong>MVR_REC</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MVR_REC</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_LENS"></a>
+    <strong>LV_LENS</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_LENS</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_LENS_STABILIZE"></a>
+    <strong>LV_LENS_STABILIZE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_LENS_STABILIZE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_MANIPULATION"></a>
+    <strong>LV_MANIPULATION</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_MANIPULATION</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_AFFRAME"></a>
+    <strong>LV_AFFRAME</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_AFFRAME</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS"></a>
+    <strong>LV_FOCUS</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_DONE"></a>
+    <strong>LV_FOCUS_DONE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_DONE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_STOP"></a>
+    <strong>LV_FOCUS_STOP</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_STOP</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_BAD"></a>
+    <strong>LV_FOCUS_BAD</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_BAD</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_STATE"></a>
+    <strong>LV_FOCUS_STATE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_STATE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_STATUS"></a>
+    <strong>LV_FOCUS_STATUS</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_STATUS</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_CMD"></a>
+    <strong>LV_FOCUS_CMD</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_CMD</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_FOCUS_DATA"></a>
+    <strong>LV_FOCUS_DATA</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_FOCUS_DATA</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_STATE"></a>
+    <strong>LV_STATE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_STATE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_DISPSIZE"></a>
+    <strong>LV_DISPSIZE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_DISPSIZE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LVCAF_STATE"></a>
+    <strong>LVCAF_STATE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LVCAF_STATE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "HALF_SHUTTER"></a>
+    <strong>HALF_SHUTTER</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">HALF_SHUTTER</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ORIENTATION"></a>
+    <strong>ORIENTATION</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">ORIENTATION</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_LENS_DRIVE_REMOTE"></a>
+    <strong>LV_LENS_DRIVE_REMOTE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_LENS_DRIVE_REMOTE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LIVE_VIEW_VIEWTYPE"></a>
+    <strong>LIVE_VIEW_VIEWTYPE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LIVE_VIEW_VIEWTYPE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MODE"></a>
+    <strong>MODE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MODE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DRIVE"></a>
+    <strong>DRIVE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">DRIVE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHUTTER"></a>
+    <strong>SHUTTER</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHUTTER</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHUTTER_RANGE"></a>
+    <strong>SHUTTER_RANGE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHUTTER_RANGE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "APERTURE"></a>
+    <strong>APERTURE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">APERTURE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ISO"></a>
+    <strong>ISO</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">ISO</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AE"></a>
+    <strong>AE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">AE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "UILOCK"></a>
+    <strong>UILOCK</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">UILOCK</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ISO_AUTO"></a>
+    <strong>ISO_AUTO</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">ISO_AUTO</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHUTTER_AUTO"></a>
+    <strong>SHUTTER_AUTO</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHUTTER_AUTO</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "APERTURE_AUTO"></a>
+    <strong>APERTURE_AUTO</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">APERTURE_AUTO</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "APERTURE3"></a>
+    <strong>APERTURE3</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">APERTURE3</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHUTTER_RELEASE"></a>
+    <strong>SHUTTER_RELEASE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHUTTER_RELEASE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AVAIL_SHOT"></a>
+    <strong>AVAIL_SHOT</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">AVAIL_SHOT</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MIC_INSERTED"></a>
+    <strong>MIC_INSERTED</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MIC_INSERTED</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SENSOR"></a>
+    <strong>SENSOR</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SENSOR</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DISPSENSOR_CTRL"></a>
+    <strong>DISPSENSOR_CTRL</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">DISPSENSOR_CTRL</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_OUTPUT_DEVICE"></a>
+    <strong>LV_OUTPUT_DEVICE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_OUTPUT_DEVICE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "HOUTPUT_TYPE"></a>
+    <strong>HOUTPUT_TYPE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">HOUTPUT_TYPE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MIRROR_DOWN"></a>
+    <strong>MIRROR_DOWN</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MIRROR_DOWN</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MYMENU_LISTING"></a>
+    <strong>MYMENU_LISTING</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">MYMENU_LISTING</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LV_MOVIE_SELECT"></a>
+    <strong>LV_MOVIE_SELECT</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LV_MOVIE_SELECT</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHOOTING_TYPE"></a>
+    <strong>SHOOTING_TYPE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHOOTING_TYPE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ERR_BATTERY"></a>
+    <strong>ERR_BATTERY</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">ERR_BATTERY</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "CUSTOM_SETTING"></a>
+    <strong>CUSTOM_SETTING</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">CUSTOM_SETTING</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DEFAULT_CUSTOM"></a>
+    <strong>DEFAULT_CUSTOM</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">DEFAULT_CUSTOM</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DEFAULT_BRACKET"></a>
+    <strong>DEFAULT_BRACKET</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">DEFAULT_BRACKET</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "PARTIAL_SETTING"></a>
+    <strong>PARTIAL_SETTING</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">PARTIAL_SETTING</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EMPOWER_OFF"></a>
+    <strong>EMPOWER_OFF</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">EMPOWER_OFF</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LVAF_MODE"></a>
+    <strong>LVAF_MODE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LVAF_MODE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ACTIVE_SWEEP_STATUS"></a>
+    <strong>ACTIVE_SWEEP_STATUS</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">ACTIVE_SWEEP_STATUS</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EFIC_TEMP"></a>
+    <strong>EFIC_TEMP</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">EFIC_TEMP</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LANGUAGE"></a>
+    <strong>LANGUAGE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LANGUAGE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "VIDEO_SYSTEM"></a>
+    <strong>VIDEO_SYSTEM</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">VIDEO_SYSTEM</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DATE_FORMAT"></a>
+    <strong>DATE_FORMAT</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">DATE_FORMAT</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ICU_UILOCK"></a>
+    <strong>ICU_UILOCK</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">ICU_UILOCK</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHOOTING_MODE"></a>
+    <strong>SHOOTING_MODE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHOOTING_MODE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SHOOTING_MODE_2"></a>
+    <strong>SHOOTING_MODE_2</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">SHOOTING_MODE_2</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WB_MODE_LV"></a>
+    <strong>WB_MODE_LV</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">WB_MODE_LV</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WB_KELVIN_LV"></a>
+    <strong>WB_KELVIN_LV</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">WB_KELVIN_LV</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WB_MODE_PH"></a>
+    <strong>WB_MODE_PH</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">WB_MODE_PH</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WB_KELVIN_PH"></a>
+    <strong>WB_KELVIN_PH</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">WB_KELVIN_PH</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WBS_GM"></a>
+    <strong>WBS_GM</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">WBS_GM</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WBS_BA"></a>
+    <strong>WBS_BA</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">WBS_BA</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "CUSTOM_WB"></a>
+    <strong>CUSTOM_WB</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">CUSTOM_WB</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "METERING_MODE"></a>
+    <strong>METERING_MODE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">METERING_MODE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LAST_JOB_ID"></a>
+    <strong>LAST_JOB_ID</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">LAST_JOB_ID</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "PROP_PICTURE_STYLE"></a>
+    <strong>PROP_PICTURE_STYLE</strong>
+    </dt>
+    <dd>
+
+
+
+    <ul>
+        <li><span class="parameter">PROP_PICTURE_STYLE</span>
+            <span class="types"><a class="type" href="../modules/property.html#property">property</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_property"></a>Class property </h2>
+
+        Represents a Canon property
+    <dl class="function">
+    <dt>
+    <a name = "property:request_change"></a>
+    <strong>property:request_change (value, len[, wait=true[, timeout]])</strong>
+    </dt>
+    <dd>
+    Set the value of the property</p>
+
+<hr/>
+<p> <strong>WARNING</strong> This is very dangerous, setting invalid values for properties can brick your camera.
+ This functionality is disabled by default, and will throw an error if you try to call it.
+ To enable, compile with <code>LUA_PROP_REQUEST_CHANGE</code>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">len</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">wait</span>
+            <span class="types"><span class="type">bool</span></span>
+
+
+
+         (<em>default</em> true)
+        </li>
+        <li><span class="parameter">timeout</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "property:handler"></a>
+    <strong>property:handler (value)</strong>
+    </dt>
+    <dd>
+    Called when the property value changes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">int</span></span>
+         the new value of the property
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">
+<span class="keyword">function</span> property.SHUTTER:handler(value)
+    <span class="global">print</span>(<span class="string">"shutter: "</span>..value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-05-15 22:24:52 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
