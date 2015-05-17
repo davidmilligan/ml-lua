@@ -72,23 +72,29 @@
 calc.value = <span class="string">""</span>
 calc.buttons =
 {
-    <span class="string">"lep()^/"</span>,
-    <span class="string">"sct789*"</span>,
-    <span class="string">"dvy456-"</span>,
-    <span class="string">"afg123+"</span>,
-    <span class="string">"rq,0.C="</span>
+    {<span class="string">"log"</span>, <span class="string">"exp"</span>,  <span class="string">"pi"</span>,  <span class="string">"("</span>,<span class="string">")"</span>,<span class="string">"^"</span>,<span class="string">"/"</span>},
+    {<span class="string">"sin"</span>, <span class="string">"cos"</span>,  <span class="string">"tan"</span>, <span class="string">"7"</span>,<span class="string">"8"</span>,<span class="string">"9"</span>,<span class="string">"*"</span>},
+    {<span class="string">"asin"</span>,<span class="string">"acos"</span>, <span class="string">"atan"</span>,<span class="string">"4"</span>,<span class="string">"5"</span>,<span class="string">"6"</span>,<span class="string">"-"</span>},
+    {<span class="string">"abs"</span>, <span class="string">"floor"</span>,<span class="string">"ceil"</span>,<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>,<span class="string">"+"</span>},
+    {<span class="string">"sqrt"</span>,<span class="string">"%"</span>,    <span class="string">","</span>,   <span class="string">"0"</span>,<span class="string">"."</span>,<span class="string">"C"</span>,<span class="string">"="</span>}
 }
 calc.row = <span class="number">5</span>
-calc.col = <span class="number">1</span>
+calc.col = <span class="number">4</span>
 calc.rows = #(calc.buttons)
 calc.cols = #(calc.buttons[<span class="number">1</span>])
 calc.font = FONT.LARGE
+calc.border = COLOR.gray(<span class="number">75</span>)
+calc.background = COLOR.gray(<span class="number">5</span>)
+calc.foreground = COLOR.WHITE
+calc.highlight = COLOR.BLUE
+calc.error_forground = COLOR.RED
 calc.pad = <span class="number">20</span>
 calc.cell_size = calc.pad * <span class="number">2</span> + calc.font.height
 calc.height = (calc.rows + <span class="number">1</span>) * calc.cell_size
 calc.width = (calc.cols) * calc.cell_size
 calc.left = display.width // <span class="number">2</span> - calc.width // <span class="number">2</span>
 calc.top = display.height // <span class="number">2</span> - calc.height // <span class="number">2</span>
+calc.error = <span class="keyword">false</span>
 
 calc.mlmenu = menu.new
 {
@@ -152,64 +158,54 @@ calc.mlmenu = menu.new
     <span class="keyword">elseif</span> key == KEY.PLAY <span class="keyword">then</span>
         self:handle_button(<span class="string">"="</span>)
     <span class="keyword">elseif</span> key == KEY.SET <span class="keyword">then</span>
-        <span class="keyword">local</span> row = self.buttons[self.row]
-        <span class="keyword">local</span> c = <span class="global">string</span>.sub(row,self.col,self.col)
-        self:handle_button(c)
+        self:handle_button(self.buttons[self.row][self.col])
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> calc:handle_button(c)
+    <span class="keyword">if</span> self.error <span class="keyword">then</span>
+        self.value = <span class="string">""</span>
+    <span class="keyword">end</span>
+    self.error = <span class="keyword">false</span>
     <span class="keyword">if</span> c == <span class="string">"C"</span> <span class="keyword">then</span>
         self.value = <span class="string">""</span>
     <span class="keyword">elseif</span> c == <span class="string">"="</span> <span class="keyword">then</span>
         <span class="keyword">local</span> status,result = <span class="global">pcall</span>(<span class="global">load</span>,<span class="string">"return "</span>..self.value)
         <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">or</span> result == <span class="keyword">nil</span> <span class="keyword">then</span>
+            self.error = <span class="keyword">true</span>
             self.value = <span class="string">"syntax error"</span>
         <span class="keyword">else</span>
             status,self.value = <span class="global">pcall</span>(result)
+            <span class="keyword">if</span> self.status == <span class="keyword">false</span> <span class="keyword">then</span>
+                self.error = <span class="keyword">true</span>
+            <span class="keyword">end</span>
         <span class="keyword">end</span>
     <span class="keyword">else</span>
-        <span class="keyword">local</span> str = self:c_to_str(c)
-        self.value = self.value..str
-        <span class="keyword">if</span> str ~= c <span class="keyword">and</span> str ~= <span class="string">"pi"</span> <span class="keyword">then</span>
+        self.value = self.value..c
+        <span class="keyword">if</span> #c &gt; <span class="number">2</span> <span class="keyword">then</span>
             self.value = self.value..<span class="string">"("</span>
         <span class="keyword">end</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-<span class="keyword">function</span> calc:c_to_str(c)
-    <span class="keyword">if</span> c== <span class="string">"l"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"log"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"e"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"exp"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"p"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"pi"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"s"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"sin"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"c"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"cos"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"t"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"tan"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"d"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"asin"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"v"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"acos"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"y"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"atan"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"a"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"abs"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"f"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"floor"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"g"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"ceil"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"r"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"rand"</span>
-    <span class="keyword">elseif</span> c == <span class="string">"q"</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"sqrt"</span>
-    <span class="keyword">else</span> <span class="keyword">return</span> c <span class="keyword">end</span>
-<span class="keyword">end</span>
-
 <span class="keyword">function</span> calc:draw()
     display.draw(<span class="keyword">function</span>()
-        display.rect(self.left,self.top,self.width,self.cell_size,COLOR.WHITE,COLOR.BLACK)
-        display.<span class="global">print</span>(self.value,self.left + self.pad,self.top + self.pad,self.font,COLOR.WHITE,COLOR.BLACK)
+        display.rect(self.left-<span class="number">4</span>,self.top-<span class="number">4</span>,self.width+<span class="number">8</span>,self.height+<span class="number">8</span>,self.border,self.border)
+        display.rect(self.left,self.top,self.width,self.cell_size,self.border,self.background)
+        <span class="keyword">local</span> fg = self.foreground
+        <span class="keyword">if</span> self.error <span class="keyword">then</span> fg = self.error_forground <span class="keyword">end</span>
+        display.<span class="global">print</span>(self.value,self.left + self.pad,self.top + self.pad,self.font,fg,self.background, self.width - self.pad * <span class="number">2</span>)
         <span class="keyword">for</span> i=<span class="number">1</span>,self.rows,<span class="number">1</span> <span class="keyword">do</span>
             <span class="keyword">local</span> row = self.buttons[i]
             <span class="keyword">for</span> j=<span class="number">1</span>,self.cols,<span class="number">1</span> <span class="keyword">do</span>
-                <span class="keyword">local</span> c = self:c_to_str(<span class="global">string</span>.sub(row,j,j))
+                <span class="keyword">local</span> c = row[j]
                 <span class="keyword">local</span> x = self.left + (j - <span class="number">1</span>) * self.cell_size
                 <span class="keyword">local</span> y = self.top + i * self.cell_size
-                <span class="keyword">local</span> bg = COLOR.BLACK
-                <span class="keyword">if</span> i == self.row <span class="keyword">and</span> j == self.col <span class="keyword">then</span> bg = COLOR.BLUE <span class="keyword">end</span>
-                display.rect(x,y,self.cell_size,self.cell_size,COLOR.WHITE,bg)
+                <span class="keyword">local</span> bg = self.background
+                <span class="keyword">if</span> i == self.row <span class="keyword">and</span> j == self.col <span class="keyword">then</span> bg = self.highlight <span class="keyword">end</span>
+                display.rect(x,y,self.cell_size,self.cell_size,self.border,bg)
                 <span class="keyword">local</span> pad = self.cell_size // <span class="number">2</span> - self.font:width(c) // <span class="number">2</span>
-                display.<span class="global">print</span>(c,x + pad, y + self.pad,self.font,COLOR.WHITE,bg)
+                display.<span class="global">print</span>(c,x + pad, y + self.pad,self.font,self.border,bg)
             <span class="keyword">end</span>
         <span class="keyword">end</span>
     <span class="keyword">end</span>)
@@ -326,7 +322,7 @@ keyhandler.runnning = <span class="keyword">false</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-16 15:09:16 </i>
+<i style="float:right;">Last updated 2015-05-16 20:12:08 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
