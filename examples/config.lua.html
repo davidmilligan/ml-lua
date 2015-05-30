@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><strong>config.lua</strong></li>
+  <li><a href="../examples/keyhndlr.lua.html">keyhndlr.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keyhandler.html">keyhandler</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>config.lua</h2>
+<pre>
+<span class="comment">--[[---------------------------------------------------------------------------
+Functions for saving/loading config data
+
+This module is a lua script (<a href="../examples/config.lua.html#">config.lua</a>), you need to explicitly load it
+with <code>require(&apos;config&apos;)</code>
+
+@module config
+]]</span>
+config = {}
+config.configs = {}
+config.__index = config
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Create a new config instance, filename will be determined automagically
+@param default the default data values
+@function create
+]]</span>
+<span class="keyword">function</span> config.create(default)
+    <span class="keyword">local</span> cfg = {}
+    <span class="comment">--determine the config filename automatically based on the script's filename
+</span>    <span class="keyword">local</span> thisfile = <span class="global">debug</span>.getinfo(<span class="number">1</span>,<span class="string">"S"</span>).short_src
+    <span class="global">assert</span>(thisfile ~= <span class="keyword">nil</span>, <span class="string">"Could not determine script filename"</span>)
+    <span class="comment">--capture between the last '/' and last '.' in the filename
+</span>    <span class="keyword">local</span> short_name = <span class="global">string</span>.match(thisfile,<span class="string">"/([^/%.]+)%.[^/%.]+$"</span>)
+    cfg.filename = <span class="global">string</span>.format(<span class="string">"%s%s.cfg"</span>, dryos.config_dir.path,short_name)
+    <span class="global">assert</span>(thisfile ~= cfg.filename, <span class="string">"Could not determine config filename"</span>)
+    cfg.default = default
+    <span class="global">setmetatable</span>(cfg,config)
+    cfg.data = cfg:<span class="global">load</span>()
+    <span class="global">table</span>.insert(config.configs, cfg)
+    <span class="keyword">if</span> event.config_save == <span class="keyword">nil</span> <span class="keyword">then</span>
+        event.config_save = <span class="keyword">function</span>(unused)
+            <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(config.configs) <span class="keyword">do</span>
+                v:saving()
+                v:save()
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> cfg
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+@type config
+]]</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Get/Set the data to store to configuration
+@field data
+]]</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Create a new config instance from a menu structure, filename will be determined
+automagically
+@param m the menu to create a config for
+@function create_from_menu
+]]</span>
+<span class="keyword">function</span> config.create_from_menu(m)
+    <span class="keyword">local</span> default = {}
+    <span class="comment">--default values are simply the menu's default values
+</span>    default[m.name] = m.value
+    <span class="keyword">if</span> m.submenu ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        <span class="comment">--todo: recurse into sub-submenus
+</span>        <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(m.submenu) <span class="keyword">do</span>
+            default[k] = v.value
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">local</span> cfg = config.create(default)
+    cfg.menu = m
+    <span class="comment">--copy back loaded data to the menu structure
+</span>    m.value = cfg.data[m.name]
+    <span class="keyword">if</span> m.submenu ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        <span class="comment">--todo: recurse into sub-submenus
+</span>        <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(m.submenu) <span class="keyword">do</span>
+             v.value = cfg.data[m.name]
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> cfg
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Load the config data from file (by executing the file)
+@function load
+]]</span>
+<span class="keyword">function</span> config:<span class="global">load</span>()
+    <span class="keyword">local</span> status,result = <span class="global">pcall</span>(<span class="global">dofile</span>,self.filename)
+    <span class="keyword">if</span> status <span class="keyword">and</span> result ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        <span class="keyword">return</span> result
+    <span class="keyword">else</span>
+        <span class="global">print</span>(result)
+        <span class="keyword">return</span> self.default
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Called right before config data is saved to file, override this function to
+update your config.data when the config is being saved
+@function saving
+]]</span>
+<span class="keyword">function</span> config:saving()
+    <span class="comment">--default implementation: save menu structure if there is one
+</span>    <span class="keyword">if</span> self.menu ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        self.data[self.menu.name] = self.menu.value
+        <span class="keyword">if</span> self.menu.submenu ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(self.menu.submenu) <span class="keyword">do</span>
+                self.data[k] = v.value
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Manually save the config data to file (data is saved automatically when the
+ML backend does it's config saving, so calling this function is unecessary
+unless you want to do a manual save).
+Whatever is in the 'data' field of this instance is saved. Only numbers,
+strings and tables can be saved (no functions, threads or userdata)
+@function save
+]]</span>
+<span class="keyword">function</span> config:save()
+    <span class="keyword">local</span> f = <span class="global">io</span>.open(self.filename,<span class="string">"w"</span>)
+    f:write(<span class="string">"return "</span>)
+    <span class="global">assert</span>(f ~= <span class="keyword">nil</span>, <span class="string">"Could not save config: "</span>..self.filename)
+    config.serialize(f,self.data)
+    f:close()
+<span class="keyword">end</span>
+
+<span class="comment">--private
+</span><span class="keyword">function</span> config.serialize(f,o)
+    <span class="keyword">if</span> <span class="global">type</span>(o) == <span class="string">"number"</span> <span class="keyword">then</span>
+        f:write(o)
+    <span class="keyword">elseif</span> <span class="global">type</span>(o) == <span class="string">"string"</span> <span class="keyword">then</span>
+        f:write(<span class="global">string</span>.format(<span class="string">"%q"</span>, o))
+    <span class="keyword">elseif</span> <span class="global">type</span>(o) == <span class="string">"table"</span> <span class="keyword">then</span>
+        f:write(<span class="string">"{\n"</span>)
+        <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(o) <span class="keyword">do</span>
+            f:write(<span class="string">"  ["</span>)
+            config.serialize(f,k)
+            f:write(<span class="string">"] = "</span>)
+            config.serialize(f,v)
+            f:write(<span class="string">",\n"</span>)
+        <span class="keyword">end</span>
+        f:write(<span class="string">"}\n"</span>)
+    <span class="keyword">else</span>
+        <span class="comment">--something we don't know how to serialize, just skip it
+</span>    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">return</span> config</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-05-29 22:03:25 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -32,14 +32,10 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Methods">Methods</a></li>
+<li><a href="#Class_keyhandler">Class keyhandler </a></li>
 </ul>
 
 
-<h2>Classes</h2>
-<ul class="$(kind=='Topics' and '' or 'nowrap'">
-  <li><strong>property</strong></li>
-</ul>
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../modules/event.html">event</a></li>
@@ -56,11 +52,18 @@
   <li><a href="../modules/lv.html">lv</a></li>
   <li><a href="../modules/menu.html">menu</a></li>
   <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
   <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><strong>keyhandler</strong></li>
 </ul>
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
   <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keyhndlr.lua.html">keyhndlr.lua</a></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
   <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
@@ -71,28 +74,31 @@
 
 <div id="content">
 
-<h1>Class <code>property</code></h1>
-<p>Canon Properties</p>
-<p>
-
-</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2014</li>
-        <li><strong>License</strong>: GPL</li>
-        <li><strong>Author</strong>: Magic Lantern Team</li>
-    </ul>
+<h1>Module <code>keyhandler</code></h1>
+<p>Helper for dealing with keypresses</p>
+<p>This module is a lua script (<a href="../examples/keyhndlr.lua.html#">keyhndlr.lua</a>), you need to explicitly load it
+with <code>require(&apos;keyhndlr&apos;)</code></p>
 
 
-<h2><a href="#Methods">Methods</a></h2>
+<h2><a href="#Class_keyhandler">Class keyhandler </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#property:request_change">property:request_change (value[, wait=true[, timeout]])</a></td>
-	<td class="summary">Set the value of the property</td>
+	<td class="name" nowrap><a href="#keyhandler:keyhandler">keyhandler:keyhandler ()</a></td>
+	<td class="summary">Starts the keyhandler if not already running, returns whether or not it was
+started</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#property:handler">property:handler (value)</a></td>
-	<td class="summary">The property change handler</td>
+	<td class="name" nowrap><a href="#keyhandler:getkeys">keyhandler:getkeys ()</a></td>
+	<td class="summary">Returns a table of all the keys that have been pressed since the last time
+getkeys was called</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#keyhandler:stop">keyhandler:stop ()</a></td>
+	<td class="summary">Stops the keyhandler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#keyhandler:anykey">keyhandler:anykey ()</a></td>
+	<td class="summary">Blocks until any key is pressed</td>
 	</tr>
 </table>
 
@@ -100,40 +106,19 @@
 <br/>
 
 
-    <h2><a name="Methods"></a>Methods</h2>
+    <h2><a name="Class_keyhandler"></a>Class keyhandler </h2>
+
 
     <dl class="function">
     <dt>
-    <a name = "property:request_change"></a>
-    <strong>property:request_change (value[, wait=true[, timeout]])</strong>
+    <a name = "keyhandler:keyhandler"></a>
+    <strong>keyhandler:keyhandler ()</strong>
     </dt>
     <dd>
-    Set the value of the property
+    Starts the keyhandler if not already running, returns whether or not it was
+started
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">value</span>
-            <span class="types"><span class="type">int</span></span>
-
-
-
-        </li>
-        <li><span class="parameter">wait</span>
-            <span class="types"><span class="type">bool</span></span>
-
-
-
-         (<em>default</em> true)
-        </li>
-        <li><span class="parameter">timeout</span>
-            <span class="types"><span class="type">int</span></span>
-
-
-
-         (<em>optional</em>)
-        </li>
-    </ul>
 
 
 
@@ -141,20 +126,42 @@
 
 </dd>
     <dt>
-    <a name = "property:handler"></a>
-    <strong>property:handler (value)</strong>
+    <a name = "keyhandler:getkeys"></a>
+    <strong>keyhandler:getkeys ()</strong>
     </dt>
     <dd>
-    The property change handler
+    Returns a table of all the keys that have been pressed since the last time
+getkeys was called
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">value</span>
-            <span class="types"><span class="type">int</span></span>
-         the new value of the property
-        </li>
-    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "keyhandler:stop"></a>
+    <strong>keyhandler:stop ()</strong>
+    </dt>
+    <dd>
+    Stops the keyhandler
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "keyhandler:anykey"></a>
+    <strong>keyhandler:anykey ()</strong>
+    </dt>
+    <dd>
+    Blocks until any key is pressed
+
+
 
 
 
@@ -168,7 +175,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-12 17:11:41 </i>
+<i style="float:right;">Last updated 2015-05-29 22:03:25 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

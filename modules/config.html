@@ -33,6 +33,7 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
+<li><a href="#Class_config">Class config </a></li>
 </ul>
 
 
@@ -45,7 +46,7 @@
   <li><a href="../modules/constants.html">constants</a></li>
   <li><a href="../modules/display.html">display</a></li>
   <li><a href="../modules/dryos.html">dryos</a></li>
-  <li><strong>global</strong></li>
+  <li><a href="../modules/global.html">global</a></li>
   <li><a href="../modules/interval.html">interval</a></li>
   <li><a href="../modules/key.html">key</a></li>
   <li><a href="../modules/lens.html">lens</a></li>
@@ -54,7 +55,7 @@
   <li><a href="../modules/movie.html">movie</a></li>
   <li><a href="../modules/property.html">property</a></li>
   <li><a href="../modules/task.html">task</a></li>
-  <li><a href="../modules/config.html">config</a></li>
+  <li><strong>config</strong></li>
   <li><a href="../modules/keyhandler.html">keyhandler</a></li>
 </ul>
 <h2>Examples</h2>
@@ -74,44 +75,44 @@
 
 <div id="content">
 
-<h1>Module <code>global</code></h1>
-<p>Global Functions</p>
-<p>
-
-</p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Copyright</strong>: 2014</li>
-        <li><strong>License</strong>: GPL</li>
-        <li><strong>Author</strong>: Magic Lantern Team</li>
-    </ul>
+<h1>Module <code>config</code></h1>
+<p>Functions for saving/loading config data</p>
+<p>This module is a lua script (<a href="../examples/config.lua.html#">config.lua</a>), you need to explicitly load it
+with <code>require(&apos;config&apos;)</code></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#beep">beep ([times=1])</a></td>
-	<td class="summary">Beep</td>
+	<td class="name" nowrap><a href="#create">create (default)</a></td>
+	<td class="summary">Create a new config instance, filename will be determined automagically</td>
+	</tr>
+</table>
+<h2><a href="#Class_config">Class config </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#config.data">config.data</a></td>
+	<td class="summary">Get/Set the data to store to configuration</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#shoot">shoot ([wait=64[, should_af=true]])</a></td>
-	<td class="summary">Take a picture</td>
+	<td class="name" nowrap><a href="#config:create_from_menu">config:create_from_menu (m)</a></td>
+	<td class="summary">Create a new config instance from a menu structure, filename will be determined
+automagically</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#msleep">msleep (amount)</a></td>
-	<td class="summary">Pauses for ms miliseconds and allows other tasks to run.</td>
+	<td class="name" nowrap><a href="#config:load">config:load ()</a></td>
+	<td class="summary">Load the config data from file (by executing the file)</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#led_on">led_on ()</a></td>
-	<td class="summary">Turns the LED on</td>
+	<td class="name" nowrap><a href="#config:saving">config:saving ()</a></td>
+	<td class="summary">Called right before config data is saved to file, override this function to
+update your config.data when the config is being saved</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#led_off">led_off ()</a></td>
-	<td class="summary">Turns the LED off</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#led_blink">led_blink ([times=1[, delay_on=50[, delay_off=50]]])</a></td>
-	<td class="summary">Blinks the LED</td>
+	<td class="name" nowrap><a href="#config:save">config:save ()</a></td>
+	<td class="summary">Manually save the config data to file (data is saved automatically when the
+ML backend does it's config saving, so calling this function is unecessary
+unless you want to do a manual save).</td>
 	</tr>
 </table>
 
@@ -123,19 +124,43 @@
 
     <dl class="function">
     <dt>
-    <a name = "beep"></a>
-    <strong>beep ([times=1])</strong>
+    <a name = "create"></a>
+    <strong>create (default)</strong>
     </dt>
     <dd>
-    Beep
+    Create a new config instance, filename will be determined automagically
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">times</span>
-            <span class="types"><span class="type">int</span></span>
-         number of times to beep
-         (<em>default</em> 1)
+        <li><span class="parameter">default</span>
+         the default data values
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_config"></a>Class config </h2>
+
+
+    <dl class="function">
+    <dt>
+    <a name = "config.data"></a>
+    <strong>config.data</strong>
+    </dt>
+    <dd>
+    Get/Set the data to store to configuration
+
+
+    <ul>
+        <li><span class="parameter">data</span>
+
+
+
         </li>
     </ul>
 
@@ -145,24 +170,18 @@
 
 </dd>
     <dt>
-    <a name = "shoot"></a>
-    <strong>shoot ([wait=64[, should_af=true]])</strong>
+    <a name = "config:create_from_menu"></a>
+    <strong>config:create_from_menu (m)</strong>
     </dt>
     <dd>
-    Take a picture
+    Create a new config instance from a menu structure, filename will be determined
+automagically
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">wait</span>
-            <span class="types"><span class="type">int</span></span>
-         how long to wait for camera to be ready to take a picture
-         (<em>default</em> 64)
-        </li>
-        <li><span class="parameter">should_af</span>
-            <span class="types"><span class="type">bool</span></span>
-         whether or not to use auto focus
-         (<em>default</em> true)
+        <li><span class="parameter">m</span>
+         the menu to create a config for
         </li>
     </ul>
 
@@ -172,32 +191,11 @@
 
 </dd>
     <dt>
-    <a name = "msleep"></a>
-    <strong>msleep (amount)</strong>
+    <a name = "config:load"></a>
+    <strong>config:load ()</strong>
     </dt>
     <dd>
-    Pauses for ms miliseconds and allows other tasks to run.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">amount</span>
-            <span class="types"><span class="type">int</span></span>
-         number of milliseconds to sleep
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "led_on"></a>
-    <strong>led_on ()</strong>
-    </dt>
-    <dd>
-    Turns the LED on
+    Load the config data from file (by executing the file)
 
 
 
@@ -207,11 +205,12 @@
 
 </dd>
     <dt>
-    <a name = "led_off"></a>
-    <strong>led_off ()</strong>
+    <a name = "config:saving"></a>
+    <strong>config:saving ()</strong>
     </dt>
     <dd>
-    Turns the LED off
+    Called right before config data is saved to file, override this function to
+update your config.data when the config is being saved
 
 
 
@@ -221,31 +220,17 @@
 
 </dd>
     <dt>
-    <a name = "led_blink"></a>
-    <strong>led_blink ([times=1[, delay_on=50[, delay_off=50]]])</strong>
+    <a name = "config:save"></a>
+    <strong>config:save ()</strong>
     </dt>
     <dd>
-    Blinks the LED
+    Manually save the config data to file (data is saved automatically when the
+ML backend does it's config saving, so calling this function is unecessary
+unless you want to do a manual save).
+Whatever is in the 'data' field of this instance is saved. Only numbers,
+strings and tables can be saved (no functions, threads or userdata)
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">times</span>
-            <span class="types"><span class="type">int</span></span>
-         Number of times to blink.
-         (<em>default</em> 1)
-        </li>
-        <li><span class="parameter">delay_on</span>
-            <span class="types"><span class="type">int</span></span>
-         How long the LED is on (in ms)
-         (<em>default</em> 50)
-        </li>
-        <li><span class="parameter">delay_off</span>
-            <span class="types"><span class="type">int</span></span>
-         How long the LED is off (in ms)
-         (<em>default</em> 50)
-        </li>
-    </ul>
 
 
 
