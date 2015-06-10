@@ -76,8 +76,69 @@ Any scripts found get "loaded" at startup by the scripting engine simply running
 Therefore the main body of the script should simply <em>define</em> the script's menu and
 behavior, not actually <em>execute</em> anything.</p>
 
-<p>The scripting engine will maintain your script's global state from run to run. So any
-global variables you declare will persist until the camera is turned off.</p>
+<h2>Menus</h2>
+<p>Scripts are not automatically visible in any specific menu. The script itself should
+define it's own menu (if a menu is needed). See: <a href="modules/menu.html#">menu</a>, <a href="examples/calc.lua.html#">calc.lua</a>, <a href="examples/copy2m.lua.html#">copy2m.lua</a>,
+<a href="examples/menutest.lua.html#">menutest.lua</a>, <a href="examples/recdelay.lua.html#">recdelay.lua</a>, <a href="examples/scrnshot.lua.html#">scrnshot.lua</a>, <a href="examples/sokoban.lua.html#">sokoban.lua</a></p>
+
+<h2>State</h2>
+<p>The scripting engine will maintain your script's global state for as long as the camera
+is powered on. So any global variables you declare will persist until the camera is
+turned off.</p>
+
+<p>Each script get's it's own lua state (virtual machine). If you would like scripts to
+share a state, have only one of the scripts in the <code>ML/SCRIPTS</code> folder, and have it
+call the other scripts with dofile() or require()</p>
+
+<h2>Tasks (threading)</h2>
+<p>"Preemptive" multithreading is not allowed within a single lua state, so only one
+thread of execution is allowed to be running in your script at a given time.
+Any attempts by other tasks to call functions in your scripts (e.g. via <a href="modules/event.html#">event</a>
+handlers) will block until the current execution completes (or yields) or some timeout
+is reached (this is achieved by the scripting backend making use of semaphores).
+(Separate scripts may run at "the same time" since they have separate lua states)</p>
+
+<p>The scripting engine will load and run scripts in a separate task created explicitly
+to load scripts. If a script blocks during loading, it will prevent other subsequent
+scripts from loading.</p>
+
+<p>Different event and menu handlers get called from different ML or Canon tasks, and
+scripts may start their own tasks. A script may yield it's execution to some other
+task that is calling the script by calling <a href="modules/task.html#yield">task.yield</a>. Execution is automatically
+yielded when the script returns from a call.</p>
+
+<p>When writing a script, you should be mindful of the context (task) from which your
+script is running, and consider when it might be appropriate to start something in a
+separate task (to keep from blocking some ML or Canon task), or when to yield (to
+keep the script from blocking itself)</p>
+
+<p>See: <a href="modules/task.html#">task</a></p>
+
+<h2>Library Scripts</h2>
+<p>You can write re-usable script code as a "library" by saving it as a .lua file in
+<code>ML/SCRIPTS/LIB</code> The require function will search for libraries (or "packages") here.
+As with regular scripts make sure to use valid 8.3 filenames. For a library called
+<code>ML/SCRIPTS/LIB/MYLIB.LUA</code>, load it by calling <code>require(&quot;MYLIB&quot;)</code>. For example, see
+<a href="examples/config.lua.html#">config.lua</a> and <a href="examples/keyhndlr.lua.html#">keyhndlr.lua</a>, which are 'library' scripts included in this API.</p>
+
+<h2>Canon Properties</h2>
+<p>Canon firmware manages many settings via what it refers to as "properties". We can
+set handlers to recieve notificatons when properties change and we can send requests
+to change their values. One must be very careful when doing so, because Canon
+firmware persists this properties in NVRAM, and setting invalid values can
+'soft-brick' the camera.</p>
+
+<p>'Safe' getters and setters for some of the more common of these properties are
+available in sereveral of the modules, mainly <a href="modules/camera.html#">camera</a> and <a href="modules/lens.html#">lens</a>. You can
+register handlers for properties with the <a href="modules/property.html#">property</a> module. Property handlers
+are run in a seprate task, so you can take as much time as you like without worrying
+about blocking Canon code, but doing so will block subsequent property handlers.</p>
+
+<h2>Errors</h2>
+<p>Unhandled errors are logged to the "console". You can turn it on from Debug >
+Modules debug > Show Console. This is also where you will see the output of
+the print() function. You can also implement your own error handling
+see <a href="examples/editor.lua.html#">editor.lua</a></p>
 
 <h2>Standard Libraries</h2>
 <p>All of the standard Lua libraries are available except <a href="http://www.lua.org/manual/5.2/manual.html#6.9">os</a> (replaced by <a href="modules/dryos.html#">dryos</a>):</p>
@@ -214,7 +275,7 @@ global variables you declare will persist until the camera is turned off.</p>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-05-29 22:03:25 </i>
+<i style="float:right;">Last updated 2015-06-09 20:45:39 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
