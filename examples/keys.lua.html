@@ -37,9 +37,11 @@
   <li><a href="../examples/calc.lua.html">calc.lua</a></li>
   <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
   <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
   <li><a href="../examples/config.lua.html">config.lua</a></li>
-  <li><strong>keyhndlr.lua</strong></li>
+  <li><strong>keys.lua</strong></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
   <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
@@ -63,77 +65,74 @@
   <li><a href="../modules/property.html">property</a></li>
   <li><a href="../modules/task.html">task</a></li>
   <li><a href="../modules/config.html">config</a></li>
-  <li><a href="../modules/keyhandler.html">keyhandler</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-    <h2>keyhndlr.lua</h2>
+    <h2>keys.lua</h2>
 <pre>
 <span class="comment">--[[---------------------------------------------------------------------------
 Helper for dealing with keypresses
 
-This module is a lua script (<a href="../examples/keyhndlr.lua.html#">keyhndlr.lua</a>), you need to explicitly load it
-with <code>require(&apos;keyhndlr&apos;)</code>
+This module is a lua script (<a href="../examples/keys.lua.html#">keys.lua</a>), you need to explicitly load it
+with <code>require(&apos;keys&apos;)</code>
 
-@module keyhandler
+@module keys
 ]]</span>
-keyhandler = {}
-keyhandler.runnning = <span class="keyword">false</span>
+keys = {}
+keys.runnning = <span class="keyword">false</span>
 
 <span class="comment">--[[---------------------------------------------------------------------------
-@type keyhandler
+@type keys
 ]]</span>
 
 <span class="comment">--[[---------------------------------------------------------------------------
-Starts the keyhandler if not already running, returns whether or not it was
+Starts the key handler if not already running, returns whether or not it was
 started
-@function keyhandler
+@function keys
 ]]</span>
-<span class="keyword">function</span> keyhandler:start()
-    <span class="keyword">if</span> keyhandler.running <span class="keyword">then</span> self:reset() <span class="keyword">return</span> <span class="keyword">false</span> <span class="keyword">end</span>
+<span class="keyword">function</span> keys:start()
+    <span class="keyword">if</span> keys.running <span class="keyword">then</span>
+        self:reset()
+        <span class="keyword">return</span> <span class="keyword">false</span>
+    <span class="keyword">end</span>
     <span class="comment">--save any previous keypress handler so we can restore it when finished
 </span>    self.old_keypress = event.keypress
     self.keys = {}
-    self.key_count = <span class="number">0</span>
     self.running = <span class="keyword">true</span>
     event.keypress = <span class="keyword">function</span>(key)
         <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">then</span>
-            keyhandler.key_count = keyhandler.key_count + <span class="number">1</span>
-            keyhandler.keys[keyhandler.key_count] = key
+            <span class="global">table</span>.insert(keys.keys, key)
         <span class="keyword">end</span>
-        <span class="keyword">return</span> <span class="keyword">false</span>
-    <span class="keyword">end</span>
+        <span class="keyword">if</span> key &lt;= KEY.UNPRESS_FULLSHUTTER <span class="keyword">then</span>
+            <span class="keyword">return</span> <span class="keyword">true</span> <span class="comment">-- do not block half-shutter, full-shutter and unknown (non-button) events
+</span>        <span class="keyword">end</span>
+        <span class="keyword">return</span> <span class="keyword">false</span>    <span class="comment">-- block regular button events
+</span>    <span class="keyword">end</span>
     <span class="keyword">return</span> <span class="keyword">true</span>
 <span class="keyword">end</span>
 
 <span class="comment">--[[---------------------------------------------------------------------------
-Returns a table of all the keys that have been pressed since the last time
-getkeys was called
-@function getkeys
+Returns a single key that has been pressed since the last time
+getkey was called, or nil if no key was pressed.
+@function getkey
 ]]</span>
-<span class="keyword">function</span> keyhandler:getkeys()
-    <span class="keyword">if</span> self.key_count == <span class="number">0</span> <span class="keyword">then</span>
-        <span class="keyword">return</span> <span class="keyword">nil</span>
-    <span class="keyword">else</span>
-        <span class="keyword">local</span> result = self.keys
-        self:reset()
-        <span class="keyword">return</span> result
-    <span class="keyword">end</span>
+<span class="keyword">function</span> keys:getkey()
+    <span class="keyword">return</span> <span class="global">table</span>.remove(self.keys, <span class="number">1</span>)
 <span class="keyword">end</span>
 
-<span class="keyword">function</span> keyhandler:reset()
-    self.key_count = <span class="number">0</span>
+<span class="keyword">function</span> keys:reset()
     self.keys = {}
 <span class="keyword">end</span>
 
 <span class="comment">--[[---------------------------------------------------------------------------
-Stops the keyhandler
+Stops the keys
 @function stop
 ]]</span>
-<span class="keyword">function</span> keyhandler:stop()
+<span class="keyword">function</span> keys:stop()
     self:reset()
     self.running = <span class="keyword">false</span>
     event.keypress = self.old_keypress
@@ -143,36 +142,31 @@ Stops the keyhandler
 Blocks until any key is pressed
 @function anykey
 ]]</span>
-<span class="keyword">function</span> keyhandler:anykey()
+<span class="keyword">function</span> keys:anykey()
     <span class="keyword">local</span> started = self:start()
     <span class="comment">--ignore any immediate keys
 </span>    task.yield(<span class="number">100</span>)
-    self:getkeys()
+    self:reset()
     <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-        <span class="keyword">local</span> keys = self:getkeys()
-        <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
-            <span class="keyword">local</span> exit = <span class="keyword">false</span>
-            <span class="keyword">for</span> i,v <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
-                <span class="keyword">if</span> v ~= KEY.UNPRESS_SET <span class="keyword">then</span>
-                    exit = <span class="keyword">true</span>
-                    <span class="keyword">break</span>
-                <span class="keyword">end</span>
+        <span class="keyword">local</span> key = self:getkey()
+        <span class="keyword">if</span> key ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="keyword">if</span> key ~= KEY.UNPRESS_SET <span class="keyword">then</span>
+                <span class="keyword">break</span>
             <span class="keyword">end</span>
-            <span class="keyword">if</span> exit <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
         <span class="keyword">end</span>
         task.yield(<span class="number">100</span>)
     <span class="keyword">end</span>
     <span class="keyword">if</span> started <span class="keyword">then</span> self:stop() <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-<span class="keyword">return</span> keyhandler</pre>
+<span class="keyword">return</span> keys</pre>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-06-09 20:45:39 </i>
+<i style="float:right;">Last updated 2015-06-13 07:07:41 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

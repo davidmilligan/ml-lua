@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><strong>pong.lua</strong></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>pong.lua</h2>
+<pre>
+<span class="comment">--[[
+ Pong Game
+
+ This game should help you understand:
+ - Animation without double-buffering
+ - Audible feedback (beps)
+ - Basic key processing
+ - Lua programming basics
+
+ Enjoy!
+]]</span>
+
+<span class="global">require</span>(<span class="string">"keys"</span>)
+
+score_right = <span class="number">0</span>     <span class="comment">-- human player score
+</span>score_left = <span class="number">0</span>      <span class="comment">-- computer opponent score
+</span>
+<span class="comment">-- ball position
+</span>ball_x = <span class="number">320</span>
+ball_y = <span class="number">240</span>
+
+<span class="comment">-- ball speed
+</span>game_speed = <span class="number">0</span>
+ball_dx = <span class="number">0</span>
+ball_dy = <span class="number">0</span>
+
+<span class="comment">-- paddle y-pos
+</span>left_paddle_y = <span class="number">240</span>
+right_paddle_y = <span class="number">240</span>
+
+<span class="comment">-- human player speed/direction, from key presses
+</span>right_paddle_delta = <span class="number">0</span>
+
+<span class="comment">-- computer AI
+</span>AI_maxspeed = <span class="number">0</span>
+AI_bias = <span class="number">0</span>
+
+<span class="comment">-- store previous drawing state, for erasing
+</span>prev_ball_x = <span class="number">0</span>
+prev_ball_y = <span class="number">0</span>
+prev_left_paddle_y = <span class="number">0</span>
+prev_right_paddle_y = <span class="number">0</span>
+
+ball_radius = <span class="number">10</span>
+paddle_size = <span class="number">70</span>
+
+<span class="keyword">function</span> coerce(x, lo, hi)
+    <span class="keyword">return</span> <span class="global">math</span>.max(<span class="global">math</span>.min(x, hi), lo)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> beep_border_bounce()
+    beep(<span class="number">1</span>, <span class="number">100</span>, <span class="number">330</span>)      <span class="comment">-- short beep at 330 Hz
+</span><span class="keyword">end</span>
+
+<span class="keyword">function</span> beep_paddle_hit()
+    beep(<span class="number">1</span>, <span class="number">100</span>, <span class="number">400</span>)      <span class="comment">-- short beep at 400 Hz
+</span><span class="keyword">end</span>
+
+<span class="keyword">function</span> beep_paddle_miss()
+    beep(<span class="number">1</span>, <span class="number">100</span>, <span class="number">1000</span>)     <span class="comment">-- short beep at 1000 Hz
+</span><span class="keyword">end</span>
+
+<span class="keyword">function</span> game_pause()
+    <span class="keyword">while</span> keys:getkey() ~= KEY.MENU <span class="keyword">do</span>
+        display.<span class="global">print</span>(<span class="string">"Game paused, press MENU to resume."</span>, <span class="number">0</span>, <span class="number">0</span>)
+        task.yield(<span class="number">50</span>)
+    <span class="keyword">end</span>
+
+    display.clear()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> draw()
+    <span class="comment">-- to prevent flicker without using the expensive double-buffering routines,
+</span>    <span class="comment">-- we erase the game items from previous position, then draw them in the new position
+</span>
+    <span class="comment">-- draw the ball
+</span>    display.circle(prev_ball_x, prev_ball_y, ball_radius, COLOR.TRANSPARENT, COLOR.TRANSPARENT)
+    display.circle(ball_x, ball_y, ball_radius, COLOR.WHITE, COLOR.WHITE)
+    display.circle(ball_x, ball_y, ball_radius, COLOR.BLACK)
+
+    <span class="comment">-- draw right paddle
+</span>    <span class="keyword">if</span> prev_right_paddle_y ~= right_paddle_y <span class="keyword">then</span>
+        display.rect(<span class="number">700</span>, prev_right_paddle_y-paddle_size/<span class="number">2</span>, <span class="number">10</span>, paddle_size, COLOR.TRANSPARENT, COLOR.TRANSPARENT)
+    <span class="keyword">end</span>
+    display.rect(<span class="number">700</span>+<span class="number">1</span>, right_paddle_y-paddle_size/<span class="number">2</span>+<span class="number">1</span>, <span class="number">10</span>-<span class="number">2</span>, paddle_size-<span class="number">2</span>, COLOR.WHITE, COLOR.WHITE)
+    display.rect(<span class="number">700</span>, right_paddle_y-paddle_size/<span class="number">2</span>, <span class="number">10</span>, paddle_size, COLOR.BLACK)
+
+    <span class="comment">-- draw left paddle
+</span>    <span class="keyword">if</span> prev_left_paddle_y ~= left_paddle_y <span class="keyword">then</span>
+        display.rect(<span class="number">10</span>, prev_left_paddle_y-paddle_size/<span class="number">2</span>, <span class="number">10</span>, paddle_size, COLOR.TRANSPARENT, COLOR.TRANSPARENT)
+    <span class="keyword">end</span>
+    display.rect(<span class="number">10</span>+<span class="number">1</span>, left_paddle_y-paddle_size/<span class="number">2</span>+<span class="number">1</span>, <span class="number">10</span>-<span class="number">2</span>, paddle_size-<span class="number">2</span>, COLOR.WHITE, COLOR.WHITE)
+    display.rect(<span class="number">10</span>, left_paddle_y-paddle_size/<span class="number">2</span>, <span class="number">10</span>, paddle_size, COLOR.BLACK)
+
+    <span class="comment">-- show the score
+</span>    display.<span class="global">print</span>(score_left, <span class="number">350</span> - <span class="number">50</span>, <span class="number">20</span>, FONT.LARGE)
+    display.<span class="global">print</span>(score_right, <span class="number">350</span> + <span class="number">50</span>, <span class="number">20</span>, FONT.LARGE)
+
+    <span class="comment">-- store previous coords
+</span>    prev_ball_x = ball_x
+    prev_ball_y = ball_y
+    prev_left_paddle_y = left_paddle_y
+    prev_right_paddle_y = right_paddle_y
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> main()
+    <span class="comment">-- this game runs on top of the menu backend
+</span>    <span class="comment">-- we will hook all the keys and prevent menu redraws
+</span>    <span class="comment">-- don't forget to restore them when the game ends
+</span>    keys:start()
+    menu.block(<span class="keyword">true</span>)
+    display.clear()
+
+    game_speed = pong_menu.submenu[<span class="string">"Game speed"</span>].value
+
+    ball_dx = game_speed
+    ball_dy = <span class="global">math</span>.random(-game_speed, game_speed)
+
+    AI_maxspeed = game_speed
+
+    <span class="keyword">while</span> menu.visible <span class="keyword">do</span>
+        <span class="keyword">local</span> key = keys:getkey()
+        <span class="keyword">if</span> key == KEY.UP <span class="keyword">then</span>
+            <span class="comment">-- up, down: move right paddle (smooth movement)
+</span>            right_paddle_delta = -<span class="number">2</span>*game_speed
+        <span class="keyword">elseif</span> key == KEY.DOWN <span class="keyword">then</span>
+            right_paddle_delta = <span class="number">2</span>*game_speed
+        <span class="keyword">elseif</span> key == KEY.UNPRESS_UDLR <span class="keyword">then</span>
+            right_paddle_delta = <span class="number">0</span>
+        <span class="keyword">elseif</span> key == KEY.WHEEL_DOWN <span class="keyword">or</span> key == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+            <span class="comment">-- scrollwheels: move right paddle (discrete increments)
+</span>            right_paddle_y = right_paddle_y + <span class="number">5</span>*game_speed
+        <span class="keyword">elseif</span> key == KEY.WHEEL_UP <span class="keyword">or</span> key == KEY.WHEEL_LEFT <span class="keyword">then</span>
+            right_paddle_y = right_paddle_y - <span class="number">5</span>*game_speed
+        <span class="keyword">elseif</span> key == KEY.MENU <span class="keyword">then</span>
+            <span class="comment">-- MENU: pause/resume game
+</span>            game_pause()
+        <span class="keyword">end</span>
+
+        <span class="comment">-- update ball position
+</span>        ball_x = ball_x + ball_dx
+        ball_y = ball_y + ball_dy
+
+        <span class="comment">-- update right paddle position
+</span>        right_paddle_y = coerce(right_paddle_y + right_paddle_delta, <span class="number">20</span> + paddle_size/<span class="number">2</span>, <span class="number">460</span>-paddle_size/<span class="number">2</span>)
+
+        <span class="comment">-- computer AI controls left paddle
+</span>        <span class="comment">-- algorithm: just follow the ball with some hysteresis, limit max speed and add a little randomness
+</span>        <span class="comment">-- that is, a slightly less-than-perfect player, so you still get a chance to win the game :P
+</span>        AI_bias = coerce(AI_bias + <span class="global">math</span>.random(-<span class="number">1</span>, <span class="number">1</span>), -<span class="number">10</span>, <span class="number">10</span>)
+        left_paddle_delta = ball_y - left_paddle_y + AI_bias
+        <span class="keyword">if</span> left_paddle_delta &gt; <span class="number">0</span> <span class="keyword">then</span> left_paddle_delta = <span class="global">math</span>.max(left_paddle_delta-<span class="number">20</span>, <span class="number">0</span>) <span class="keyword">end</span>
+        <span class="keyword">if</span> left_paddle_delta &lt; <span class="number">0</span> <span class="keyword">then</span> left_paddle_delta = <span class="global">math</span>.min(left_paddle_delta+<span class="number">20</span>, <span class="number">0</span>) <span class="keyword">end</span>
+        left_paddle_delta = coerce(left_paddle_delta, -AI_maxspeed, AI_maxspeed)
+        left_paddle_y = coerce(left_paddle_y + left_paddle_delta, <span class="number">20</span> + paddle_size/<span class="number">2</span>, <span class="number">460</span>-paddle_size/<span class="number">2</span>)
+
+        <span class="keyword">if</span> ball_x &lt; <span class="number">20</span> + ball_radius <span class="keyword">then</span>
+            <span class="comment">-- left bounce
+</span>
+            <span class="keyword">if</span> <span class="global">math</span>.abs(left_paddle_y - ball_y) &lt; paddle_size / <span class="number">2</span> + ball_radius <span class="keyword">then</span>
+                <span class="comment">-- paddle hit the ball?
+</span>                ball_x = <span class="number">20</span> + ball_radius
+                ball_dx = -ball_dx
+                ball_dy = (ball_y - left_paddle_y) * game_speed / <span class="number">25</span>
+                beep_paddle_hit()
+            <span class="keyword">else</span>
+                <span class="comment">-- nope, missed
+</span>                draw()
+                beep_paddle_miss()
+                task.yield(<span class="number">500</span>)
+                score_right = score_right + <span class="number">1</span>
+                ball_x = <span class="number">360</span>
+                ball_y = <span class="number">240</span>
+                right_paddle_delta = <span class="number">0</span>
+                ball_dx = game_speed
+                ball_dy = <span class="global">math</span>.random(-game_speed, game_speed)
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> ball_x &gt; <span class="number">700</span> - ball_radius <span class="keyword">then</span>
+            <span class="comment">-- right bounce
+</span>
+            <span class="keyword">if</span> <span class="global">math</span>.abs(right_paddle_y - ball_y) &lt; paddle_size / <span class="number">2</span> + ball_radius <span class="keyword">then</span>
+                <span class="comment">-- paddle hit the ball?
+</span>                ball_x = <span class="number">700</span>-ball_radius
+                ball_dx = -ball_dx
+                ball_dy = (ball_y - right_paddle_y) * game_speed / <span class="number">25</span>
+                beep_paddle_hit()
+            <span class="keyword">else</span>
+                <span class="comment">-- nope, missed
+</span>                draw()
+                beep_paddle_miss()
+                task.yield(<span class="number">500</span>)
+                score_left = score_left + <span class="number">1</span>
+                ball_x = <span class="number">360</span>
+                ball_y = <span class="number">240</span>
+                right_paddle_delta = <span class="number">0</span>
+                ball_dx = -game_speed
+                ball_dy = <span class="global">math</span>.random(-game_speed, game_speed)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span> ball_y &lt; ball_radius <span class="keyword">then</span>
+            <span class="comment">-- top bounce
+</span>            ball_y = ball_radius
+            ball_dy = -ball_dy
+            beep_border_bounce()
+        <span class="keyword">elseif</span> ball_y &gt; <span class="number">480</span>-ball_radius <span class="keyword">then</span>
+            <span class="comment">-- bottom bounce
+</span>            ball_y = <span class="number">480</span> - ball_radius
+            ball_dy = -ball_dy
+            beep_border_bounce()
+        <span class="keyword">end</span>
+
+        <span class="comment">-- update the screen
+</span>        draw()
+
+        <span class="comment">-- be friendly with other tasks
+</span>        task.yield(<span class="number">20</span>)
+    <span class="keyword">end</span>
+
+    <span class="comment">-- quit game
+</span>    menu.block(<span class="keyword">false</span>)
+    keys:stop()
+<span class="keyword">end</span>
+
+pong_menu = menu.new
+{
+    parent = <span class="string">"Games"</span>,
+    name = <span class="string">"Pong"</span>,
+    submenu =
+    {
+        {
+            name = <span class="string">"Play"</span>,
+            <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(main) <span class="keyword">end</span>,
+        },
+        {
+            name = <span class="string">"Game speed"</span>,
+            value = <span class="number">5</span>,
+            min = <span class="number">1</span>,
+            max = <span class="number">20</span>
+        }
+    }
+}</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-06-13 07:07:41 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

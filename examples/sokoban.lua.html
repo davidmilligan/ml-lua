@@ -37,9 +37,11 @@
   <li><a href="../examples/calc.lua.html">calc.lua</a></li>
   <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
   <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
   <li><a href="../examples/config.lua.html">config.lua</a></li>
-  <li><a href="../examples/keyhndlr.lua.html">keyhndlr.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
   <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><strong>sokoban.lua</strong></li>
@@ -63,7 +65,7 @@
   <li><a href="../modules/property.html">property</a></li>
   <li><a href="../modules/task.html">task</a></li>
   <li><a href="../modules/config.html">config</a></li>
-  <li><a href="../modules/keyhandler.html">keyhandler</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
 </ul>
 
 </div>
@@ -86,7 +88,7 @@
  Enjoy!
 ]]</span>
 
-<span class="global">require</span>(<span class="string">"keyhndlr"</span>)
+<span class="global">require</span>(<span class="string">"keys"</span>)
 
 <span class="comment">--printf
 </span><span class="keyword">function</span> printf(...) console.write(<span class="global">string</span>.format(...)) <span class="keyword">end</span>
@@ -433,38 +435,36 @@ targets = {}
 
 <span class="keyword">function</span> main()
 
-    setup(sokobanmenu.submenu[<span class="string">"Level"</span>].value)
+    setup(sokoban_menu.submenu[<span class="string">"Level"</span>].value)
 
     menu.block(<span class="keyword">true</span>);
     <span class="keyword">local</span> status,error = <span class="global">xpcall</span>(<span class="keyword">function</span>()
         split_target();
-        keyhandler:start()
+        keys:start()
         draw_maze();
         <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-
+            <span class="keyword">if</span> menu.visible == <span class="keyword">false</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
             <span class="comment">-- print_maze();
-</span>            <span class="keyword">local</span> keys = keyhandler:getkeys();
-            <span class="keyword">if</span> keys ~= <span class="keyword">nil</span> <span class="keyword">then</span>
-                <span class="keyword">for</span> i,key <span class="keyword">in</span> <span class="global">ipairs</span>(keys) <span class="keyword">do</span>
-                    <span class="keyword">if</span> key == KEY.LEFT <span class="keyword">or</span> key == KEY.WHEEL_LEFT <span class="keyword">then</span>
-                        move(<span class="number">0</span>, -<span class="number">1</span>);
-                    <span class="keyword">elseif</span> key == KEY.RIGHT <span class="keyword">or</span> key == KEY.WHEEL_RIGHT <span class="keyword">then</span>
-                        move(<span class="number">0</span>, <span class="number">1</span>);
-                    <span class="keyword">elseif</span> key == KEY.UP <span class="keyword">or</span> key == KEY.WHEEL_UP <span class="keyword">then</span>
-                        move(-<span class="number">1</span>, <span class="number">0</span>);
-                    <span class="keyword">elseif</span> key == KEY.DOWN <span class="keyword">or</span> key == KEY.WHEEL_DOWN <span class="keyword">then</span>
-                        move(<span class="number">1</span>, <span class="number">0</span>);
-                    <span class="keyword">elseif</span> key == KEY.SET <span class="keyword">or</span> key == KEY.UNPRESS_SET <span class="keyword">then</span>
-                    <span class="keyword">elseif</span> key == KEY.Q <span class="keyword">or</span> key == KEY.TRASH <span class="keyword">or</span> key == KEY.MENU <span class="keyword">then</span>
-                        printf(<span class="string">"Exiting...\n"</span>);
-                        menu.block(<span class="keyword">false</span>);
-                        keyhandler:stop()
-                        <span class="keyword">return</span>;
-                    <span class="keyword">end</span>
-                <span class="keyword">end</span>
-                display.draw(draw_maze)
-                <span class="keyword">if</span> check_solution() ~= <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+</span>            <span class="keyword">local</span> key = keys:getkey();
+            <span class="keyword">if</span> key == KEY.LEFT <span class="keyword">or</span> key == KEY.WHEEL_LEFT <span class="keyword">then</span>
+                move(<span class="number">0</span>, -<span class="number">1</span>);
+            <span class="keyword">elseif</span> key == KEY.RIGHT <span class="keyword">or</span> key == KEY.WHEEL_RIGHT <span class="keyword">then</span>
+                move(<span class="number">0</span>, <span class="number">1</span>);
+            <span class="keyword">elseif</span> key == KEY.UP <span class="keyword">or</span> key == KEY.WHEEL_UP <span class="keyword">then</span>
+                move(-<span class="number">1</span>, <span class="number">0</span>);
+            <span class="keyword">elseif</span> key == KEY.DOWN <span class="keyword">or</span> key == KEY.WHEEL_DOWN <span class="keyword">then</span>
+                move(<span class="number">1</span>, <span class="number">0</span>);
+            <span class="keyword">elseif</span> key == KEY.SET <span class="keyword">or</span> key == KEY.UNPRESS_SET <span class="keyword">then</span>
+            <span class="keyword">elseif</span> key == KEY.Q <span class="keyword">or</span> key == KEY.TRASH <span class="keyword">or</span> key == KEY.MENU <span class="keyword">then</span>
+                printf(<span class="string">"Exiting...\n"</span>);
+                menu.block(<span class="keyword">false</span>);
+                keys:stop()
+                <span class="keyword">return</span>;
             <span class="keyword">end</span>
+
+            display.draw(draw_maze)
+            <span class="keyword">if</span> check_solution() ~= <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+
             task.yield(<span class="number">100</span>)
         <span class="keyword">end</span>
 
@@ -477,21 +477,17 @@ targets = {}
         <span class="global">print</span>(error)
     <span class="keyword">end</span>
     menu.block(<span class="keyword">false</span>);
-    keyhandler:stop()
+    keys:stop()
 <span class="keyword">end</span>
 
-sokobanmenu = menu.new
+sokoban_menu = menu.new
 {
     parent = <span class="string">"Games"</span>,
     name = <span class="string">"Sokoban"</span>,
-    value = <span class="number">1</span>,
-    update = <span class="keyword">function</span>() <span class="keyword">return</span> <span class="string">""</span> <span class="keyword">end</span>,
     submenu =
     {
         {
             name = <span class="string">"Play"</span>,
-            icon_type = ICON_TYPE.ACTION,
-            update = <span class="keyword">function</span>() <span class="keyword">return</span> <span class="string">""</span> <span class="keyword">end</span>,
             <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(main) <span class="keyword">end</span>,
         },
         {
@@ -508,7 +504,7 @@ sokobanmenu = menu.new
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-06-09 20:45:39 </i>
+<i style="float:right;">Last updated 2015-06-13 07:07:41 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

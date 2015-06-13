@@ -37,13 +37,13 @@
   <li><a href="../examples/calc.lua.html">calc.lua</a></li>
   <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
   <li><a href="../examples/editor.lua.html">editor.lua</a></li>
-  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><strong>hello.lua</strong></li>
   <li><a href="../examples/config.lua.html">config.lua</a></li>
   <li><a href="../examples/keys.lua.html">keys.lua</a></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
   <li><a href="../examples/pong.lua.html">pong.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
-  <li><strong>scrnshot.lua</strong></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
 </ul>
 <h2>Modules</h2>
@@ -72,22 +72,24 @@
 
 <div id="content">
 
-    <h2>scrnshot.lua</h2>
+    <h2>hello.lua</h2>
 <pre>
-<span class="comment">-- take a screenshot every time a key is pressed
+<span class="comment">-- A very simple script.
 </span>
-scrnshot_menu = menu.new
-{
-    name = <span class="string">"Screenshot on Keypress"</span>,
-    choices = { <span class="string">"Off"</span>, <span class="string">"On"</span> },
-    value = <span class="string">"Off"</span>,
-}
+<span class="keyword">function</span> main()
+    menu.close()
+    console.show()
+    <span class="global">print</span> <span class="string">"Hello, World!"</span>
+    <span class="global">print</span> <span class="string">"Press any key to exit."</span>
+    key.wait()
+    console.hide()
+<span class="keyword">end</span>
 
-<span class="keyword">function</span> event.keypress(key)
-    <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">and</span> scrnshot_menu.value == <span class="string">"On"</span> <span class="keyword">then</span>
-        display.screenshot()
-    <span class="keyword">end</span>
-<span class="keyword">end</span></pre>
+keymenu = menu.new
+{
+    name = <span class="string">"Hello, World!"</span>,
+    <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(main) <span class="keyword">end</span>,
+}</pre>
 
 
 </div> <!-- id="content" -->
