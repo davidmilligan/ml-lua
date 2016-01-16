@@ -38,13 +38,13 @@
   <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
   <li><a href="../examples/editor.lua.html">editor.lua</a></li>
   <li><a href="../examples/hello.lua.html">hello.lua</a></li>
-  <li><a href="../examples/imetest.lua.html">imetest.lua</a></li>
+  <li><strong>imetest.lua</strong></li>
   <li><a href="../examples/config.lua.html">config.lua</a></li>
   <li><a href="../examples/keys.lua.html">keys.lua</a></li>
   <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
   <li><a href="../examples/pong.lua.html">pong.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
-  <li><strong>scrnshot.lua</strong></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
 </ul>
 <h2>Modules</h2>
@@ -74,22 +74,26 @@
 
 <div id="content">
 
-    <h2>scrnshot.lua</h2>
+    <h2>imetest.lua</h2>
 <pre>
-<span class="comment">-- take a screenshot every time a key is pressed
-</span>
-scrnshot_menu = menu.new
+menu.new
 {
-    name = <span class="string">"Screenshot on Keypress"</span>,
-    choices = { <span class="string">"Off"</span>, <span class="string">"On"</span> },
-    value = <span class="string">"Off"</span>,
-}
-
-<span class="keyword">function</span> event.keypress(key)
-    <span class="keyword">if</span> key ~= <span class="number">0</span> <span class="keyword">and</span> scrnshot_menu.value == <span class="string">"On"</span> <span class="keyword">then</span>
-        display.screenshot()
+    parent = <span class="string">"Debug"</span>,
+    name = <span class="string">"IME Test"</span>,
+    <span class="global">select</span> = <span class="keyword">function</span>(self)
+      task.create(<span class="keyword">function</span>()
+        console.show()
+        console.write(<span class="string">"Starting IME...\n"</span>)
+        <span class="keyword">local</span> text = ime.gets(<span class="string">"IME TEST!"</span>)
+        console.write(<span class="string">"IME result..\n"</span>)
+        <span class="keyword">if</span> text == <span class="keyword">nil</span> <span class="keyword">then</span>
+          console.write(<span class="string">"User Canceled!"</span>)
+        <span class="keyword">else</span>
+          console.write(text)
+        <span class="keyword">end</span>
+      <span class="keyword">end</span>)
     <span class="keyword">end</span>
-<span class="keyword">end</span></pre>
+}</pre>
 
 
 </div> <!-- id="content" -->
