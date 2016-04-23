@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/api_test.lua.html">api_test.lua</a></li>
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
+  <li><a href="../examples/logger.lua.html">logger.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/meta.lua.html">meta.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/shell.lua.html">shell.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+  <li><strong>test.lua</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
+  <li><a href="../modules/logger.html">logger</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>test.lua</h2>
+<pre>
+<span class="comment">--[[---------------------------------------------------------------------------
+Lua Scripting API Test
+]]</span>
+<span class="global">require</span>(<span class="string">"logger"</span>)
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Helper functions
+]]</span>
+<span class="keyword">function</span> printf(s,...)
+    <span class="global">print</span>(s:format(...))
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> log_table(t)
+    <span class="keyword">local</span> log = logger(<span class="string">"LUATEST.LOG"</span>)
+    log:write(<span class="global">string</span>.format(<span class="string">"%s = "</span>, t))
+    <span class="keyword">local</span> s,e = <span class="global">xpcall</span>(<span class="keyword">function</span>()
+        log:serialize(_G[t])
+    <span class="keyword">end</span>, <span class="global">debug</span>.traceback)
+    <span class="keyword">if</span> s == <span class="keyword">false</span> <span class="keyword">then</span>
+        log:write(e)
+    <span class="keyword">end</span>
+    log:close()
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Lua Scripting API test functions
+]]</span>
+test = {}
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Generic API tests
+]]</span>
+<span class="keyword">function</span> test.api()
+    menu.close()
+    console.clear()
+    console.show()
+    log_table(<span class="string">"event"</span>)
+    log_table(<span class="string">"camera"</span>)
+    log_table(<span class="string">"console"</span>)
+    log_table(<span class="string">"lv"</span>)
+    log_table(<span class="string">"lens"</span>)
+    log_table(<span class="string">"display"</span>)
+    log_table(<span class="string">"key"</span>)
+    log_table(<span class="string">"menu"</span>)
+    log_table(<span class="string">"test_menus"</span>)
+    log_table(<span class="string">"movie"</span>)
+    log_table(<span class="string">"dryos"</span>)
+    log_table(<span class="string">"interval"</span>)
+    log_table(<span class="string">"battery"</span>)
+    log_table(<span class="string">"task"</span>)
+    log_table(<span class="string">"property"</span>)
+    log_table(<span class="string">"touch"</span>)
+    key.wait()
+    console.hide()
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Verify apex fields are 'reversible'
+]]</span>
+<span class="keyword">function</span> test.apex()
+   display.clear()
+   a = camera.shutter.apex
+   camera.shutter.apex = <span class="number">4</span>
+   b = camera.shutter.apex
+   camera.shutter.apex = a
+   c = camera.shutter.apex
+   i = a..<span class="string">","</span>..b..<span class="string">","</span>..c
+   display.notify_box (i,<span class="number">5000</span>)
+<span class="keyword">end</span>
+
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Create Test Menus
+]]</span>
+test_menus = {}
+<span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(test) <span class="keyword">do</span>
+    <span class="keyword">local</span> m = menu.new
+    {
+        name = <span class="string">"Script "</span>..k..<span class="string">" tests"</span>,
+        <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(v) <span class="keyword">end</span>,
+    }
+    <span class="global">table</span>.insert(test_menus,m)
+<span class="keyword">end</span>
+menu.new
+{
+    name = <span class="string">"Run all script tests"</span>,
+    <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(<span class="keyword">function</span>() <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(test) <span class="keyword">do</span> v() <span class="keyword">end</span> <span class="keyword">end</span>) <span class="keyword">end</span>,
+}</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2016-03-21 21:07:57 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><strong>api_test.lua</strong></li>
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
+  <li><a href="../examples/logger.lua.html">logger.lua</a></li>
+  <li><a href="../examples/strict.lua.html">strict.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
+  <li><a href="../modules/logger.html">logger</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>api_test.lua</h2>
+<pre>
+<span class="comment">-- Test routines for the scripting API
+</span><span class="comment">-- Very incomplete
+</span><span class="global">require</span>(<span class="string">"logger"</span>)
+
+<span class="comment">-- global logger
+</span>test_log = <span class="keyword">nil</span>
+
+<span class="keyword">function</span> printf(s,...)
+    test_log:writef(s,...)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> request_mode(mode, mode_str)
+    <span class="keyword">while</span> camera.mode ~= mode <span class="keyword">do</span>
+        printf(<span class="string">"Please switch to %s mode.\n"</span>, mode_str, mode)
+        <span class="keyword">while</span> camera.mode ~= mode <span class="keyword">do</span>
+            console.show()
+            msleep(<span class="number">1000</span>)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> round(x)
+    <span class="comment">-- https://scriptinghelpers.org/questions/4850/how-do-i-round-numbers-in-lua-answered
+</span>    <span class="keyword">return</span> x + <span class="number">0.5</span> - (x + <span class="number">0.5</span>) % <span class="number">1</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> print_table(t)
+    test_log:write(<span class="global">string</span>.format(<span class="string">"%s = "</span>, t))
+    <span class="keyword">local</span> s,e = <span class="global">xpcall</span>(<span class="keyword">function</span>()
+        test_log:serialize(_G[t])
+    <span class="keyword">end</span>, <span class="global">debug</span>.traceback)
+    <span class="keyword">if</span> s == <span class="keyword">false</span> <span class="keyword">then</span>
+        test_log:write(e)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- used for testing Lua 'strict' mode
+</span>declared_var = <span class="keyword">nil</span>
+
+<span class="keyword">function</span> strict_tests()
+    printf(<span class="string">"Strict mode tests...\n"</span>)
+
+    <span class="comment">-- this should work
+</span>    declared_var = <span class="number">5</span>
+    <span class="global">assert</span>(declared_var == <span class="number">5</span>)
+
+    <span class="comment">-- this should raise error
+</span>    <span class="keyword">local</span> s,e = <span class="global">pcall</span>(<span class="keyword">function</span>() undeclared_var = <span class="number">7</span> <span class="keyword">end</span>)
+    <span class="global">assert</span>(s == <span class="keyword">false</span>)
+    <span class="global">assert</span>(e:find(<span class="string">"assign to undeclared variable 'undeclared_var'"</span>))
+
+    <span class="comment">-- same here
+</span>    <span class="keyword">local</span> s,e = <span class="global">pcall</span>(<span class="keyword">function</span>() <span class="global">print</span>(undeclared_var) <span class="keyword">end</span>)
+    <span class="global">assert</span>(s == <span class="keyword">false</span>)
+    <span class="global">assert</span>(e:find(<span class="string">"variable 'undeclared_var' is not declared"</span>))
+
+    printf(<span class="string">"Strict mode tests passed.\n"</span>)
+    printf(<span class="string">"\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> generic_tests()
+    printf(<span class="string">"Generic tests...\n"</span>)
+    print_table(<span class="string">"camera"</span>)
+    print_table(<span class="string">"event"</span>)
+    print_table(<span class="string">"console"</span>)
+    print_table(<span class="string">"lv"</span>)
+    print_table(<span class="string">"lens"</span>)
+    print_table(<span class="string">"display"</span>)
+    print_table(<span class="string">"key"</span>)
+    print_table(<span class="string">"menu"</span>)
+    print_table(<span class="string">"testmenu"</span>)
+    print_table(<span class="string">"movie"</span>)
+    print_table(<span class="string">"dryos"</span>)
+    print_table(<span class="string">"interval"</span>)
+    print_table(<span class="string">"battery"</span>)
+    print_table(<span class="string">"task"</span>)
+    print_table(<span class="string">"property"</span>)
+    printf(<span class="string">"Generic tests completed.\n"</span>)
+    printf(<span class="string">"\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> stdio_test()
+    <span class="keyword">local</span> s,e
+
+    <span class="comment">-- these should print to console
+</span>    <span class="comment">-- fixme: they should output this:
+</span>    <span class="comment">-- Hello, stderr. Hello, stdout.
+</span>    <span class="comment">-- Hello again, stdout.
+</span>    <span class="comment">-- Hello again, stderr.
+</span>    <span class="global">io</span>.write(<span class="string">"Hello, stdout. "</span>)
+    <span class="global">io</span>.stderr:write(<span class="string">"Hello, stderr. "</span>)
+    <span class="global">io</span>.write(<span class="string">"\n"</span>)
+
+    <span class="global">io</span>.write(<span class="string">"Hello again, stdout.\n"</span>)
+    <span class="global">io</span>.stderr:write(<span class="string">"Hello again, stderr.\n"</span>)
+
+    <span class="comment">-- not implemented
+</span>    <span class="comment">-- I expected error, but...
+</span>    <span class="keyword">local</span> inp = <span class="global">io</span>.read(<span class="string">"*line"</span>)
+    <span class="global">print</span>(<span class="string">"From stdin:"</span>, inp)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> copy_test(src, dst)
+    printf(<span class="string">"Copy test: %s -&gt; %s\n"</span>, src, dst)
+
+    <span class="comment">-- will this copy without errors? we'll see
+</span>    <span class="comment">-- read source file
+</span>    <span class="keyword">local</span> fin = <span class="global">io</span>.open(src, <span class="string">"rb"</span>)
+    <span class="keyword">local</span> data = fin:read(<span class="string">"*all"</span>)
+    fin:close()
+
+    <span class="comment">-- save a copy
+</span>    <span class="keyword">local</span> fout = <span class="global">io</span>.open(dst, <span class="string">"w"</span>)
+    fout:write(data)
+    fout:close()
+
+    <span class="comment">-- verify
+</span>    fin = <span class="global">io</span>.open(dst, <span class="string">"rb"</span>)
+    <span class="keyword">local</span> check = fin:read(<span class="string">"*all"</span>)
+    <span class="keyword">local</span> size = fin:seek(<span class="string">"end"</span>, <span class="number">0</span>)
+    fin:close()
+    <span class="global">assert</span>(data == check)
+    <span class="global">assert</span>(size == #data)
+
+    <span class="comment">-- delete the copy
+</span>    <span class="global">assert</span>(dryos.remove(dst) == <span class="keyword">true</span>)
+
+    <span class="comment">-- check if it was deleted
+</span>    fin = <span class="global">io</span>.open(dst, <span class="string">"rb"</span>)
+    <span class="global">assert</span>(fin == <span class="keyword">nil</span>)
+
+    <span class="comment">-- it should return false this time
+</span>    <span class="global">assert</span>(dryos.remove(dst) == <span class="keyword">false</span>)
+
+    printf(<span class="string">"Copy test OK\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> append_test(file)
+    printf(<span class="string">"Append test: %s\n"</span>, file)
+
+    <span class="keyword">local</span> data1 = <span class="string">"Allons enfants de la patrie\n"</span>
+    <span class="keyword">local</span> data2 = <span class="string">"Le jour de gloire est arrivé !\n"</span>
+
+    <span class="comment">-- make sure the file is not there
+</span>    dryos.remove(file)
+
+    <span class="comment">-- create it
+</span>    <span class="keyword">local</span> fout = <span class="global">io</span>.open(file, <span class="string">"a"</span>)
+    fout:write(data1)
+    fout:close()
+
+    <span class="comment">-- verify the contents
+</span>    <span class="keyword">local</span> fin = <span class="global">io</span>.open(file, <span class="string">"r"</span>)
+    <span class="keyword">local</span> check = fin:read(<span class="string">"*all"</span>)
+    fin:close()
+    <span class="global">assert</span>(data1 == check)
+
+    <span class="comment">-- reopen it to append something
+</span>    fout = <span class="global">io</span>.open(file, <span class="string">"a"</span>)
+    fout:write(data2)
+    fout:close()
+
+    <span class="comment">-- verify the contents
+</span>    fin = <span class="global">io</span>.open(file, <span class="string">"r"</span>)
+    check = fin:read(<span class="string">"*all"</span>)
+    fin:close()
+    <span class="global">assert</span>(check == data1 .. data2)
+
+    <span class="comment">-- delete it
+</span>    <span class="global">assert</span>(dryos.remove(file) == <span class="keyword">true</span>)
+
+    <span class="comment">-- check if it was deleted
+</span>    fin = <span class="global">io</span>.open(file, <span class="string">"rb"</span>)
+    <span class="global">assert</span>(fin == <span class="keyword">nil</span>)
+
+    printf(<span class="string">"Append test OK\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> test_io()
+    stdio_test()
+    copy_test(<span class="string">"autoexec.bin"</span>, <span class="string">"tmp.bin"</span>)
+    append_test(<span class="string">"tmp.txt"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> test_camera_exposure()
+    printf(<span class="string">"Testing exposure settings, module 'camera'...\n"</span>)
+    printf(<span class="string">"Camera    : %s (%s) %s\n"</span>, camera.model, camera.model_short, camera.firmware)
+    printf(<span class="string">"Lens      : %s\n"</span>, lens.name)
+    printf(<span class="string">"Shoot mode: %s\n"</span>, camera.mode)
+    printf(<span class="string">"Shutter   : %s (raw %s, %ss, %sms, apex %s)\n"</span>, camera.shutter, camera.shutter.raw, camera.shutter.value, camera.shutter.ms, camera.shutter.apex)
+    printf(<span class="string">"Aperture  : %s (raw %s, f/%s, apex %s)\n"</span>, camera.aperture, camera.aperture.raw, camera.aperture.value, camera.aperture.apex)
+    printf(<span class="string">"Av range  : %s..%s (raw %s..%s, f/%s..f/%s, apex %s..%s)\n"</span>,
+        camera.aperture.min, camera.aperture.max,
+        camera.aperture.min.raw, camera.aperture.max.raw,
+        camera.aperture.min.value, camera.aperture.max.value,
+        camera.aperture.min.apex, camera.aperture.max.apex
+    )
+    printf(<span class="string">"ISO       : %s (raw %s, %s, apex %s)\n"</span>, camera.iso, camera.iso.raw, camera.iso.value, camera.iso.apex)
+    printf(<span class="string">"EC        : %s (raw %s, %s EV)\n"</span>, camera.ec, camera.ec.raw, camera.ec.value)
+    printf(<span class="string">"Flash EC  : %s (raw %s, %s EV)\n"</span>, camera.flash_ec, camera.flash_ec.raw, camera.flash_ec.value)
+
+    request_mode(MODE.M, <span class="string">"M"</span>)
+    <span class="keyword">local</span> old_value = camera.shutter.raw
+    printf(<span class="string">"Setting shutter to random values...\n"</span>)
+    <span class="keyword">for</span> k = <span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> method = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">4</span>)
+        <span class="keyword">local</span> d = <span class="keyword">nil</span>
+        <span class="keyword">if</span> method == <span class="number">1</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> s = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">30</span>)
+            <span class="keyword">if</span> <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">then</span>
+                camera.shutter.value = s
+            <span class="keyword">else</span>
+                camera.shutter = s
+            <span class="keyword">end</span>
+            d = <span class="global">math</span>.abs(<span class="global">math</span>.log(camera.shutter.value,<span class="number">2</span>) - <span class="global">math</span>.log(s,<span class="number">2</span>))
+        <span class="keyword">elseif</span> method == <span class="number">2</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> ms = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">30000</span>)
+            camera.shutter.ms = ms
+            d = <span class="global">math</span>.abs(<span class="global">math</span>.log(camera.shutter.ms,<span class="number">2</span>) - <span class="global">math</span>.log(ms,<span class="number">2</span>))
+        <span class="keyword">elseif</span> method == <span class="number">3</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> apex = <span class="global">math</span>.random(-<span class="number">5</span>*<span class="number">100</span>,<span class="number">12</span>*<span class="number">100</span>)/<span class="number">100</span>
+            camera.shutter.apex = apex
+            d = <span class="global">math</span>.abs(camera.shutter.apex - apex)
+        <span class="keyword">elseif</span> method == <span class="number">4</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> raw = <span class="global">math</span>.random(<span class="number">16</span>,<span class="number">152</span>)
+            camera.shutter.raw = raw
+            d = <span class="global">math</span>.abs(camera.shutter.raw - raw) / <span class="number">8</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">-- difference between requested and actual shutter speed should be max 1.5/8 EV
+</span>        <span class="comment">-- (most cameras accept 0, 3/8, 4/8, 5/8, 1 EV, the largest gap being 3/8 EV,
+</span>        <span class="comment">--  and you should always get the nearest valid shutter speed)
+</span>        <span class="keyword">if</span> d &gt; <span class="number">1.5</span>/<span class="number">8</span> + <span class="number">1e-3</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: shutter delta %s EV\n"</span>, d)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- seconds and ms fields should be consistent
+</span>        <span class="keyword">if</span> <span class="global">math</span>.abs(camera.shutter.value - camera.shutter.ms/<span class="number">1000</span>) &gt; <span class="number">1e-3</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: shutter %ss != %sms\n"</span>, camera.shutter.value, camera.shutter.ms)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- seconds and apex should be consistent
+</span>        <span class="comment">-- see http://dougkerr.net/Pumpkin/articles/APEX.pdf
+</span>        <span class="keyword">local</span> expected_apex = <span class="global">math</span>.log(<span class="number">1</span>/camera.shutter.value,<span class="number">2</span>)
+        <span class="keyword">if</span> <span class="global">math</span>.abs(expected_apex - camera.shutter.apex) &gt; <span class="number">0.01</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: shutter %ss != Tv%s, expected %s\n"</span>, camera.shutter.value, camera.shutter.apex, expected_apex)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- setting shutter to the same value, using any method (s,ms,apex,raw)
+</span>        <span class="comment">-- should not change anything
+</span>        <span class="keyword">for</span> i,field <span class="keyword">in</span> <span class="global">pairs</span>{<span class="string">"value"</span>,<span class="string">"ms"</span>,<span class="string">"apex"</span>,<span class="string">"raw"</span>} <span class="keyword">do</span>
+            <span class="keyword">local</span> current = {}
+            current.apex  = camera.shutter.apex
+            current.value = camera.shutter.value
+            current.ms    = camera.shutter.ms
+            current.raw   = camera.shutter.raw
+
+            <span class="comment">-- ms is integer, so tests at very low values will fail because of roundoff errors
+</span>            <span class="comment">-- however, if we have set the shutter in ms from the beginning, it will work fine
+</span>            <span class="keyword">if</span> field == <span class="string">"ms"</span> <span class="keyword">and</span> current.ms &lt; <span class="number">10</span> <span class="keyword">and</span> method ~= <span class="number">2</span> <span class="keyword">then</span>
+                <span class="comment">-- how do you write "continue" in Lua?!
+</span>                field = <span class="string">"value"</span>
+            <span class="keyword">end</span>
+
+            camera.shutter[field] = current[field]
+
+            <span class="keyword">if</span> camera.shutter.value ~= current.value <span class="keyword">then</span>
+                printf(<span class="string">"Error: shutter set to %s=%s, got %ss, expected %ss\n"</span>, field, current[field], camera.shutter.value, current.value)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.shutter.ms ~= current.ms <span class="keyword">then</span>
+                printf(<span class="string">"Error: shutter set to %s=%s, got %sms, expected %sms\n"</span>, field, current[field], camera.shutter.ms, current.ms)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.shutter.apex ~= current.apex <span class="keyword">then</span>
+                printf(<span class="string">"Error: shutter set to %s=%s, got Tv%s, expected Tv%s\n"</span>, field, current[field], camera.shutter.apex, current.apex)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.shutter.raw ~= current.raw <span class="keyword">then</span>
+                printf(<span class="string">"Error: shutter set to %s=%s, got %s, expected %s (raw)\n"</span>, field, current[field], camera.shutter.raw, current.raw)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    camera.shutter.raw = old_value
+
+    request_mode(MODE.M, <span class="string">"M"</span>)
+    old_value = camera.iso.raw
+    printf(<span class="string">"Setting ISO to random values...\n"</span>)
+    <span class="keyword">for</span> k = <span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> method = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">3</span>)
+        <span class="keyword">local</span> d = <span class="keyword">nil</span>
+        <span class="keyword">if</span> method == <span class="number">1</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> iso = <span class="global">math</span>.random(<span class="number">100</span>, <span class="number">6400</span>)
+            <span class="keyword">if</span> <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">then</span>
+                camera.iso.value = iso
+            <span class="keyword">else</span>
+                camera.iso = iso
+            <span class="keyword">end</span>
+            d = <span class="global">math</span>.abs(<span class="global">math</span>.log(camera.iso.value,<span class="number">2</span>) - <span class="global">math</span>.log(iso,<span class="number">2</span>))
+        <span class="keyword">elseif</span> method == <span class="number">2</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> apex = <span class="global">math</span>.random(<span class="number">5</span>*<span class="number">100</span>,<span class="number">11</span>*<span class="number">100</span>)/<span class="number">100</span>
+            camera.iso.apex = apex
+            d = <span class="global">math</span>.abs(camera.iso.apex - apex)
+        <span class="keyword">elseif</span> method == <span class="number">3</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> raw = <span class="global">math</span>.random(<span class="number">72</span>, <span class="number">120</span>)
+            camera.iso.raw = raw
+            d = <span class="global">math</span>.abs(camera.iso.raw - raw) / <span class="number">8</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">-- difference between requested and actual ISO should be max 1/3 EV
+</span>        <span class="keyword">if</span> d &gt; <span class="number">1</span>/<span class="number">3</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: ISO delta %s EV\n"</span>, d)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- ISO and Sv (APEX) should be consistent
+</span>        <span class="keyword">local</span> expected_apex = <span class="global">math</span>.log(camera.iso.value/<span class="number">3.125</span>, <span class="number">2</span>)
+        <span class="keyword">if</span> <span class="global">math</span>.abs(expected_apex - camera.iso.apex) &gt; <span class="number">0.2</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: ISO %s != Sv%s, expected %s\n"</span>, camera.iso.value, camera.iso.apex, expected_apex)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- setting ISO to the same value, using any method (value,apex,raw)
+</span>        <span class="comment">-- should not change anything
+</span>        <span class="keyword">for</span> i,field <span class="keyword">in</span> <span class="global">pairs</span>{<span class="string">"value"</span>,<span class="string">"apex"</span>,<span class="string">"raw"</span>} <span class="keyword">do</span>
+            <span class="keyword">local</span> current = {}
+            current.apex  = camera.iso.apex
+            current.value = camera.iso.value
+            current.raw   = camera.iso.raw
+
+            camera.iso[field] = current[field]
+
+            <span class="keyword">if</span> camera.iso.value ~= current.value <span class="keyword">then</span>
+                printf(<span class="string">"Error: ISO set to %s=%s, got %s, expected %s\n"</span>, field, current[field], camera.iso.value, current.value)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.iso.apex ~= current.apex <span class="keyword">then</span>
+                printf(<span class="string">"Error: ISO set to %s=%s, got Sv%s, expected Sv%s\n"</span>, field, current[field], camera.iso.apex, current.apex)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.iso.raw ~= current.raw <span class="keyword">then</span>
+                printf(<span class="string">"Error: ISO set to %s=%s, got %s, expected %s (raw)\n"</span>, field, current[field], camera.iso.raw, current.raw)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    camera.iso.raw = old_value
+
+    <span class="keyword">if</span> camera.aperture.min.raw == camera.aperture.max.raw <span class="keyword">then</span>
+        printf(<span class="string">"This lens does not have variable aperture (skipping test).\n"</span>)
+    <span class="keyword">else</span>
+        request_mode(MODE.M, <span class="string">"M"</span>)
+        old_value = camera.aperture.raw
+        printf(<span class="string">"Setting aperture to random values...\n"</span>)
+        <span class="keyword">for</span> k = <span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+            <span class="keyword">local</span> method = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">3</span>)
+            <span class="keyword">local</span> d = <span class="keyword">nil</span>
+            <span class="keyword">local</span> extra_tol = <span class="number">0</span>
+            <span class="keyword">if</span> method == <span class="number">1</span> <span class="keyword">then</span>
+                <span class="keyword">local</span> av = <span class="global">math</span>.random(round(camera.aperture.min.value*<span class="number">10</span>), round(camera.aperture.max.value*<span class="number">10</span>)) / <span class="number">10</span>
+                <span class="keyword">if</span> <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">then</span>
+                    camera.aperture.value = av
+                <span class="keyword">else</span>
+                    camera.aperture = av
+                <span class="keyword">end</span>
+                d = <span class="global">math</span>.abs(<span class="global">math</span>.log(camera.aperture.value,<span class="number">2</span>) - <span class="global">math</span>.log(av,<span class="number">2</span>)) * <span class="number">2</span>
+                <span class="comment">-- when checking the result, allow a larger difference (0.1 units) - see note below
+</span>                extra_tol = <span class="global">math</span>.abs(<span class="global">math</span>.log(av,<span class="number">2</span>) - <span class="global">math</span>.log(av-<span class="number">0.1</span>,<span class="number">2</span>)) * <span class="number">2</span>
+            <span class="keyword">elseif</span> method == <span class="number">2</span> <span class="keyword">then</span>
+                <span class="keyword">local</span> apex = <span class="global">math</span>.random(round(camera.aperture.min.apex*<span class="number">100</span>), round(camera.aperture.max.apex*<span class="number">100</span>)) / <span class="number">100</span>
+                camera.aperture.apex = apex
+                d = <span class="global">math</span>.abs(camera.aperture.apex - apex)
+            <span class="keyword">elseif</span> method == <span class="number">3</span> <span class="keyword">then</span>
+                <span class="keyword">local</span> raw = <span class="global">math</span>.random(camera.aperture.min.raw, camera.aperture.max.raw)
+                camera.aperture.raw = raw
+                d = <span class="global">math</span>.abs(camera.aperture.raw - raw) / <span class="number">8</span>
+            <span class="keyword">end</span>
+
+            <span class="comment">-- difference between requested and actual aperture should be max 1.5/8 EV
+</span>            <span class="comment">-- note: when using F-numbers, the difference may be larger, because of the rounding done
+</span>            <span class="comment">-- to match Canon values (e.g. raw 48 would be f/5.66 (f/5.7), instead of Canon's f/5.6)
+</span>            <span class="keyword">if</span> (d &gt; <span class="number">1.5</span>/<span class="number">8</span> + extra_tol) <span class="keyword">then</span>
+                printf(<span class="string">"Error: aperture delta %s EV (expected &lt; %s, f/%s, method=%d)\n"</span>, d, <span class="number">1.5</span>/<span class="number">8</span> + extra_tol, camera.aperture, method)
+            <span class="keyword">end</span>
+
+            <span class="comment">-- aperture and Av (APEX) should be consistent
+</span>            <span class="keyword">local</span> expected_apex = <span class="global">math</span>.log(camera.aperture.value, <span class="number">2</span>) * <span class="number">2</span>
+            <span class="keyword">if</span> <span class="global">math</span>.abs(expected_apex - camera.aperture.apex) &gt; <span class="number">0.2</span> <span class="keyword">then</span>
+                printf(<span class="string">"Error: aperture %s != Av%s, expected %s\n"</span>, camera.aperture.value, camera.aperture.apex, expected_apex)
+            <span class="keyword">end</span>
+
+            <span class="comment">-- setting aperture to the same value, using any method (value,apex,raw)
+</span>            <span class="comment">-- should not change anything
+</span>            <span class="keyword">for</span> i,field <span class="keyword">in</span> <span class="global">pairs</span>{<span class="string">"value"</span>,<span class="string">"apex"</span>,<span class="string">"raw"</span>} <span class="keyword">do</span>
+                <span class="keyword">local</span> current = {}
+                current.apex  = camera.aperture.apex
+                current.value = camera.aperture.value
+                current.raw   = camera.aperture.raw
+
+                camera.aperture[field] = current[field]
+
+                <span class="keyword">if</span> camera.aperture.value ~= current.value <span class="keyword">then</span>
+                    printf(<span class="string">"Error: aperture set to %s=%s, got %s, expected %s\n"</span>, field, current[field], camera.aperture.value, current.value)
+                <span class="keyword">end</span>
+                <span class="keyword">if</span> camera.aperture.apex ~= current.apex <span class="keyword">then</span>
+                    printf(<span class="string">"Error: aperture set to %s=%s, got Sv%s, expected Sv%s\n"</span>, field, current[field], camera.aperture.apex, current.apex)
+                <span class="keyword">end</span>
+                <span class="keyword">if</span> camera.aperture.raw ~= current.raw <span class="keyword">then</span>
+                    printf(<span class="string">"Error: aperture set to %s=%s, got %s, expected %s (raw)\n"</span>, field, current[field], camera.aperture.raw, current.raw)
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        camera.aperture.raw = old_value
+    <span class="keyword">end</span>
+
+    request_mode(MODE.AV, <span class="string">"Av"</span>)
+    old_value = camera.ec.raw
+    printf(<span class="string">"Setting EC to random values...\n"</span>)
+    <span class="keyword">for</span> k = <span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> method = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>)
+        <span class="keyword">local</span> d = <span class="keyword">nil</span>
+        <span class="keyword">if</span> method == <span class="number">1</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> ec = <span class="global">math</span>.random(-<span class="number">2</span>*<span class="number">100</span>, <span class="number">2</span>*<span class="number">100</span>) / <span class="number">100</span>
+            <span class="keyword">if</span> <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">then</span>
+                camera.ec.value = ec
+            <span class="keyword">else</span>
+                camera.ec = ec
+            <span class="keyword">end</span>
+            d = <span class="global">math</span>.abs(camera.ec.value - ec,<span class="number">2</span>)
+        <span class="keyword">elseif</span> method == <span class="number">2</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> raw = <span class="global">math</span>.random(-<span class="number">16</span>, <span class="number">16</span>)
+            camera.ec.raw = raw
+            d = <span class="global">math</span>.abs(camera.ec.raw - raw) / <span class="number">8</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">-- difference between requested and actual EC should be max 1.5/8 EV
+</span>        <span class="keyword">if</span> d &gt; <span class="number">1.5</span>/<span class="number">8</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: EC delta %s EV\n"</span>, d)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- EC and raw should be consistent
+</span>        <span class="keyword">local</span> expected_ec = camera.ec.raw / <span class="number">8</span>
+        <span class="keyword">if</span> <span class="global">math</span>.abs(expected_ec - camera.ec.value) &gt; <span class="number">0.001</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: EC raw %s != %s EV, expected %s EV\n"</span>, camera.ec.raw, camera.ec.value, expected_ec)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- setting EC to the same value, using any method (value,raw)
+</span>        <span class="comment">-- should not change anything
+</span>        <span class="keyword">for</span> i,field <span class="keyword">in</span> <span class="global">pairs</span>{<span class="string">"value"</span>,<span class="string">"raw"</span>} <span class="keyword">do</span>
+            <span class="keyword">local</span> current = {}
+            current.value = camera.ec.value
+            current.raw   = camera.ec.raw
+
+            camera.ec[field] = current[field]
+
+            <span class="keyword">if</span> camera.ec.value ~= current.value <span class="keyword">then</span>
+                printf(<span class="string">"Error: EC set to %s=%s, got %s, expected %s EV\n"</span>, field, current[field], camera.ec.value, current.value)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.ec.raw ~= current.raw <span class="keyword">then</span>
+                printf(<span class="string">"Error: EC set to %s=%s, got %s, expected %s (raw)\n"</span>, field, current[field], camera.ec.raw, current.raw)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    camera.ec.raw = old_value
+
+    <span class="comment">-- copy/paste &amp; replace from EC (those two should behave in the same way)
+</span>    old_value = camera.flash_ec.raw
+    printf(<span class="string">"Setting Flash EC to random values...\n"</span>)
+    <span class="keyword">for</span> k = <span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> method = <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>)
+        <span class="keyword">local</span> d = <span class="keyword">nil</span>
+        <span class="keyword">if</span> method == <span class="number">1</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> fec = <span class="global">math</span>.random(-<span class="number">2</span>*<span class="number">100</span>, <span class="number">2</span>*<span class="number">100</span>) / <span class="number">100</span>
+            <span class="keyword">if</span> <span class="global">math</span>.random(<span class="number">1</span>,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">then</span>
+                camera.flash_ec.value = fec
+            <span class="keyword">else</span>
+                camera.flash_ec = fec
+            <span class="keyword">end</span>
+            d = <span class="global">math</span>.abs(camera.flash_ec.value - fec,<span class="number">2</span>)
+        <span class="keyword">elseif</span> method == <span class="number">2</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> raw = <span class="global">math</span>.random(-<span class="number">16</span>, <span class="number">16</span>)
+            camera.flash_ec.raw = raw
+            d = <span class="global">math</span>.abs(camera.flash_ec.raw - raw) / <span class="number">8</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">-- difference between requested and actual EC should be max 1.5/8 EV
+</span>        <span class="keyword">if</span> d &gt; <span class="number">1.5</span>/<span class="number">8</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: FEC delta %s EV\n"</span>, d)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- EC and raw should be consistent
+</span>        <span class="keyword">local</span> expected_fec = camera.flash_ec.raw / <span class="number">8</span>
+        <span class="keyword">if</span> <span class="global">math</span>.abs(expected_fec - camera.flash_ec.value) &gt; <span class="number">0.001</span> <span class="keyword">then</span>
+            printf(<span class="string">"Error: FEC raw %s != %s EV, expected %s EV\n"</span>, camera.flash_ec.raw, camera.flash_ec.value, current.expected_fec)
+        <span class="keyword">end</span>
+
+        <span class="comment">-- setting EC to the same value, using any method (value,raw)
+</span>        <span class="comment">-- should not change anything
+</span>        <span class="keyword">for</span> i,field <span class="keyword">in</span> <span class="global">pairs</span>{<span class="string">"value"</span>,<span class="string">"raw"</span>} <span class="keyword">do</span>
+            <span class="keyword">local</span> current = {}
+            current.value = camera.flash_ec.value
+            current.raw   = camera.flash_ec.raw
+
+            camera.flash_ec[field] = current[field]
+
+            <span class="keyword">if</span> camera.flash_ec.value ~= current.value <span class="keyword">then</span>
+                printf(<span class="string">"Error: FEC set to %s=%s, got %s, expected %s EV\n"</span>, field, current[field], camera.flash_ec.value, current.value)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> camera.flash_ec.raw ~= current.raw <span class="keyword">then</span>
+                printf(<span class="string">"Error: FEC set to %s=%s, got %s, expected %s (raw)\n"</span>, field, current[field], camera.flash_ec.raw, current.raw)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    camera.flash_ec.raw = old_value
+
+    printf(<span class="string">"Exposure tests completed.\n"</span>)
+    printf(<span class="string">"\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> test_lv()
+    printf(<span class="string">"Testing module 'lv'...\n"</span>)
+    <span class="keyword">if</span> lv.enabled <span class="keyword">then</span>
+        printf(<span class="string">"LiveView is running; stopping...\n"</span>)
+        lv.stop()
+        <span class="global">assert</span>(<span class="keyword">not</span> lv.enabled, <span class="string">"LiveView did not stop"</span>)
+        msleep(<span class="number">2000</span>)
+    <span class="keyword">end</span>
+
+    printf(<span class="string">"Starting LiveView...\n"</span>)
+    lv.start()
+    <span class="global">assert</span>(lv.enabled, <span class="string">"LiveView did not start"</span>)
+
+    msleep(<span class="number">2000</span>)
+
+    <span class="keyword">for</span> i,z <span class="keyword">in</span> <span class="global">pairs</span>{<span class="number">1</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">1</span>} <span class="keyword">do</span>
+        printf(<span class="string">"Setting zoom to x%d...\n"</span>, z)
+        lv.zoom = z
+        <span class="global">assert</span>(lv.zoom == z, <span class="string">"Could not set zoom in LiveView "</span>)
+        lv.wait(<span class="number">5</span>)
+    <span class="keyword">end</span>
+
+    printf(<span class="string">"Pausing LiveView...\n"</span>)
+    lv.pause()
+    <span class="global">assert</span>(lv.enabled, <span class="string">"LiveView stopped"</span>)
+    <span class="global">assert</span>(lv.paused, <span class="string">"LiveView could not be paused"</span>)
+
+    msleep(<span class="number">2000</span>)
+
+    printf(<span class="string">"Resuming LiveView...\n"</span>)
+    lv.resume()
+    <span class="global">assert</span>(lv.enabled, <span class="string">"LiveView stopped"</span>)
+    <span class="global">assert</span>(<span class="keyword">not</span> lv.paused, <span class="string">"LiveView could not be resumed"</span>)
+
+    msleep(<span class="number">2000</span>)
+
+    printf(<span class="string">"Stopping LiveView...\n"</span>)
+    lv.stop()
+
+    <span class="global">assert</span>(<span class="keyword">not</span> lv.enabled, <span class="string">"LiveView did not stop"</span>)
+    <span class="global">assert</span>(<span class="keyword">not</span> lv.paused,  <span class="string">"LiveView is disabled, can't be paused"</span>)
+    <span class="global">assert</span>(<span class="keyword">not</span> lv.running, <span class="string">"LiveView is disabled, can't be running"</span>)
+
+    msleep(<span class="number">1000</span>)
+
+    printf(<span class="string">"LiveView tests completed.\n"</span>)
+    printf(<span class="string">"\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> test_lens_focus()
+    <span class="keyword">if</span> lens.name == <span class="string">""</span> <span class="keyword">then</span>
+        printf(<span class="string">"This test requires an electronic lens.\n"</span>)
+        <span class="global">assert</span>(<span class="keyword">not</span> lens.af, <span class="string">"manual lenses can't autofocus"</span>)
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> <span class="keyword">not</span> lens.af <span class="keyword">then</span>
+        printf(<span class="string">"Please enable autofocus.\n"</span>)
+        printf(<span class="string">"(or, remove the lens from the camera to skip this test)\n"</span>)
+        <span class="keyword">while</span> <span class="keyword">not</span> lens.af <span class="keyword">and</span> lens.name ~= <span class="string">""</span> <span class="keyword">do</span>
+            console.show()
+            msleep(<span class="number">1000</span>)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> <span class="keyword">not</span> lv.running <span class="keyword">then</span>
+        lv.start()
+        <span class="global">assert</span>(lv.running)
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> lens.af <span class="keyword">then</span>
+        printf(<span class="string">"Focus distance: %s\n"</span>,  lens.focus_distance)
+
+        <span class="comment">-- note: focus direction is not consistent
+</span>        <span class="comment">-- some lenses will focus to infinity, others to macro
+</span>        printf(<span class="string">"Focusing backward...\n"</span>)
+        <span class="keyword">while</span> lens.focus(-<span class="number">1</span>,<span class="number">3</span>,<span class="keyword">true</span>) <span class="keyword">do</span> <span class="keyword">end</span>
+        printf(<span class="string">"Focus distance: %s\n"</span>,  lens.focus_distance)
+
+        msleep(<span class="number">500</span>)
+
+        <span class="keyword">for</span> i,step <span class="keyword">in</span> <span class="global">pairs</span>{<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>} <span class="keyword">do</span>
+            <span class="keyword">for</span> j,wait <span class="keyword">in</span> <span class="global">pairs</span>{<span class="keyword">true</span>,<span class="keyword">false</span>} <span class="keyword">do</span>
+                printf(<span class="string">"Focusing forward with step size %d, wait=%s...\n"</span>, step, wait)
+                <span class="keyword">local</span> steps_front = <span class="number">0</span>
+                <span class="keyword">while</span> lens.focus(<span class="number">1</span>,step,<span class="keyword">true</span>) <span class="keyword">do</span>
+                    printf(<span class="string">"."</span>)
+                    steps_front = steps_front + <span class="number">1</span>
+                <span class="keyword">end</span>
+                printf(<span class="string">"\n"</span>)
+                printf(<span class="string">"Focus distance: %s\n"</span>,  lens.focus_distance)
+
+                msleep(<span class="number">500</span>)
+
+                printf(<span class="string">"Focusing backward with step size %d, wait=%s...\n"</span>, step, wait)
+                <span class="keyword">local</span> steps_back = <span class="number">0</span>
+                <span class="keyword">while</span> lens.focus(-<span class="number">1</span>,step,<span class="keyword">true</span>) <span class="keyword">do</span>
+                    printf(<span class="string">"."</span>)
+                    steps_back = steps_back + <span class="number">1</span>
+                <span class="keyword">end</span>
+                printf(<span class="string">"\n"</span>)
+                printf(<span class="string">"Focus distance: %s\n"</span>,  lens.focus_distance)
+
+                msleep(<span class="number">500</span>)
+
+                printf(<span class="string">"Focus range: %s steps forward, %s steps backward. \n"</span>,  steps_front, steps_back)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        printf(<span class="string">"Focus test completed.\n"</span>)
+    <span class="keyword">else</span>
+        printf(<span class="string">"Focus test skipped.\n"</span>)
+    <span class="keyword">end</span>
+    printf(<span class="string">"\n"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> api_tests()
+    menu.close()
+    console.clear()
+    console.show()
+    test_log = logger(<span class="string">"LUATEST.LOG"</span>)
+
+    strict_tests()
+    generic_tests()
+
+    printf(<span class="string">"Module tests...\n"</span>)
+    test_io()
+    test_camera_exposure()
+    test_lv()
+    test_lens_focus()
+
+    printf(<span class="string">"Done!\n"</span>)
+
+    test_log:close()
+    key.wait()
+    console.hide()
+<span class="keyword">end</span>
+
+testmenu = menu.new
+{
+    name   = <span class="string">"Script API tests"</span>,
+    help   = <span class="string">"Various tests for the Lua scripting API."</span>,
+    help2  = <span class="string">"When adding new Lua APIs, tests for them should go here."</span>,
+    <span class="global">select</span> = <span class="keyword">function</span>(this) task.create(api_tests) <span class="keyword">end</span>,
+}</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2016-04-23 15:53:20 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

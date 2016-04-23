@@ -51,7 +51,6 @@
   <li><a href="../modules/display.html">display</a></li>
   <li><a href="../modules/dryos.html">dryos</a></li>
   <li><a href="../modules/global.html">global</a></li>
-  <li><a href="../modules/ime.html">ime</a></li>
   <li><a href="../modules/interval.html">interval</a></li>
   <li><a href="../modules/key.html">key</a></li>
   <li><a href="../modules/lens.html">lens</a></li>
@@ -62,20 +61,23 @@
   <li><a href="../modules/task.html">task</a></li>
   <li><a href="../modules/config.html">config</a></li>
   <li><a href="../modules/keys.html">keys</a></li>
+  <li><a href="../modules/logger.html">logger</a></li>
 </ul>
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/api_test.lua.html">api_test.lua</a></li>
   <li><a href="../examples/calc.lua.html">calc.lua</a></li>
-  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
   <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><a href="../examples/hello.lua.html">hello.lua</a></li>
-  <li><a href="../examples/imetest.lua.html">imetest.lua</a></li>
   <li><a href="../examples/config.lua.html">config.lua</a></li>
   <li><a href="../examples/keys.lua.html">keys.lua</a></li>
-  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/logger.lua.html">logger.lua</a></li>
+  <li><a href="../examples/strict.lua.html">strict.lua</a></li>
   <li><a href="../examples/pong.lua.html">pong.lua</a></li>
   <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
-  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
   <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
 </ul>
 
@@ -139,11 +141,9 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mode">mode</a></td>
-	<td class="summary">Get the current camera mode, possible values defined in <a href="../modules/constants.html#MODE">constants.MODE</a></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#af_mode">af_mode</a></td>
-	<td class="summary">Get the current auto focus mode</td>
+	<td class="summary">Get the current camera mode, possible values defined in <a href="../modules/constants.html#MODE">constants.MODE</a>
+ Note: for cameras without a dedicated video mode, it will return MODE.MOVIE
+ whenever your camera is configured to record videos.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#metering_mode">metering_mode</a></td>
@@ -182,11 +182,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#shutter.apex">shutter.apex</a></td>
-	<td class="summary">Get/Set shutter speed in apex units x10</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#shutter.apexf">shutter.apexf</a></td>
-	<td class="summary">Get/Set shutter speed in apex units (floating point)</td>
+	<td class="summary">Get/Set shutter speed in APEX units (floating point)</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#shutter.ms">shutter.ms</a></td>
@@ -197,7 +193,7 @@
 	<td class="summary">Get/Set shutter speed in seconds (floating point)</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#shutter:tostring">shutter:tostring ()</a></td>
+	<td class="name" nowrap><a href="#shutter:__tostring">shutter:__tostring ()</a></td>
 	<td class="summary">Pretty prints the current shutter speed as a string</td>
 	</tr>
 </table>
@@ -209,18 +205,46 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#aperture.apex">aperture.apex</a></td>
-	<td class="summary">Get/Set aperture in apex units x10</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#aperture.apexf">aperture.apexf</a></td>
-	<td class="summary">Get/Set aperture in apex units (floating point)</td>
+	<td class="summary">Get/Set aperture in APEX units (floating point)</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#aperture.value">aperture.value</a></td>
 	<td class="summary">Get/Set aperture as f-number (floating point)</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#aperture:tostring">aperture:tostring ()</a></td>
+	<td class="name" nowrap><a href="#aperture.min">aperture.min</a></td>
+	<td class="summary">Get/Set minimum (wide open) aperture value (aperture object)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.max">aperture.max</a></td>
+	<td class="summary">Get/Set maximum (closed) aperture value (aperture object)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.raw">aperture.raw</a></td>
+	<td class="summary">Get minimum (wide open) aperture in Canon raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.apex">aperture.apex</a></td>
+	<td class="summary">Get minimum (wide open) aperture in APEX units (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.value">aperture.value</a></td>
+	<td class="summary">Get minimum (wide open) aperture as f-number (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.raw">aperture.raw</a></td>
+	<td class="summary">Get maximum (closed) aperture in Canon raw units</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.apex">aperture.apex</a></td>
+	<td class="summary">Get maximum (closed) aperture in APEX units (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture.value">aperture.value</a></td>
+	<td class="summary">Get maximum (closed) aperture as f-number (floating point)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#aperture:__tostring">aperture:__tostring ()</a></td>
 	<td class="summary">Pretty prints the current aperture as a string</td>
 	</tr>
 </table>
@@ -232,18 +256,14 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#iso.apex">iso.apex</a></td>
-	<td class="summary">Get/Set ISO in apex units x10</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#iso.apexf">iso.apexf</a></td>
-	<td class="summary">Get/Set ISO in apex units (floating point)</td>
+	<td class="summary">Get/Set ISO in APEX units (floating point)</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#iso.value">iso.value</a></td>
 	<td class="summary">Get/Set ISO</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#iso:tostring">iso:tostring ()</a></td>
+	<td class="name" nowrap><a href="#iso:__tostring">iso:__tostring ()</a></td>
 	<td class="summary">Pretty prints the current ISO as a string</td>
 	</tr>
 </table>
@@ -254,19 +274,11 @@
 	<td class="summary">Get/Set exposure compensation in Canon raw units</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ec.apex">ec.apex</a></td>
-	<td class="summary">Get/Set exposure compensation in apex units x10</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#ec.apexf">ec.apexf</a></td>
-	<td class="summary">Get/Set exposure compensation in EVs (floating point)</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#ec.value">ec.value</a></td>
-	<td class="summary">Get/Set exposure compensation in EVs</td>
+	<td class="summary">Get/Set exposure compensation in EV or APEX</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ec:tostring">ec:tostring ()</a></td>
+	<td class="name" nowrap><a href="#ec:__tostring">ec:__tostring ()</a></td>
 	<td class="summary">Pretty prints the exposure compensation as a string</td>
 	</tr>
 </table>
@@ -482,6 +494,8 @@
     </dt>
     <dd>
     Get the current camera mode, possible values defined in <a href="../modules/constants.html#MODE">constants.MODE</a>
+ Note: for cameras without a dedicated video mode, it will return MODE.MOVIE
+ whenever your camera is configured to record videos.
 
 
     <ul>
@@ -490,26 +504,6 @@
 
 
 
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "af_mode"></a>
-    <strong>af_mode</strong>
-    </dt>
-    <dd>
-    Get the current auto focus mode
-
-
-    <ul>
-        <li><span class="parameter">af_mode</span>
-            <span class="types"><span class="type">int</span></span>
-         readonly
         </li>
     </ul>
 
@@ -690,33 +684,11 @@
     <strong>shutter.apex</strong>
     </dt>
     <dd>
-    Get/Set shutter speed in apex units x10
+    Get/Set shutter speed in APEX units (floating point)
 
 
     <ul>
         <li><span class="parameter">apex</span>
-            <span class="types"><span class="type">int</span></span>
-
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "shutter.apexf"></a>
-    <strong>shutter.apexf</strong>
-    </dt>
-    <dd>
-    Get/Set shutter speed in apex units (floating point)
-
-
-    <ul>
-        <li><span class="parameter">apexf</span>
             <span class="types"><span class="type">number</span></span>
 
 
@@ -774,8 +746,8 @@
 
 </dd>
     <dt>
-    <a name = "shutter:tostring"></a>
-    <strong>shutter:tostring ()</strong>
+    <a name = "shutter:__tostring"></a>
+    <strong>shutter:__tostring ()</strong>
     </dt>
     <dd>
     Pretty prints the current shutter speed as a string
@@ -827,33 +799,11 @@
     <strong>aperture.apex</strong>
     </dt>
     <dd>
-    Get/Set aperture in apex units x10
+    Get/Set aperture in APEX units (floating point)
 
 
     <ul>
         <li><span class="parameter">apex</span>
-            <span class="types"><span class="type">int</span></span>
-
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "aperture.apexf"></a>
-    <strong>aperture.apexf</strong>
-    </dt>
-    <dd>
-    Get/Set aperture in apex units (floating point)
-
-
-    <ul>
-        <li><span class="parameter">apexf</span>
             <span class="types"><span class="type">number</span></span>
 
 
@@ -889,8 +839,184 @@
 
 </dd>
     <dt>
-    <a name = "aperture:tostring"></a>
-    <strong>aperture:tostring ()</strong>
+    <a name = "aperture.min"></a>
+    <strong>aperture.min</strong>
+    </dt>
+    <dd>
+    Get/Set minimum (wide open) aperture value (aperture object)
+
+
+    <ul>
+        <li><span class="parameter">min</span>
+            <span class="types"><a class="type" href="../modules/camera.html#aperture">aperture</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.max"></a>
+    <strong>aperture.max</strong>
+    </dt>
+    <dd>
+    Get/Set maximum (closed) aperture value (aperture object)
+
+
+    <ul>
+        <li><span class="parameter">max</span>
+            <span class="types"><a class="type" href="../modules/camera.html#aperture">aperture</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.raw"></a>
+    <strong>aperture.raw</strong>
+    </dt>
+    <dd>
+    Get minimum (wide open) aperture in Canon raw units
+
+
+    <ul>
+        <li><span class="parameter">raw</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.apex"></a>
+    <strong>aperture.apex</strong>
+    </dt>
+    <dd>
+    Get minimum (wide open) aperture in APEX units (floating point)
+
+
+    <ul>
+        <li><span class="parameter">apex</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.value"></a>
+    <strong>aperture.value</strong>
+    </dt>
+    <dd>
+    Get minimum (wide open) aperture as f-number (floating point)
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.raw"></a>
+    <strong>aperture.raw</strong>
+    </dt>
+    <dd>
+    Get maximum (closed) aperture in Canon raw units
+
+
+    <ul>
+        <li><span class="parameter">raw</span>
+            <span class="types"><span class="type">int</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.apex"></a>
+    <strong>aperture.apex</strong>
+    </dt>
+    <dd>
+    Get maximum (closed) aperture in APEX units (floating point)
+
+
+    <ul>
+        <li><span class="parameter">apex</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture.value"></a>
+    <strong>aperture.value</strong>
+    </dt>
+    <dd>
+    Get maximum (closed) aperture as f-number (floating point)
+
+
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "aperture:__tostring"></a>
+    <strong>aperture:__tostring ()</strong>
     </dt>
     <dd>
     Pretty prints the current aperture as a string
@@ -942,33 +1068,11 @@
     <strong>iso.apex</strong>
     </dt>
     <dd>
-    Get/Set ISO in apex units x10
+    Get/Set ISO in APEX units (floating point)
 
 
     <ul>
         <li><span class="parameter">apex</span>
-            <span class="types"><span class="type">int</span></span>
-
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "iso.apexf"></a>
-    <strong>iso.apexf</strong>
-    </dt>
-    <dd>
-    Get/Set ISO in apex units (floating point)
-
-
-    <ul>
-        <li><span class="parameter">apexf</span>
             <span class="types"><span class="type">number</span></span>
 
 
@@ -1004,8 +1108,8 @@
 
 </dd>
     <dt>
-    <a name = "iso:tostring"></a>
-    <strong>iso:tostring ()</strong>
+    <a name = "iso:__tostring"></a>
+    <strong>iso:__tostring ()</strong>
     </dt>
     <dd>
     Pretty prints the current ISO as a string
@@ -1053,55 +1157,11 @@
 
 </dd>
     <dt>
-    <a name = "ec.apex"></a>
-    <strong>ec.apex</strong>
-    </dt>
-    <dd>
-    Get/Set exposure compensation in apex units x10
-
-
-    <ul>
-        <li><span class="parameter">apex</span>
-            <span class="types"><span class="type">int</span></span>
-
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "ec.apexf"></a>
-    <strong>ec.apexf</strong>
-    </dt>
-    <dd>
-    Get/Set exposure compensation in EVs (floating point)
-
-
-    <ul>
-        <li><span class="parameter">apexf</span>
-            <span class="types"><span class="type">number</span></span>
-
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
     <a name = "ec.value"></a>
     <strong>ec.value</strong>
     </dt>
     <dd>
-    Get/Set exposure compensation in EVs
+    Get/Set exposure compensation in EV or APEX
 
 
     <ul>
@@ -1119,8 +1179,8 @@
 
 </dd>
     <dt>
-    <a name = "ec:tostring"></a>
-    <strong>ec:tostring ()</strong>
+    <a name = "ec:__tostring"></a>
+    <strong>ec:__tostring ()</strong>
     </dt>
     <dd>
     Pretty prints the exposure compensation as a string
@@ -1147,7 +1207,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2016-01-16 16:12:12 </i>
+<i style="float:right;">Last updated 2016-04-23 15:53:20 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

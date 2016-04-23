@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/api_test.lua.html">api_test.lua</a></li>
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
+  <li><strong>logger.lua</strong></li>
+  <li><a href="../examples/strict.lua.html">strict.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
+  <li><a href="../modules/logger.html">logger</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>logger.lua</h2>
+<pre>
+<span class="comment">--[[---------------------------------------------------------------------------
+Logging helper. Writes to a log file and prints to the console.
+
+This module is a lua script (<a href="../examples/logger.lua.html#">logger.lua</a>), you need to explicitly load it
+with <code>require(&apos;logger&apos;)</code>
+
+@module logger
+@usage
+require('logger')
+
+local log = logger("MYLOG.LOG")
+log:write("hello world!")
+log:close()
+]]</span>
+logger = {}
+logger_metatable = {}
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Creates a new logger
+@tparam string filename the filename of the log file
+@tparam[opt] table listener an additional 'listener' to write data to, should implement a t:write(str) function
+@treturn logger the new instance
+@function logger
+]]</span>
+<span class="keyword">function</span> logger_metatable.__call(self,filename,listener)
+    <span class="keyword">local</span> t = {}
+    t.filename = filename
+    t.listener = listener
+    t.logfile = <span class="global">io</span>.open(filename, <span class="string">"a"</span>)
+    t.logfile:setvbuf(<span class="string">"line"</span>)
+    <span class="keyword">local</span> calling_filename = <span class="global">debug</span>.getinfo(<span class="number">2</span>,<span class="string">"S"</span>).short_src
+    <span class="keyword">local</span> date = dryos.date
+    t.logfile:write(<span class="global">string</span>.format(<span class="string">[[
+
+===============================================================================
+%s - %d-%d-%d %02d:%02d:%02d
+===============================================================================
+
+]]</span>,
+    <span class="global">tostring</span>(calling_filename), date.year, date.month, date.day, date.hour, date.min, date.sec))
+    <span class="keyword">local</span> m = {}
+    m.__index = logger
+    <span class="global">setmetatable</span>(t,m)
+    <span class="keyword">return</span> t
+<span class="keyword">end</span>
+
+<span class="global">setmetatable</span>(logger,logger_metatable)
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Splits a string into a table consisting of the lines of the original string
+@tparam string str
+@function logger.tolines
+]]</span>
+<span class="keyword">function</span> logger.tolines(str)
+    <span class="keyword">local</span> t = {}
+    <span class="keyword">local</span> p1 = <span class="number">1</span>
+    <span class="keyword">local</span> p2 = <span class="number">1</span>
+    <span class="keyword">local</span> len = #str
+    <span class="keyword">while</span> p2 &lt;= len <span class="keyword">do</span>
+        <span class="keyword">local</span> c = str:sub(p2,p2)
+        <span class="keyword">if</span> p2 == len <span class="keyword">then</span>
+            <span class="keyword">if</span> p1 == p2 <span class="keyword">then</span> <span class="global">table</span>.insert(t,<span class="string">""</span>)
+            <span class="keyword">else</span> <span class="global">table</span>.insert(t, str:sub(p1,p2)) <span class="keyword">end</span>
+            <span class="comment">--ends in newline?
+</span>            <span class="keyword">if</span> c == <span class="string">"\r"</span> <span class="keyword">or</span> c == <span class="string">"\n"</span> <span class="keyword">then</span> <span class="global">table</span>.insert(t,<span class="string">""</span>) <span class="keyword">end</span>
+            <span class="keyword">break</span>
+        <span class="keyword">elseif</span> c == <span class="string">"\r"</span> <span class="keyword">or</span> c == <span class="string">"\n"</span> <span class="keyword">then</span>
+            <span class="keyword">if</span> p1 == p2 <span class="keyword">then</span> <span class="global">table</span>.insert(t,<span class="string">""</span>)
+            <span class="keyword">else</span> <span class="global">table</span>.insert(t, str:sub(p1,p2-<span class="number">1</span>)) <span class="keyword">end</span>
+            p2 = p2 + <span class="number">1</span>
+            <span class="keyword">if</span> c == <span class="string">"\r"</span> <span class="keyword">and</span> str:sub(p2,p2) == <span class="string">"\n"</span> <span class="keyword">then</span>
+                p2 = p2 + <span class="number">1</span>
+            <span class="keyword">end</span>
+            p1 = p2
+        <span class="keyword">else</span>
+            p2 = p2 + <span class="number">1</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> t
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+@type logger
+]]</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Writes a string to the log
+@param str the string
+@function write
+]]</span>
+<span class="keyword">function</span> logger:write(str)
+    str = <span class="global">tostring</span>(str)
+    <span class="keyword">if</span> self.listener ~= <span class="keyword">nil</span> <span class="keyword">then</span> self.listener:write(str) <span class="keyword">end</span>
+    <span class="global">io</span>.write(str)
+    self.logfile:write(str)
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Writes a printf style formatted string to the log
+@tparam string fmt format string
+@param ... format arguments
+@function writef
+]]</span>
+<span class="keyword">function</span> logger:writef(fmt,...)
+    self:write(fmt:format(...))
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Converts any Lua type to a string representation and logs it.
+Recursively enumerates table structures
+@param o the object to serialize
+@function serialize
+]]</span>
+<span class="keyword">function</span> logger:serialize(o,l)
+    <span class="keyword">if</span> <span class="global">type</span>(o) == <span class="string">"string"</span> <span class="keyword">then</span>
+        self:writef(<span class="string">"%q"</span>,o)
+    <span class="keyword">elseif</span> <span class="global">type</span>(o) == <span class="string">"table"</span> <span class="keyword">or</span> <span class="global">type</span>(o) == <span class="string">"userdata"</span> <span class="keyword">then</span>
+        <span class="keyword">if</span> l == <span class="keyword">nil</span> <span class="keyword">then</span> l = <span class="number">1</span> <span class="keyword">end</span>
+        <span class="comment">--prevent infinite recursion
+</span>        <span class="keyword">if</span> l &lt; <span class="number">10</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> s,e = <span class="global">pcall</span>(<span class="keyword">function</span>() <span class="global">pairs</span>(o) <span class="keyword">end</span>)
+            <span class="keyword">if</span> s == <span class="keyword">true</span> <span class="keyword">then</span>
+                <span class="comment">-- something iterable
+</span>                self:writef(<span class="string">"%s:\n"</span>,<span class="global">type</span>(o))
+                <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>(o) <span class="keyword">do</span>
+                    <span class="keyword">for</span> i=<span class="number">1</span>,l,<span class="number">1</span> <span class="keyword">do</span> self:write(<span class="string">"  "</span>) <span class="keyword">end</span>
+                    <span class="keyword">if</span> <span class="global">type</span>(k) == <span class="string">"string"</span> <span class="keyword">then</span> self:writef(<span class="string">"%s = "</span>,k)
+                    <span class="keyword">else</span> self:writef(<span class="string">"[%s] = "</span>,<span class="global">tostring</span>(k)) <span class="keyword">end</span>
+                    self:serialize(v,l+<span class="number">1</span>)
+                    <span class="keyword">if</span> <span class="global">type</span>(v) ~= <span class="string">"table"</span> <span class="keyword">then</span> self:write(<span class="string">"\n"</span>) <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">else</span>
+                <span class="comment">-- something not iterable
+</span>                self:writef(<span class="string">"%s"</span>,<span class="global">type</span>(o))
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        self:write(<span class="global">tostring</span>(o))
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--[[---------------------------------------------------------------------------
+Close the log
+@function close
+]]</span>
+<span class="keyword">function</span> logger:close()
+    self.logfile:close()
+<span class="keyword">end</span>
+
+<span class="keyword">return</span> logger</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2016-04-23 15:53:20 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Class_logger">Class logger </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
+  <li><strong>logger</strong></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/api_test.lua.html">api_test.lua</a></li>
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
+  <li><a href="../examples/logger.lua.html">logger.lua</a></li>
+  <li><a href="../examples/strict.lua.html">strict.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>logger</code></h1>
+<p>Logging helper.</p>
+<p> Writes to a log file and prints to the console.</p>
+
+<p>This module is a lua script (<a href="../examples/logger.lua.html#">logger.lua</a>), you need to explicitly load it
+with <code>require(&apos;logger&apos;)</code></p>
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">
+require(&apos;logger&apos;)
+
+local log = logger(&quot;MYLOG.LOG&quot;)
+log:write(&quot;hello world!&quot;)
+log:close()</pre>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#logger">logger (filename[, listener])</a></td>
+	<td class="summary">Creates a new logger</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tolines">tolines (str)</a></td>
+	<td class="summary">Splits a string into a table consisting of the lines of the original string</td>
+	</tr>
+</table>
+<h2><a href="#Class_logger">Class logger </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#logger:write">logger:write (str)</a></td>
+	<td class="summary">Writes a string to the log</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#logger:writef">logger:writef (fmt, ...)</a></td>
+	<td class="summary">Writes a printf style formatted string to the log</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#logger:serialize">logger:serialize (o)</a></td>
+	<td class="summary">Converts any Lua type to a string representation and logs it.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#logger:close">logger:close ()</a></td>
+	<td class="summary">Close the log</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "logger"></a>
+    <strong>logger (filename[, listener])</strong>
+    </dt>
+    <dd>
+    Creates a new logger
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">filename</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         the filename of the log file
+        </li>
+        <li><span class="parameter">listener</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+         an additional 'listener' to write data to, should implement a t:write(str) function
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../modules/logger.html#logger">logger</a></span>
+        the new instance
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tolines"></a>
+    <strong>tolines (str)</strong>
+    </dt>
+    <dd>
+    Splits a string into a table consisting of the lines of the original string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_logger"></a>Class logger </h2>
+
+
+    <dl class="function">
+    <dt>
+    <a name = "logger:write"></a>
+    <strong>logger:write (str)</strong>
+    </dt>
+    <dd>
+    Writes a string to the log
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         the string
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "logger:writef"></a>
+    <strong>logger:writef (fmt, ...)</strong>
+    </dt>
+    <dd>
+    Writes a printf style formatted string to the log
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fmt</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         format string
+        </li>
+        <li><span class="parameter">...</span>
+         format arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "logger:serialize"></a>
+    <strong>logger:serialize (o)</strong>
+    </dt>
+    <dd>
+    Converts any Lua type to a string representation and logs it.
+Recursively enumerates table structures
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">o</span>
+         the object to serialize
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "logger:close"></a>
+    <strong>logger:close ()</strong>
+    </dt>
+    <dd>
+    Close the log
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2016-04-23 15:53:20 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

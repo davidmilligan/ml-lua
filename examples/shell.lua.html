@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>ML Lua API</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ML Lua API</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/api_test.lua.html">api_test.lua</a></li>
+  <li><a href="../examples/calc.lua.html">calc.lua</a></li>
+  <li><a href="../examples/copy2m.lua.html">copy2m.lua</a></li>
+  <li><a href="../examples/editor.lua.html">editor.lua</a></li>
+  <li><a href="../examples/hello.lua.html">hello.lua</a></li>
+  <li><a href="../examples/config.lua.html">config.lua</a></li>
+  <li><a href="../examples/keys.lua.html">keys.lua</a></li>
+  <li><a href="../examples/logger.lua.html">logger.lua</a></li>
+  <li><a href="../examples/menutest.lua.html">menutest.lua</a></li>
+  <li><a href="../examples/meta.lua.html">meta.lua</a></li>
+  <li><a href="../examples/pong.lua.html">pong.lua</a></li>
+  <li><a href="../examples/recdelay.lua.html">recdelay.lua</a></li>
+  <li><a href="../examples/scrnshot.lua.html">scrnshot.lua</a></li>
+  <li><strong>shell.lua</strong></li>
+  <li><a href="../examples/sokoban.lua.html">sokoban.lua</a></li>
+  <li><a href="../examples/test.lua.html">test.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/event.html">event</a></li>
+  <li><a href="../modules/battery.html">battery</a></li>
+  <li><a href="../modules/camera.html">camera</a></li>
+  <li><a href="../modules/console.html">console</a></li>
+  <li><a href="../modules/constants.html">constants</a></li>
+  <li><a href="../modules/display.html">display</a></li>
+  <li><a href="../modules/dryos.html">dryos</a></li>
+  <li><a href="../modules/global.html">global</a></li>
+  <li><a href="../modules/interval.html">interval</a></li>
+  <li><a href="../modules/key.html">key</a></li>
+  <li><a href="../modules/lens.html">lens</a></li>
+  <li><a href="../modules/lv.html">lv</a></li>
+  <li><a href="../modules/menu.html">menu</a></li>
+  <li><a href="../modules/movie.html">movie</a></li>
+  <li><a href="../modules/property.html">property</a></li>
+  <li><a href="../modules/task.html">task</a></li>
+  <li><a href="../modules/config.html">config</a></li>
+  <li><a href="../modules/keys.html">keys</a></li>
+  <li><a href="../modules/logger.html">logger</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>shell.lua</h2>
+<pre>
+
+<span class="global">require</span>(<span class="string">"keys"</span>)
+<span class="global">require</span>(<span class="string">"keyboard"</span>)
+<span class="global">require</span>(<span class="string">"logger"</span>)
+
+shell = {}
+shell.value = <span class="string">""</span>
+shell.lines = {<span class="string">"Welcome to the Lua Shell"</span>,<span class="string">""</span>}
+shell.history = {}
+shell.history_index = <span class="number">0</span>
+
+<span class="keyword">function</span> shell:init()
+    self.logger = logger(<span class="string">"LUASHELL.LOG"</span>,self)
+    <span class="comment">--intercept the builtin print
+</span>    <span class="global">print</span> = <span class="keyword">function</span>(...)
+        <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="global">pairs</span>({...}) <span class="keyword">do</span>
+            self.logger:serialize(v)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> shell:write(str)
+    <span class="keyword">local</span> lines = logger.tolines(str)
+    self.lines[#(self.lines)] = self.lines[#(self.lines)]..lines[<span class="number">1</span>]
+    <span class="keyword">for</span> i=<span class="number">2</span>,#lines,<span class="number">1</span> <span class="keyword">do</span>
+        <span class="global">table</span>.insert(self.lines,lines[i])
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> shell:run()
+    <span class="keyword">local</span> status, error = <span class="global">xpcall</span>(<span class="keyword">function</span>()
+        self:init()
+        self:main_loop()
+    <span class="keyword">end</span>, <span class="global">debug</span>.traceback)
+    <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">then</span>
+        handle_error(error)
+    <span class="keyword">end</span>
+    menu.block(<span class="keyword">false</span>)
+    keys:stop()
+    self.logger:close()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> shell:main_loop()
+    menu.block(<span class="keyword">true</span>)
+    keyboard.font = FONT.MONO_20
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="keyword">if</span> menu.visible == <span class="keyword">false</span> <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+        <span class="keyword">local</span> command = keyboard:show(<span class="string">""</span>,<span class="keyword">nil</span>,<span class="keyword">function</span>(k,w) self:handle_keyboard_up(k,w) <span class="keyword">end</span>,<span class="keyword">function</span>(k,w) self:handle_keyboard_down(k,w) <span class="keyword">end</span>,#(self.lines),self.lines)
+        <span class="keyword">if</span> command ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            self.logger:writef(<span class="string">"&gt;%s\n"</span>,command)
+            <span class="keyword">local</span> status,result = <span class="global">pcall</span>(<span class="global">load</span>, command)
+            <span class="keyword">if</span> status == <span class="keyword">false</span> <span class="keyword">or</span> result == <span class="keyword">nil</span> <span class="keyword">then</span>
+                self.value = <span class="string">"syntax error"</span>
+            <span class="keyword">else</span>
+                status,self.value = <span class="global">xpcall</span>(result, <span class="global">debug</span>.traceback)
+            <span class="keyword">end</span>
+            <span class="global">table</span>.insert(self.history,command)
+            self.history_index = #(self.history) + <span class="number">1</span>
+            <span class="keyword">if</span> self.value ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+                self.logger:serialize(self.value)
+            <span class="keyword">end</span>
+            self.value = <span class="global">tostring</span>(self.value)
+            <span class="keyword">if</span> self.lines[#(self.lines)] ~= <span class="string">""</span> <span class="keyword">then</span> <span class="global">table</span>.insert(self.lines,<span class="string">""</span>) <span class="keyword">end</span>
+        <span class="keyword">else</span> <span class="keyword">break</span> <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    keys:stop()
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> shell:handle_keyboard_up(k,w)
+    <span class="keyword">if</span> <span class="keyword">not</span> w <span class="keyword">then</span>
+        <span class="keyword">if</span> self.history_index &gt; <span class="number">0</span> <span class="keyword">then</span> self.history_index = self.history_index - <span class="number">1</span> <span class="keyword">end</span>
+        k.value = self.history[self.history_index]
+        <span class="keyword">if</span> k.value == <span class="keyword">nil</span> <span class="keyword">then</span> k.value = <span class="string">""</span> <span class="keyword">end</span>
+        k.pos = #(k.value)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> shell:handle_keyboard_down(k,w)
+    <span class="keyword">if</span> <span class="keyword">not</span> w <span class="keyword">then</span>
+        <span class="keyword">if</span> self.history_index &lt;= #(self.history) <span class="keyword">then</span> self.history_index = self.history_index + <span class="number">1</span> <span class="keyword">end</span>
+        k.value = self.history[self.history_index]
+        <span class="keyword">if</span> k.value == <span class="keyword">nil</span> <span class="keyword">then</span> k.value = <span class="string">""</span> <span class="keyword">end</span>
+        k.pos = #(k.value)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+shell.mlmenu = menu.new
+{
+    name = <span class="string">"Lua Shell"</span>,
+    help = <span class="string">"Interactive Lua Shell"</span>,
+    <span class="global">select</span> = <span class="keyword">function</span>(this)
+        task.create(<span class="keyword">function</span>() shell:run() <span class="keyword">end</span>)
+    <span class="keyword">end</span>,
+    update = <span class="keyword">function</span>(this) <span class="keyword">return</span> shell.value <span class="keyword">end</span>
+}
+
+<span class="keyword">function</span> handle_error(error)
+    <span class="keyword">if</span> error == <span class="keyword">nil</span> <span class="keyword">then</span> error = <span class="string">"Unknown Error!\n"</span> <span class="keyword">end</span>
+    <span class="keyword">local</span> f = FONT.MONO_20
+    display.rect(<span class="number">0</span>,<span class="number">0</span>,display.width,display.height,COLOR.RED,COLOR.BLACK)
+    <span class="keyword">local</span> pos = <span class="number">10</span>
+    <span class="keyword">for</span> line <span class="keyword">in</span> error:gmatch(<span class="string">"[^\r\n]+"</span>) <span class="keyword">do</span>
+        <span class="keyword">local</span> clipped = display.<span class="global">print</span>(line,<span class="number">10</span>,pos,f)
+        <span class="keyword">while</span> clipped ~= <span class="keyword">nil</span> <span class="keyword">do</span>
+            pos = pos + f.height
+            clipped = display.<span class="global">print</span>(clipped,<span class="number">10</span>,pos,f)
+        <span class="keyword">end</span>
+        pos = pos + f.height
+    <span class="keyword">end</span>
+    <span class="keyword">local</span> log = logger(<span class="string">"SHELL.ERR"</span>)
+    log:write(error)
+    log:close()
+    keys:anykey()
+<span class="keyword">end</span></pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2016-03-21 21:07:57 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
